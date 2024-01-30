@@ -1,0 +1,9 @@
+# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/configuration-files#global-analyzerconfig
+is_global = true
+
+# Microsoft
+dotnet_diagnostic.CA1707.severity = error
+
+# StyleCop
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1600.severity = none

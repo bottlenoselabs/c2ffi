@@ -1,0 +1,26 @@
+<Project>
+
+  <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ArtifactsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory),.gitignore))/artifacts</ArtifactsPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsEnabledAnalyzers>true</IsEnabledAnalyzers>
+    <IsEnabledAnalyzersStyleCop>true</IsEnabledAnalyzersStyleCop>
+    <StyleCopSettingsFilePath>$(MSBuildThisFileDirectory)StyleCop.json</StyleCopSettingsFilePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bottlenoselabs.Common.Tools" Version="*-*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.507">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)Analyzers.globalconfig" Link="Properties/Analyzers.globalconfig" />
+  </ItemGroup>
+
+</Project>
