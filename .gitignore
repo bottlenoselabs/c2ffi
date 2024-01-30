@@ -1,0 +1,7 @@
+# JetBrains
+.idea/
+
+# Generated files
+bin/
+obj/
+/artifacts/
