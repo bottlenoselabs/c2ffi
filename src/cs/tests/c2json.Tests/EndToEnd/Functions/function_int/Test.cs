@@ -5,7 +5,7 @@
 
 namespace c2json.Tests.EndToEnd.Functions.function_int;
 
-public class FunctionIntTest : AbstractSyntaxTreeTest
+public class Test : AbstractSyntaxTreeTest
 {
     [Fact]
     public void FunctionExists()

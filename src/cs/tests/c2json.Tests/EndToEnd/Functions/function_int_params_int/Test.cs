@@ -5,7 +5,7 @@
 
 namespace c2json.Tests.EndToEnd.Functions.function_int_params_int;
 
-public class FunctionIntParamsIntTest : AbstractSyntaxTreeTest
+public class Test : AbstractSyntaxTreeTest
 {
     [Fact]
     public void FunctionExists()
