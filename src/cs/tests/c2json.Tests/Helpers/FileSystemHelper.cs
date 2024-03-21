@@ -7,7 +7,7 @@ namespace c2json.Tests.Helpers;
 
 public class FileSystemHelper
 {
-    private IFileSystem _fileSystem;
+    private readonly IFileSystem _fileSystem;
     private string? _gitRepositoryRootDirectoryPath;
 
     public string GitRepositoryRootDirectoryPath => _gitRepositoryRootDirectoryPath ??= FindGitRepositoryRootDirectoryPath();
@@ -20,7 +20,7 @@ public class FileSystemHelper
     private string FindGitRepositoryRootDirectoryPath()
     {
         var baseDirectory = AppContext.BaseDirectory;
-        var directoryInfo = new DirectoryInfo(baseDirectory);
+        var directoryInfo = _fileSystem.DirectoryInfo.New(baseDirectory);
         while (true)
         {
             var files = directoryInfo.GetFiles(".gitignore", SearchOption.TopDirectoryOnly);
