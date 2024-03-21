@@ -6,6 +6,9 @@ using c2json.Tool;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+#pragma warning disable CS0657 // Not a valid attribute location for this declaration
+[assembly: CollectionBehavior(MaxParallelThreads = 1)]
+
 namespace c2json.Tests;
 
 #pragma warning disable CA1724
