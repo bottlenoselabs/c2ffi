@@ -7,16 +7,18 @@ namespace c2json.Tests.EndToEnd.Functions.function_int;
 
 public class Test : AbstractSyntaxTreeTest
 {
+    private const string FunctionName = "function_int";
+
     [Fact]
     public void FunctionExists()
     {
         var asts = GetAbstractSyntaxTrees(
-            "src/c/tests/functions/function_int/config.json");
+            $"src/c/tests/functions/{FunctionName}/config.json");
         Assert.True(asts.Length > 0);
 
         foreach (var ast in asts)
         {
-            var function = ast.GetFunction("function_int");
+            var function = ast.GetFunction(FunctionName);
             Assert.True(function.ReturnTypeName == "int");
             Assert.True(function.Parameters.IsDefaultOrEmpty);
         }

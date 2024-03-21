@@ -1,5 +1,6 @@
 # JetBrains
 .idea/
+**/*.DotSettings.user
 
 # Generated files
 bin/
