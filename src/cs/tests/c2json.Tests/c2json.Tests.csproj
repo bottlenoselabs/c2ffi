@@ -13,6 +13,7 @@
 
   <!-- Project references -->
   <ItemGroup>
+    <ProjectReference Include="$(GitRepositoryPath)/src/cs/production/c2json.Data/c2json.Data.csproj" />
     <ProjectReference Include="$(GitRepositoryPath)/src/cs/production/c2json.Tool/c2json.Tool.csproj" />
   </ItemGroup>
 
