@@ -4,7 +4,7 @@
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e66c8b53_002Dd87c_002D4866_002Da001_002Db22555a93199/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests2&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::0BCF52BC-43A0-4269-AD46-EFD744E68E2F::net8.0::c2json.Tests.EndToEnd.FunctionInt.FunctionIntTest&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::0BCF52BC-43A0-4269-AD46-EFD744E68E2F::net8.0::c2json.Tests.EndToEnd.Functions.function_int_params_int.FunctionIntParamsIntTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	

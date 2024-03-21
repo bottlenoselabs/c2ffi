@@ -5,3 +5,4 @@
 bin/
 obj/
 /artifacts/
+src/c/tests/**/ast/*.json

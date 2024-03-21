@@ -1,7 +1,7 @@
 {
     "inputFilePath": "./main.c",
     "userIncludeDirectories": [
-        "../../production/ffi_helper/include"
+        "../../../production/ffi_helper/include"
     ],
     "targetPlatforms": {
         "windows": {
