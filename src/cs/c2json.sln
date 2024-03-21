@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{06F30AED
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2json.Tests", "tests\c2json.Tests\c2json.Tests.csproj", "{0BCF52BC-43A0-4269-AD46-EFD744E68E2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2json.Data", "production\c2json.Data\c2json.Data.csproj", "{14BAF06A-F498-4B99-AD01-FA300EFFAB42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,9 +24,14 @@ Global
 		{0BCF52BC-43A0-4269-AD46-EFD744E68E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BCF52BC-43A0-4269-AD46-EFD744E68E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BCF52BC-43A0-4269-AD46-EFD744E68E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14BAF06A-F498-4B99-AD01-FA300EFFAB42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14BAF06A-F498-4B99-AD01-FA300EFFAB42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14BAF06A-F498-4B99-AD01-FA300EFFAB42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14BAF06A-F498-4B99-AD01-FA300EFFAB42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3F9FAB9D-2FAD-4F1B-AC53-68F47CEDBC0E} = {5958CFE5-69EC-4909-9325-15EC41A29A49}
 		{0BCF52BC-43A0-4269-AD46-EFD744E68E2F} = {06F30AED-E9B8-4E52-ADF9-34A4FD08103D}
+		{14BAF06A-F498-4B99-AD01-FA300EFFAB42} = {5958CFE5-69EC-4909-9325-15EC41A29A49}
 	EndGlobalSection
 EndGlobal

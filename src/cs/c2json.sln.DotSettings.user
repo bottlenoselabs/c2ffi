@@ -1,12 +1,15 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5709975a_002Dcd8c_002D439d_002Da461_002D0afbfe7e7fae/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests&amp;gt; #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/lstranks/Programming/bottlenoselabs/c2json/src/cs/tests/c2json.Tests" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests&amp;gt;" /&gt;
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/Users/lstranks/Library/Caches/JetBrains/Rider2023.3/resharper-host/temp/Rider/vAny/CoverageData/_c2json.1869097186/Snapshot/snapshot.utdcvr</s:String>
+	
+	
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e66c8b53_002Dd87c_002D4866_002Da001_002Db22555a93199/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests2&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::0BCF52BC-43A0-4269-AD46-EFD744E68E2F::net8.0::c2json.Tests.EndToEnd.FunctionInt.FunctionIntTest&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9e881854_002Ddad9_002D4174_002Db2d8_002Deb70434c3673/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/lstranks/Programming/bottlenoselabs/c2json/src/cs/tests/c2json.Tests" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests&amp;gt;" /&gt;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e66c8b53_002Dd87c_002D4866_002Da001_002Db22555a93199/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests2&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/lstranks/Programming/bottlenoselabs/c2json/src/cs/tests/c2json.Tests2" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;c2json.Tests2&amp;gt;" /&gt;
-&lt;/SessionState&gt;</s:String>
+	
+	
+	
+	
 	
 	</wpf:ResourceDictionary>

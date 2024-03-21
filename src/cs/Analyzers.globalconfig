@@ -6,4 +6,6 @@ dotnet_diagnostic.CA1707.severity = error
 
 # StyleCop
 dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1312.severity = none
+dotnet_diagnostic.SA1401.severity = none
 dotnet_diagnostic.SA1600.severity = none
