@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- MSBuild properties -->
+  <PropertyGroup>
+    <RootNamespace>c2ffi.Tool</RootNamespace>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- NuGet -->
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>$(GitRepositoryPath)/nupkg</PackageOutputPath>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/bottlenoselabs/c2ffi</RepositoryUrl>
+    <PackageId>bottlenoselabs.c2ffi.tool</PackageId>
+    <PackageDescription>
+      Convert a cross-platform C header `.h` to a FFI (foreign function interface) `.json` file for the purposes of generating bindings of the said C library for other languages.
+    </PackageDescription>
+    <ToolCommandName>c2ffi</ToolCommandName>
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <!-- Read .csproj information at runtime -->
+  <ItemGroup>
+    <AssemblyAttribute Include="c2ffi.Tool.ProjectInfoAttribute">
+      <_Parameter1>$(PackageDescription)</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <!-- NuGet package references -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="System.IO.Abstractions" Version="20.0.15" />
+    <PackageReference Include="bottlenoselabs.Common" Version="2024.3.5" />
+  </ItemGroup>
+
+  <!-- Configuration settings -->
+  <ItemGroup>
+    <EmbeddedResource Include="Properties/appsettings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\c2ffi.Data\c2ffi.Data.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\Extract\Infrastructure\" />
+    <Folder Include="Generated\" />
+  </ItemGroup>
+
+</Project>
