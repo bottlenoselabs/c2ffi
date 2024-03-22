@@ -220,7 +220,7 @@ Instead use bitmasks to get or set the bits of an integer yourself.
 
 Bad
 ```c
-struct dob {  
+struct dob {  // What is the sequential order of the struct's fields?
     uint32_t date: 5;  
     uint32_t month: 4;  
     uint32_t year: 12;  
