@@ -22,7 +22,6 @@ Automate the first step of generating bindings for a higher level language by pa
 
 Refer to the following 2 graphs as examples for a FFI between C and target language `X`.
 
-
 Example diagram: platform specific.
 ```mermaid
 graph LR
@@ -75,7 +74,7 @@ graph LR
     end
 ```
 
-Example diagram: Cross-platform.
+Example diagram: cross-platform.
 ```mermaid
 graph LR
 
