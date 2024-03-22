@@ -41,7 +41,7 @@ jobs:
 
     - name: "Test .NET extract"
       run: |
-        dotnet test '${{ github.workspace }}/src/cs/tests/c2json.Tests.EndToEnd.Extract/c2json.Tests.EndToEnd.Extract.csproj' --nologo --verbosity minimal --configuration Release
+        dotnet test '${{ github.workspace }}/src/cs/tests/c2ffi.Tests.EndToEnd.Extract/c2ffi.Tests.EndToEnd.Extract.csproj' --nologo --verbosity minimal --configuration Release
 
     - name: "Upload generated FFI files"
       uses: actions/upload-artifact@v3
@@ -90,5 +90,5 @@ jobs:
 
     - name: "Test .NET merge"
       run: |
-        dotnet test '${{ github.workspace }}/src/cs/tests/c2json.Tests.EndToEnd.Merge/c2json.Tests.EndToEnd.Merge.csproj' --nologo --verbosity minimal --configuration Release
+        dotnet test '${{ github.workspace }}/src/cs/tests/c2ffi.Tests.EndToEnd.Merge/c2ffi.Tests.EndToEnd.Merge.csproj' --nologo --verbosity minimal --configuration Release
 

@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2json.Tool", "production\c2json.Tool\c2json.Tool.csproj", "{3F9FAB9D-2FAD-4F1B-AC53-68F47CEDBC0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tool", "production\c2ffi.Tool\c2ffi.Tool.csproj", "{3F9FAB9D-2FAD-4F1B-AC53-68F47CEDBC0E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "production", "production", "{5958CFE5-69EC-4909-9325-15EC41A29A49}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{06F30AED-E9B8-4E52-ADF9-34A4FD08103D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2json.Tests.EndToEnd.Extract", "tests\c2json.Tests.EndToEnd.Extract\c2json.Tests.EndToEnd.Extract.csproj", "{0BCF52BC-43A0-4269-AD46-EFD744E68E2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tests.EndToEnd.Extract", "tests\c2ffi.Tests.EndToEnd.Extract\c2ffi.Tests.EndToEnd.Extract.csproj", "{0BCF52BC-43A0-4269-AD46-EFD744E68E2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2json.Data", "production\c2json.Data\c2json.Data.csproj", "{14BAF06A-F498-4B99-AD01-FA300EFFAB42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Data", "production\c2ffi.Data\c2ffi.Data.csproj", "{14BAF06A-F498-4B99-AD01-FA300EFFAB42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2json.Tests.Library", "tests\c2json.Tests.Library\c2json.Tests.Library.csproj", "{D8933EFB-2F00-4356-8F69-4438A9711DA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tests.Library", "tests\c2ffi.Tests.Library\c2ffi.Tests.Library.csproj", "{D8933EFB-2F00-4356-8F69-4438A9711DA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2json.Tests.EndToEnd.Merge", "tests\c2json.Tests.EndToEnd.Merge\c2json.Tests.EndToEnd.Merge.csproj", "{CEC639D4-F1FD-40BD-81B7-B20B2DE18EA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tests.EndToEnd.Merge", "tests\c2ffi.Tests.EndToEnd.Merge\c2ffi.Tests.EndToEnd.Merge.csproj", "{CEC639D4-F1FD-40BD-81B7-B20B2DE18EA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
