@@ -20,8 +20,62 @@ Note that C++ or other low-level languages are not considered as part of the pro
 
 Automate the first step of generating bindings for a higher level language by parsing a cross-platform C `.h` file using [libclang](https://clang.llvm.org/docs/Tooling.html) and extracting out the minimal FFI (foreign function interface) data as `.json`.
 
-Refer to the following graph as an example for a FFI between C and target language `X`.
+Refer to the following 2 graphs as examples for a FFI between C and target language `X`.
 
+
+Example diagram: platform specific.
+```mermaid
+graph LR
+
+    subgraph C library: Linux
+
+    C_HEADER(C header file <br> .h)
+    C_SOURCE(C/C++/ObjC source code <br> .c/.cpp/.m)
+
+    C_HEADER --- C_SOURCE
+
+    end
+
+    subgraph c2ffi: extract
+
+    EXTRACT_FFI_LINUX[Extract <br> FFI]
+
+    C_HEADER -.-> EXTRACT_FFI_LINUX
+
+    end
+
+    subgraph Artifacts: native library
+
+    C_COMPILED_LINUX(compiled C code <br> .so)
+
+    end
+
+    subgraph Artifacts: target-platform
+
+    C_HEADER -.-> C_COMPILED_LINUX
+    C_SOURCE -.-> C_COMPILED_LINUX
+
+    PLATFORM_FFI_LINUX(platform FFI <br> .json)
+
+    EXTRACT_FFI_LINUX -.-> PLATFORM_FFI_LINUX
+
+    end
+
+    subgraph Your bindgen tool
+
+    PLATFORM_FFI_LINUX --> X_CODE_GENERATOR[X language code <br> generator]
+
+    end
+
+    subgraph Your app
+
+    C_COMPILED_LINUX === X_SOURCE
+    X_CODE_GENERATOR -.-> X_SOURCE(X language source code)
+
+    end
+```
+
+Example diagram: Cross-platform.
 ```mermaid
 graph LR
 
