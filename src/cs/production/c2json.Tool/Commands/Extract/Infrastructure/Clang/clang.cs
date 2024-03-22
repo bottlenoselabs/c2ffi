@@ -16,6 +16,7 @@
 #pragma warning disable CS8981
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -23,6 +24,7 @@ using c2json.Tool.Commands.Extract.Infrastructure.Clang;
 
 namespace bottlenoselabs
 {
+    [ExcludeFromCodeCoverage]
     public static unsafe partial class clang
     {
 		// Enum @ Index.h:4109:6 (clang-c/Index.h)

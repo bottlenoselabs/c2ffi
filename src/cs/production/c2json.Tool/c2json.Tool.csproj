@@ -18,7 +18,7 @@
     <RepositoryUrl>https://github.com/bottlenoselabs/c2json</RepositoryUrl>
     <PackageId>bottlenoselabs.c2json.tool</PackageId>
     <PackageDescription>
-      Convert a cross-platform C header `.h` to a FFI (foreign function interface) abstract syntax tree (AST) `.json` file for the purposes of generating bindings of the said C library for other languages.
+      Convert a cross-platform C header `.h` to a FFI (foreign function interface) `.json` file for the purposes of generating bindings of the said C library for other languages.
     </PackageDescription>
     <ToolCommandName>c2json</ToolCommandName>
     <NoWarn>$(NoWarn);NU5104</NoWarn>
@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\Extract\Infrastructure\" />
+    <Folder Include="Generated\" />
   </ItemGroup>
 
 </Project>

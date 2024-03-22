@@ -1,7 +1,9 @@
 # JetBrains
 .idea/
+**/*.DotSettings.user
 
 # Generated files
 bin/
 obj/
 /artifacts/
+src/c/tests/**/ffi/*.json

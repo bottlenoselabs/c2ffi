@@ -2,21 +2,23 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.CommandLine;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using c2json.Tool.Commands.Extract;
 using c2json.Tool.Commands.Merge;
 
 namespace c2json.Tool;
 
+[ExcludeFromCodeCoverage]
 public sealed class CommandLineInterfaceCommand : RootCommand
 {
     public CommandLineInterfaceCommand(
-        ExtractAbstractSyntaxTreeCommand extractAbstractSyntaxTreeCommand,
-        MergeAbstractSyntaxTreesCommand mergeAbstractSyntaxTreesCommand)
+        ExtractFfiCommand extractFfiCommand,
+        MergeFfisCommand mergeFfisCommand)
         : base(GetDescription())
     {
-        AddCommand(extractAbstractSyntaxTreeCommand);
-        AddCommand(mergeAbstractSyntaxTreesCommand);
+        AddCommand(extractFfiCommand);
+        AddCommand(mergeFfisCommand);
     }
 
     private static string GetDescription()

@@ -10,7 +10,7 @@ namespace c2json.Data.Nodes;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents a variable in a C abstract syntax tree.
+///     Represents a variable in a C foreign function interface.
 /// </summary>
 [PublicAPI]
 public class CVariable : CNodeWithLocation

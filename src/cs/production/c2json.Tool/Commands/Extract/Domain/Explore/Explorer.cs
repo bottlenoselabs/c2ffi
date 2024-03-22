@@ -33,22 +33,22 @@ public sealed partial class Explorer
         _logger = logger;
     }
 
-    public CAbstractSyntaxTreeTargetPlatform GetAbstractSyntaxTree(
+    public CFfiTargetPlatform ExtractFfi(
         string filePath,
         ExtractTargetPlatformOptions options)
     {
         using var context = CreateExploreContext(filePath, options);
         using var _ = _logger.BeginScope(options.TargetPlatform)!;
 
-        CAbstractSyntaxTreeTargetPlatform result;
+        CFfiTargetPlatform result;
         try
         {
             ExploreTranslationUnit(context, context.ParseContext);
             ExploreVariables(context);
             ExploreFunctions(context);
             ExploreTypes(context);
-            result = context.GetAbstractSyntaxTree();
-            LogAbstractSyntaxTree(result);
+            result = context.GetFfi();
+            LogFfi(result);
         }
         catch (Exception e)
         {
@@ -229,9 +229,9 @@ public sealed partial class Explorer
         LogFoundNode(node.NodeKind, node.Name, location);
     }
 
-    private void LogAbstractSyntaxTree(CAbstractSyntaxTreeTargetPlatform ast)
+    private void LogFfi(CFfiTargetPlatform ffi)
     {
-        var functionNamesFound = ast.Functions.Keys.ToArray();
+        var functionNamesFound = ffi.Functions.Keys.ToArray();
         var functionNamesFoundString = string.Join(", ", functionNamesFound);
         LogFoundFunctions(functionNamesFound.Length, functionNamesFoundString);
     }

@@ -2,10 +2,12 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.CommandLine;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Hosting;
 
 namespace c2json.Tool;
 
+[ExcludeFromCodeCoverage]
 public sealed class CommandLineInterfaceHost(
     IHostApplicationLifetime applicationLifetime,
     CommandLineInterfaceCommand command)

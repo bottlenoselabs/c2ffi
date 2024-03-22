@@ -11,7 +11,7 @@ namespace c2json.Data.Nodes;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents a struct or union field in a C abstract syntax tree.
+///     Represents a struct or union field in a C foreign function interface.
 /// </summary>
 [PublicAPI]
 public class CRecord : CNodeWithLocation

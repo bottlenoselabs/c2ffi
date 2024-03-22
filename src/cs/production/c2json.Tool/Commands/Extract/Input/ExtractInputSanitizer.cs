@@ -114,7 +114,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         UnsanitizedExtractInputTargetPlatform targetPlatformInput,
         string inputFilePath)
     {
-        var targetPlatform = new c2json.Data.TargetPlatform(targetPlatformString);
+        var targetPlatform = new TargetPlatform(targetPlatformString);
 
         var outputFilePath = SanitizeOutputDirectoryPath(input.OutputDirectory, targetPlatformString);
 
@@ -136,7 +136,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
 
         var opaqueTypeNames = SanitizeStrings(input.OpaqueTypeNames).ToImmutableHashSet();
 
-        var inputAbstractSyntaxTree = new ExtractTargetPlatformOptions
+        var options = new ExtractTargetPlatformOptions
         {
             TargetPlatform = targetPlatform,
             OutputFilePath = outputFilePath,
@@ -151,7 +151,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             OpaqueTypeNames = opaqueTypeNames
         };
 
-        return inputAbstractSyntaxTree;
+        return options;
     }
 
     private string SanitizeOutputDirectoryPath(
@@ -162,7 +162,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
         if (string.IsNullOrEmpty(outputDirectoryPath))
         {
-            directoryPath = Path.Combine(Environment.CurrentDirectory, "ast");
+            directoryPath = Path.Combine(Environment.CurrentDirectory, "ffi");
         }
         else
         {

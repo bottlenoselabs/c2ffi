@@ -12,16 +12,16 @@ namespace c2json.Tool.Commands.Extract.Input.Unsanitized;
 public sealed class UnsanitizedExtractInput
 {
     /// <summary>
-    ///     Gets or sets the path of the output abstract syntax tree directory.
+    ///     Gets or sets the path of the output FFI directory.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         The directory will contain one or more generated abstract syntax tree `.json` files which each have a
+    ///         The directory will contain one or more generated FFI`.json` files which each have a
     ///         file name of the target platform.
     ///     </para>
     /// </remarks>
     [JsonPropertyName("outputDirectory")]
-    public string? OutputDirectory { get; set; } = "./ast";
+    public string? OutputDirectory { get; set; } = "./ffi";
 
     /// <summary>
     ///     Gets or sets the path of the input `.h` header file containing C code.
@@ -117,7 +117,7 @@ public sealed class UnsanitizedExtractInput
     public ImmutableArray<string>? OpaqueTypeNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the target platform configurations for extracting the abstract syntax trees per desktop host
+    ///     Gets or sets the target platform configurations for extracting the FFIs per desktop host
     ///     operating system.
     /// </summary>
     [JsonPropertyName("targetPlatforms")]

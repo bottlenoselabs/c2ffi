@@ -369,35 +369,35 @@ namespace c2json.Tool.Commands.Extract.Domain.Parse
 }
 namespace c2json.Tool.Commands.Extract
 {
-    partial class ExtractAbstractSyntaxTreeTool
+    partial class ExtractFfiTool
     {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::c2json.Data.TargetPlatform, global::System.String, global::System.Exception?> __LogWriteAbstractSyntaxTreeTargetPlatformSuccessCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2json.Data.TargetPlatform, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(0, nameof(LogWriteAbstractSyntaxTreeTargetPlatformSuccess)), "Success. Extracted abstract syntax tree for the target platform '{TargetPlatform}': {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::c2json.Data.TargetPlatform, global::System.String, global::System.Exception?> __LogWriteFfiTargetPlatformSuccessCallback =
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2json.Data.TargetPlatform, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(0, nameof(LogWriteFfiTargetPlatformSuccess)), "Success. Extracted FFI for the target platform '{TargetPlatform}': {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogWriteAbstractSyntaxTreeTargetPlatformSuccess(global::c2json.Data.TargetPlatform targetPlatform, global::System.String filePath)
+        private partial void LogWriteFfiTargetPlatformSuccess(global::c2json.Data.TargetPlatform targetPlatform, global::System.String filePath)
         {
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
             {
-                __LogWriteAbstractSyntaxTreeTargetPlatformSuccessCallback(_logger, targetPlatform, filePath, null);
+                __LogWriteFfiTargetPlatformSuccessCallback(_logger, targetPlatform, filePath, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::c2json.Data.TargetPlatform, global::System.String, global::System.Exception?> __LogWriteAbstractSyntaxTreeTargetPlatformFailureCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2json.Data.TargetPlatform, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(1, nameof(LogWriteAbstractSyntaxTreeTargetPlatformFailure)), "Failed to extract abstract syntax tree for the target platform '{TargetPlatform}': {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::c2json.Data.TargetPlatform, global::System.String, global::System.Exception?> __LogWriteFfiTargetPlatformFailureCallback =
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2json.Data.TargetPlatform, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(1, nameof(LogWriteFfiTargetPlatformFailure)), "Failed to extract FFI for the target platform '{TargetPlatform}': {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogWriteAbstractSyntaxTreeTargetPlatformFailure(global::System.Exception exception, global::c2json.Data.TargetPlatform targetPlatform, global::System.String filePath)
+        private partial void LogWriteFfiTargetPlatformFailure(global::System.Exception exception, global::c2json.Data.TargetPlatform targetPlatform, global::System.String filePath)
         {
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Error))
             {
-                __LogWriteAbstractSyntaxTreeTargetPlatformFailureCallback(_logger, targetPlatform, filePath, exception);
+                __LogWriteFfiTargetPlatformFailureCallback(_logger, targetPlatform, filePath, exception);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Collections.Immutable.ImmutableArray<global::c2json.Data.TargetPlatform>, global::System.Exception?> __LogSuccessCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Collections.Immutable.ImmutableArray<global::c2json.Data.TargetPlatform>>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogSuccess)), "Success. Extracted abstract syntax trees for the target platforms '{TargetPlatforms}'.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Collections.Immutable.ImmutableArray<global::c2json.Data.TargetPlatform>>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogSuccess)), "Success. Extracted FFIs for the target platforms '{TargetPlatforms}'.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogSuccess(global::System.Collections.Immutable.ImmutableArray<global::c2json.Data.TargetPlatform> targetPlatforms)

@@ -16,7 +16,7 @@ namespace c2json.Data.Serialization;
 [PublicAPI]
 public static class Json
 {
-    private static readonly JsonSerializerContextCAbstractSyntaxTreeTargetPlatform ContextTargetPlatform =
+    private static readonly JsonSerializerContextCFfiTargetPlatform ContextTargetPlatform =
         new(new JsonSerializerOptions()
         {
             WriteIndented = true,
@@ -27,7 +27,7 @@ public static class Json
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
         });
 
-    private static readonly JsonSerializerContextCAbstractSyntaxTreeCrossPlatform ContextCrossPlatform = new(new()
+    private static readonly JsonSerializerContextCFfiCrossPlatform ContextCrossPlatform = new(new()
     {
         WriteIndented = true,
         Converters =
@@ -37,31 +37,31 @@ public static class Json
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
     });
 
-    public static CAbstractSyntaxTreeTargetPlatform ReadAbstractSyntaxTreeTargetPlatform(
+    public static CFfiTargetPlatform ReadFfiTargetPlatform(
         IFileSystem fileSystem, string filePath)
     {
         var fullFilePath = fileSystem.Path.GetFullPath(filePath);
         var fileContents = fileSystem.File.ReadAllText(fullFilePath);
-        var result = JsonSerializer.Deserialize(fileContents, ContextTargetPlatform.CAbstractSyntaxTreeTargetPlatform)!;
+        var result = JsonSerializer.Deserialize(fileContents, ContextTargetPlatform.CFfiTargetPlatform)!;
         FillNamesTargetPlatform(result);
         return result;
     }
 
-    public static CAbstractSyntaxTreeCrossPlatform ReadAbstractSyntaxTreeCrossPlatform(
+    public static CFfiCrossPlatform ReadFfiCrossPlatform(
         IFileSystem fileSystem,
         string filePath)
     {
         var fullFilePath = fileSystem.Path.GetFullPath(filePath);
         var fileContents = fileSystem.File.ReadAllText(fullFilePath);
-        var result = JsonSerializer.Deserialize(fileContents, ContextCrossPlatform.CAbstractSyntaxTreeCrossPlatform)!;
+        var result = JsonSerializer.Deserialize(fileContents, ContextCrossPlatform.CFfiCrossPlatform)!;
         FillNamesCrossPlatform(result);
         return result;
     }
 
-    public static void WriteAbstractSyntaxTreeTargetPlatform(
+    public static void WriteFfiTargetPlatform(
         IFileSystem fileSystem,
         string filePath,
-        CAbstractSyntaxTreeTargetPlatform abstractSyntaxTree)
+        CFfiTargetPlatform ffi)
     {
         var fullFilePath = fileSystem.Path.GetFullPath(filePath);
 
@@ -82,7 +82,7 @@ public static class Json
             File.Delete(fullFilePath);
         }
 
-        var fileContents = JsonSerializer.Serialize(abstractSyntaxTree, ContextTargetPlatform.Options);
+        var fileContents = JsonSerializer.Serialize(ffi, ContextTargetPlatform.Options);
 
         using var fileStream = fileSystem.File.OpenWrite(fullFilePath);
         using var textWriter = new StreamWriter(fileStream);
@@ -91,10 +91,10 @@ public static class Json
         fileStream.Close();
     }
 
-    public static void WriteAbstractSyntaxTreeCrossPlatform(
+    public static void WriteFfiCrossPlatform(
         IFileSystem fileSystem,
         string filePath,
-        CAbstractSyntaxTreeCrossPlatform abstractSyntaxTree)
+        CFfiCrossPlatform ffi)
     {
         var fullFilePath = fileSystem.Path.GetFullPath(filePath);
 
@@ -115,7 +115,7 @@ public static class Json
             fileSystem.File.Delete(fullFilePath);
         }
 
-        var fileContents = JsonSerializer.Serialize(abstractSyntaxTree, ContextCrossPlatform.Options);
+        var fileContents = JsonSerializer.Serialize(ffi, ContextCrossPlatform.Options);
 
         using var fileStream = fileSystem.File.OpenWrite(fullFilePath);
         using var textWriter = new StreamWriter(fileStream);
@@ -124,97 +124,97 @@ public static class Json
         fileStream.Close();
     }
 
-    private static void FillNamesTargetPlatform(CAbstractSyntaxTreeTargetPlatform abstractSyntaxTree)
+    private static void FillNamesTargetPlatform(CFfiTargetPlatform ffi)
     {
-        foreach (var keyValuePair in abstractSyntaxTree.MacroObjects)
+        foreach (var keyValuePair in ffi.MacroObjects)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Variables)
+        foreach (var keyValuePair in ffi.Variables)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Functions)
+        foreach (var keyValuePair in ffi.Functions)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Records)
+        foreach (var keyValuePair in ffi.Records)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Enums)
+        foreach (var keyValuePair in ffi.Enums)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.EnumConstants)
+        foreach (var keyValuePair in ffi.EnumConstants)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.TypeAliases)
+        foreach (var keyValuePair in ffi.TypeAliases)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.OpaqueTypes)
+        foreach (var keyValuePair in ffi.OpaqueTypes)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.FunctionPointers)
+        foreach (var keyValuePair in ffi.FunctionPointers)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
     }
 
-    private static void FillNamesCrossPlatform(CAbstractSyntaxTreeCrossPlatform abstractSyntaxTree)
+    private static void FillNamesCrossPlatform(CFfiCrossPlatform ffi)
     {
-        foreach (var keyValuePair in abstractSyntaxTree.MacroObjects)
+        foreach (var keyValuePair in ffi.MacroObjects)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Variables)
+        foreach (var keyValuePair in ffi.Variables)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Functions)
+        foreach (var keyValuePair in ffi.Functions)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Records)
+        foreach (var keyValuePair in ffi.Records)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.Enums)
+        foreach (var keyValuePair in ffi.Enums)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.EnumConstants)
+        foreach (var keyValuePair in ffi.EnumConstants)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.TypeAliases)
+        foreach (var keyValuePair in ffi.TypeAliases)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.OpaqueTypes)
+        foreach (var keyValuePair in ffi.OpaqueTypes)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in abstractSyntaxTree.FunctionPointers)
+        foreach (var keyValuePair in ffi.FunctionPointers)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }

@@ -10,7 +10,7 @@ namespace c2json.Data.Nodes;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents an opaque type in a C abstract syntax tree.
+///     Represents an opaque type in a C foreign function interface.
 /// </summary>
 [PublicAPI]
 public class COpaqueType : CNodeWithLocation

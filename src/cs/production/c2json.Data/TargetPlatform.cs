@@ -1,6 +1,7 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using c2json.Data.Serialization;
 using JetBrains.Annotations;
@@ -22,6 +23,7 @@ namespace c2json.Data;
 /// </summary>
 [PublicAPI]
 [JsonConverter(typeof(TargetPlatformJsonConverter))]
+[ExcludeFromCodeCoverage]
 public record struct TargetPlatform(string ClangTargetTriple)
 {
     /// <summary>
@@ -139,49 +141,6 @@ public record struct TargetPlatform(string ClangTargetTriple)
     ///     Unknown target platform.
     /// </summary>
     public static readonly TargetPlatform Unknown = new("unknown-unknown-unknown");
-
-    public bool IsOperatingSystemWindows()
-    {
-        return ClangTargetTriple.Contains("-pc-windows", StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public bool IsOperatingSystemLinux()
-    {
-        return ClangTargetTriple.Contains("-unknown-linux", StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public bool IsOperatingSystemMacOs()
-    {
-        return ClangTargetTriple.Contains("-apple-darwin", StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public bool IsOperatingSystemIOs()
-    {
-        return ClangTargetTriple.Contains("-apple-ios", StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public bool IsArchitectureArm64()
-    {
-        return ClangTargetTriple.StartsWith("aarch64-", StringComparison.InvariantCultureIgnoreCase) ||
-               ClangTargetTriple.StartsWith("arm64-", StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public bool IsArchitectureArm32()
-    {
-        return ClangTargetTriple.StartsWith("arm-", StringComparison.InvariantCultureIgnoreCase) ||
-            ClangTargetTriple.StartsWith("armv7-", StringComparison.InvariantCultureIgnoreCase) ||
-            ClangTargetTriple.StartsWith("armv6k-", StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public bool IsArchitectureX64()
-    {
-        return ClangTargetTriple.StartsWith("x86_64-", StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public bool IsArchitectureX86()
-    {
-        return ClangTargetTriple.StartsWith("i686-", StringComparison.InvariantCultureIgnoreCase);
-    }
 
     #region Sony
 
