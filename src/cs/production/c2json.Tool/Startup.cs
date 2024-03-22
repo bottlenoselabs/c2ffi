@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Reflection;
 using System.Resources;
@@ -14,6 +15,7 @@ namespace c2json.Tool;
 
 public static class Startup
 {
+    [ExcludeFromCodeCoverage]
     public static IHost CreateHost(string[] args)
     {
         return new HostBuilder()

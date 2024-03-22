@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using c2json.Data;
 using c2json.Data.Nodes;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace c2json.Tests.EndToEnd;
 
 [PublicAPI]
+[ExcludeFromCodeCoverage]
 public abstract class AbstractSyntaxTreeTest
 {
     private readonly IFileSystem _fileSystem;
