@@ -1,6 +1,6 @@
 # c2ffi
 
-Convert a cross-platform C header `.h` to a FFI (foreign function interface) `.json` data structure for the purposes of generating bindings to other languages.
+Convert a C header `.h` to a FFI (foreign function interface) `.json` data structure for the purposes of generating bindings to other languages.
 
 ## Background: Why?
 
@@ -161,7 +161,7 @@ const int64_t MY_ENUM_LARGE_VALUE_1 = 0x1000000000000000L;
 const int64_t MY_ENUM_LARGE_VALUE_2 = 0x2000000000000000L;
 ```
 
-<sup>4</sup>: Do not use bit fields in C. This is because bit fields may have [different bit layouts across different
+<sup>3</sup>: Do not use bit fields in C. This is because bit fields may have [different bit layouts across different
 compilers (e.g. GCC vs MSCV) which may break portability](https://stackoverflow.com/a/25345750).
 Instead use bitmasks to get or set the bits of an integer yourself. 
 
@@ -174,21 +174,21 @@ struct dob {
 };  
 ```
 
-<sup>5</sup>: Function-like macros are only possible if the parameters' types can be inferred 100% of the time during preprocessor; otherwise, not possible. **Not yet implemented**.
+<sup>4</sup>: Function-like macros are only possible if the parameters' types can be inferred 100% of the time during preprocessor; otherwise, not possible. **Not yet implemented**.
 
 Bad
 ```c
 #define SUM(a,b,c) a + b + c // What is the type of a?
 ```
 
-<sup>6</sup>: Object-like macros have full support. The value type is determined by evaluating the value of the macro as an C expression using `auto` in C++ to determine the type.
+<sup>5</sup>: Object-like macros have full support. The value type is determined by evaluating the value of the macro as an C++ expression using `auto`.
 
-Good
+Acceptable
 ```c
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 1024 // Type is int16_t
 ```
 
-<sup>7</sup>: Types must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the AST. E.g. a function extern which uses an integer as a parameter but is really expecting an enum that is not a transitive type will cause the "dangling" enum to not be included as part of the FFI.
+<sup>7</sup>: Types must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the FFI. If this is not the case, then the type is not used in the FFI and will not be extracted.
 
 ### Platforms
 
@@ -234,19 +234,19 @@ The following table demonstrates commonly used target platforms.
 
 <sup>3</sup>: Google does not allow copy or usage of their software development kits (SDKs) due to their [Android Software Development Kit License Agreement](https://developer.android.com/studio/terms). You can download and install Android Studio to gain access to the SDKs for Android. This effectively means that to generate FFI for target platforms which are Android, then `c2ffi` must run from Windows, macOS, or Linux with Android Studio installed and additional SDKs for each target platform are also installed through Android Studio or equivalent.
 
-Note that pointers such as `void*` can have different sizes across target computer architectures. E.g., `X86` pointers are 4 bytes and `X64` (aswell as `ARM64`) pointers are 8 bytes. This means that ASTs that `CAstFfi` generates between 32-bit and 64-bit target platforms will have different return type sizes, parameter type sizes, or record sizes when using pointers. That being said, 64-bit word size is pretty ubiquitous on Windows these days, at least for gaming, as you can see from [Steam hardware survey where 64-bit is 99%+](https://store.steampowered.com/hwsurvey/directx/). Additionally, you can see that the ["trend" is that 64-bit is becoming standard over time with 32-bit getting dropped](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_operating_system_timeline). If you are planning on targeting modern machines, I would advise making your life simple and just forgeting about target platforms with 32-bit computer architectures such as `X86` and `ARM32`.
+Note that pointers such as `void*` can have different sizes across target computer architectures. E.g., `X86` pointers are 4 bytes and `X64` (aswell as `ARM64`) pointers are 8 bytes. This means that FFIs that `c2ffi` generates between 32-bit and 64-bit target platforms will have different return type sizes, parameter type sizes, or record sizes when using pointers. That being said, 64-bit word size is pretty ubiquitous on Windows these days, at least for gaming, as you can see from [Steam hardware survey where 64-bit is 99%+](https://store.steampowered.com/hwsurvey/directx/). Additionally, you can see that the ["trend" is that 64-bit is becoming standard over time with 32-bit getting dropped](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_operating_system_timeline). If you are planning on targeting modern machines, I would advise making your life simple and just forgeting about target platforms with 32-bit computer architectures such as `X86` and `ARM32`.
 
 ## Getting Started
 
 ### Install
 
 ```bash
-dotnet tool install bottlenoselabs.castffi.tool -g
+dotnet tool install bottlenoselabs.c2ffi.tool -g
 ```
 
 ### Usage `extract`
 
-Extract the platform specific abstract syntax tree `.json` files.
+Extract the platform specific FFI using a configuration `.json` file.
 
 `config-extract.json`:
 ```json
@@ -274,18 +274,20 @@ Extract the platform specific abstract syntax tree `.json` files.
 
 Terminal:
 ```bash
-castffi extract path/to/config-extract.json
+c2ffi extract path/to/config-extract.json
 ```
 
 NOTE: The `targetPlatforms` in the `config.json` is a matrix of operating systems to extract the Clang target triples on. In other words, it will only extract the Clang target triple when on the specific operating systems. For example given the `config.json` above, when the current operating system is `windows`, only the `x86_64-pc-windows-msvc` and `aarch64-pc-windows-msvc` target triples will extracted.
 
 ### Usage `merge`
 
-Once one or more platform abstract syntax tree `.json` files have been extracted, merge them together into a cross-platform abstract syntax tree.
+Once one or more FFI `.json` files have been extracted, merge them together into a cross-platform FFI `.json` file. 
+
+This step is necessary to verify that the platform specific FFIs are indeed cross-platform by checking functions, types, bit-widths, etc, are all the same. If you plan on only targetting a specific platform such as Windows only, you may wish to skip this step.  
 
 Terminal:
 ```bash
-castffi merge --inputDirectoryPath /path/to/platform/ast --outputFilePath /path/to cross-platform-ast.json
+c2ffi merge --inputDirectoryPath /path/to/platform/ast --outputFilePath /path/to/cross-platform-ast.json
 ```
 
 
