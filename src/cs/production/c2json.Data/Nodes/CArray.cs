@@ -9,7 +9,7 @@ namespace c2json.Data.Nodes;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents an array in a C abstract syntax tree.
+///     Represents an array in a C foreign function interface.
 /// </summary>
 [PublicAPI]
 public class CArray : CNode

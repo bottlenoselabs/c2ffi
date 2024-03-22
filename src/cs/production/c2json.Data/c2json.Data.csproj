@@ -12,5 +12,8 @@
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
     <PackageReference Include="TestableIO.System.IO.Abstractions" Version="20.0.15" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
 
 </Project>

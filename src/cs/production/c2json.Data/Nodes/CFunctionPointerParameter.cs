@@ -10,7 +10,7 @@ namespace c2json.Data.Nodes;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents a function pointer parameter in a C abstract syntax tree.
+///     Represents a function pointer parameter in a C foreign function interface.
 /// </summary>
 [PublicAPI]
 public class CFunctionPointerParameter : CNode

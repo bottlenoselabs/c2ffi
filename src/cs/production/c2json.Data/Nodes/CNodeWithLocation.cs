@@ -9,8 +9,8 @@ namespace c2json.Data.Nodes;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents the abstract base for a node in a C abstract syntax tree with a defined file location in the
-///     original C header.
+///     Represents the abstract base for a node in a C foreign function interface with a defined
+///     file location in the original C header.
 /// </summary>
 [PublicAPI]
 public abstract class CNodeWithLocation : CNode

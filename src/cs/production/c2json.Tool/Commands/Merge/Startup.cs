@@ -11,6 +11,6 @@ public sealed class Startup : IDependencyInjectionStartup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<MergeAbstractSyntaxTreesCommand>();
+        services.AddSingleton<MergeFfisCommand>();
     }
 }

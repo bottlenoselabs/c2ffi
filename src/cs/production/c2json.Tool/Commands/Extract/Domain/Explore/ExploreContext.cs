@@ -16,7 +16,7 @@ public sealed class ExploreContext : IDisposable
 {
     public readonly ParseContext ParseContext;
     private readonly ImmutableDictionary<CNodeKind, NodeExplorer> _nodeHandlers;
-    private readonly AbstractSyntaxTreeBuilder _abstractSyntaxTreeBuilder;
+    private readonly FfiBuilder _ffiBuilder;
 
     public string FilePath => ParseContext.FilePath;
 
@@ -26,12 +26,12 @@ public sealed class ExploreContext : IDisposable
     {
         ParseContext = parseContext;
         _nodeHandlers = GetNodeHandlers(services);
-        _abstractSyntaxTreeBuilder = new AbstractSyntaxTreeBuilder();
+        _ffiBuilder = new FfiBuilder();
     }
 
-    public CAbstractSyntaxTreeTargetPlatform GetAbstractSyntaxTree()
+    public CFfiTargetPlatform GetFfi()
     {
-        return _abstractSyntaxTreeBuilder.GetAbstractSyntaxTree(ParseContext);
+        return _ffiBuilder.GetFfi(ParseContext);
     }
 
     public CNode? Explore(ExploreInfoNode info)
@@ -40,7 +40,7 @@ public sealed class ExploreContext : IDisposable
         var node = handler.ExploreInternal(this, info);
         if (node != null)
         {
-            _abstractSyntaxTreeBuilder.AddNode(node);
+            _ffiBuilder.AddNode(node);
         }
 
         return node;

@@ -13,12 +13,12 @@ namespace c2json.Tool;
 public sealed class CommandLineInterfaceCommand : RootCommand
 {
     public CommandLineInterfaceCommand(
-        ExtractAbstractSyntaxTreeCommand extractAbstractSyntaxTreeCommand,
-        MergeAbstractSyntaxTreesCommand mergeAbstractSyntaxTreesCommand)
+        ExtractFfiCommand extractFfiCommand,
+        MergeFfisCommand mergeFfisCommand)
         : base(GetDescription())
     {
-        AddCommand(extractAbstractSyntaxTreeCommand);
-        AddCommand(mergeAbstractSyntaxTreesCommand);
+        AddCommand(extractFfiCommand);
+        AddCommand(mergeFfisCommand);
     }
 
     private static string GetDescription()

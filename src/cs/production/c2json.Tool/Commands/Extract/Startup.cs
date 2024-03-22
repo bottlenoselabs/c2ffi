@@ -37,7 +37,7 @@ public sealed class Startup : IDependencyInjectionStartup
         services.AddTransient<TypeAliasExplorer>();
         services.AddTransient<VariableExplorer>();
 
-        services.AddSingleton<ExtractAbstractSyntaxTreeCommand>();
-        services.AddSingleton<ExtractAbstractSyntaxTreeTool>();
+        services.AddSingleton<ExtractFfiCommand>();
+        services.AddSingleton<ExtractFfiTool>();
     }
 }

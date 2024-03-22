@@ -7,24 +7,24 @@ using c2json.Tests.Library.Models;
 
 namespace c2json.Tests.EndToEnd.Extract.Functions.function_int;
 
-public class Test : ExtractAbstractSyntaxTreeTest
+public class Test : ExtractFfiTest
 {
     private const string FunctionName = "function_int";
 
     [Fact]
     public void FunctionExists()
     {
-        var asts = GetAbstractSyntaxTrees(
+        var ffis = GetFfis(
             $"src/c/tests/functions/{FunctionName}/config.json");
-        Assert.True(asts.Length > 0);
+        Assert.True(ffis.Length > 0);
 
-        foreach (var ast in asts)
+        foreach (var ast in ffis)
         {
             AstFunctionExists(ast);
         }
     }
 
-    private void AstFunctionExists(CTestAbstractSyntaxTree ast)
+    private void AstFunctionExists(CTestFfi ast)
     {
         var function = ast.GetFunction(FunctionName);
         Assert.True(function.CallingConvention == "cdecl");

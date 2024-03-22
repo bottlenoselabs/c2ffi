@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 namespace c2json.Data;
 
 /// <summary>
-///     Defines the kind of C nodes in the <see cref="CAbstractSyntaxTreeTargetPlatform" />.
+///     Defines the kind of C nodes in the <see cref="CFfiTargetPlatform" />.
 /// </summary>
 [PublicAPI]
 public enum CNodeKind

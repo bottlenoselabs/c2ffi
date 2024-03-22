@@ -9,7 +9,7 @@ namespace c2json.Data.Nodes;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents the abstract base for a node in a C abstract syntax tree.
+///     Represents the abstract base for a node in a C foreign function interface.
 /// </summary>
 [PublicAPI]
 public abstract class CNode : IComparable<CNode>, IEquatable<CNode>
