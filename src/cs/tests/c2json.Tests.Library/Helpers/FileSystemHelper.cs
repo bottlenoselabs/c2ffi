@@ -4,7 +4,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 
-namespace c2json.Tests.Helpers;
+namespace c2json.Tests.Library.Helpers;
 
 [ExcludeFromCodeCoverage]
 public class FileSystemHelper

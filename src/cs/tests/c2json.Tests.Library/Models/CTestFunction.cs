@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace c2json.Tests.Models;
+namespace c2json.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]

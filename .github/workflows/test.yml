@@ -5,8 +5,8 @@ on:
 
 jobs:
 
-  test-dotnet-job:
-    name: "Test .NET solution: ${{ matrix.platform.name }}"
+  test-dotnet-extract-job:
+    name: "Test .NET extract: ${{ matrix.platform.name }}"
     runs-on: ${{ matrix.platform.os }}
     strategy:
       fail-fast: false
@@ -39,15 +39,42 @@ jobs:
       with:
         dotnet-version: '8.x'
 
-    - name: "Test .NET solution"
+    - name: "Test .NET extract"
       run: |
-        dotnet test '${{ github.workspace }}/src/cs' --nologo --verbosity minimal --configuration Release
+        dotnet test '${{ github.workspace }}/src/cs/tests/c2json.Tests.EndToEnd.Extract/c2json.Tests.EndToEnd.Extract.csproj' --nologo --verbosity minimal --configuration Release
 
-    - name: "Collect generated JSON files"
+    - name: "Upload generated JSON files"
       uses: actions/upload-artifact@v3
-      if: github.event_name == 'pull_request'
       with:
-        name: "Test Data ${{ matrix.platform.name }}"
+        name: "ASTs ${{ matrix.platform.name }}"
         path: |
           ${{ github.workspace }}/src/c/tests/**/ast/*.json
+
+  test-dotnet-merge-job:
+    name: "Test .NET merge"
+    runs-on: ubuntu-latest
+    needs: [test-dotnet-extract-job]
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+    - name: "Clone Git repository"
+      uses: actions/checkout@v3
+
+    - name: "Setup .NET"
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.x'
+
+    - name: "Download generated JSON files"
+      uses: actions/download-artifact@v3
+      with:
+        name: "ASTs"
+        path: |
+          ${{ github.workspace }}/src/c/tests
+
+    - name: "Test .NET merge"
+      run: |
+        dotnet test '${{ github.workspace }}/src/cs/tests/c2json.Tests.EndToEnd.Merge/c2json.Tests.EndToEnd.Merge.csproj' --nologo --verbosity minimal --configuration Release
 

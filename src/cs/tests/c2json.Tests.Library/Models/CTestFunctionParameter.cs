@@ -5,18 +5,20 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace c2json.Tests.Models;
+namespace c2json.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestTypeAlias
+public class CTestFunctionParameter
 {
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
-    [JsonPropertyName("underlyingName")]
-    public string UnderlyingName { get; set; } = string.Empty;
+    [JsonPropertyName("type_name")]
+    public string TypeName { get; set; } = string.Empty;
 
-    [JsonPropertyName("underlyingKind")]
-    public string UnderlyingKind { get; set; } = string.Empty;
+    public override string ToString()
+    {
+        return Name;
+    }
 }

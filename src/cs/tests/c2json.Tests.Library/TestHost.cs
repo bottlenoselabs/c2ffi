@@ -1,10 +1,11 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2json.Tests.Helpers;
+using c2json.Tests.Library.Helpers;
 using c2json.Tool;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Xunit;
 
 #pragma warning disable CS0657 // Not a valid attribute location for this declaration
 [assembly: CollectionBehavior(MaxParallelThreads = 1)]

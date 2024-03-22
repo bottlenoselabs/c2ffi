@@ -7,17 +7,17 @@ using System.IO.Abstractions;
 using c2json.Data;
 using c2json.Data.Nodes;
 using c2json.Data.Serialization;
-using c2json.Tests.Helpers;
-using c2json.Tests.Models;
+using c2json.Tests.Library.Helpers;
+using c2json.Tests.Library.Models;
 using c2json.Tool.Commands.Extract;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace c2json.Tests.EndToEnd;
+namespace c2json.Tests.EndToEnd.Extract;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public abstract class AbstractSyntaxTreeTest
+public abstract class ExtractAbstractSyntaxTreeTest
 {
     private readonly IFileSystem _fileSystem;
     private readonly IPath _path;
@@ -26,7 +26,7 @@ public abstract class AbstractSyntaxTreeTest
     private readonly FileSystemHelper _fileSystemHelper;
     private readonly ExtractAbstractSyntaxTreeTool _tool;
 
-    protected AbstractSyntaxTreeTest()
+    protected ExtractAbstractSyntaxTreeTest()
     {
         var services = TestHost.Services;
         _fileSystem = services.GetService<IFileSystem>()!;

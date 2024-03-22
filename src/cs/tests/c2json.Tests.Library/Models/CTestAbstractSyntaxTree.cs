@@ -4,8 +4,9 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
+using Xunit;
 
-namespace c2json.Tests.Models;
+namespace c2json.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]

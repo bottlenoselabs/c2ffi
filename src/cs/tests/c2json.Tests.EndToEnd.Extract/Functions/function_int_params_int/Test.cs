@@ -1,15 +1,15 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2json.Tests.Models;
+using c2json.Tests.Library.Models;
 
 #pragma warning disable CA1707
 
-namespace c2json.Tests.EndToEnd.Functions.function_int;
+namespace c2json.Tests.EndToEnd.Extract.Functions.function_int_params_int;
 
-public class Test : AbstractSyntaxTreeTest
+public class Test : ExtractAbstractSyntaxTreeTest
 {
-    private const string FunctionName = "function_int";
+    private const string FunctionName = "function_int_params_int";
 
     [Fact]
     public void FunctionExists()
@@ -24,12 +24,15 @@ public class Test : AbstractSyntaxTreeTest
         }
     }
 
-    private void AstFunctionExists(CTestAbstractSyntaxTree ast)
+    private static void AstFunctionExists(CTestAbstractSyntaxTree ast)
     {
         var function = ast.GetFunction(FunctionName);
         Assert.True(function.CallingConvention == "cdecl");
         Assert.True(function.ReturnTypeName == "int");
 
-        Assert.True(function.Parameters.IsDefaultOrEmpty);
+        Assert.True(function.Parameters.Length == 1);
+        var parameter = function.Parameters[0];
+        Assert.True(parameter.Name == "a");
+        Assert.True(parameter.TypeName == "int");
     }
 }

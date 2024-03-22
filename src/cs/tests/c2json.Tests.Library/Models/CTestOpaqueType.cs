@@ -5,18 +5,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace c2json.Tests.Models;
+namespace c2json.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestMacroObject
+public class CTestOpaqueType
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
 
-    [JsonPropertyName("type_name")]
-    public string TypeName { get; set; } = string.Empty;
-
-    [JsonPropertyName("value")]
-    public string Value { get; set; } = string.Empty;
+    [JsonPropertyName("sizeOf")]
+    public int SizeOf { get; init; }
 }
