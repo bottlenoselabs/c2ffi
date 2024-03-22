@@ -5,16 +5,16 @@ on:
 
 jobs:
 
-  test-dotnet-extract-job:
+  test-extract-job:
     name: "Extract FFI ASTs: ${{ matrix.platform.name }}"
     runs-on: ${{ matrix.platform.os }}
     strategy:
       fail-fast: false
       matrix:
         platform:
-        - { name: Windows, os: windows-latest }
-        - { name: Linux, os: ubuntu-latest }
-        - { name: macOS, os: macos-latest }
+        - { name: windows, os: windows-latest }
+        - { name: linux, os: ubuntu-latest }
+        - { name: macos, os: macos-latest }
     defaults:
       run:
         shell: bash
@@ -43,17 +43,17 @@ jobs:
       run: |
         dotnet test '${{ github.workspace }}/src/cs/tests/c2json.Tests.EndToEnd.Extract/c2json.Tests.EndToEnd.Extract.csproj' --nologo --verbosity minimal --configuration Release
 
-    - name: "Upload generated JSON files"
+    - name: "Upload generated FFI AST files"
       uses: actions/upload-artifact@v3
       with:
-        name: "ASTs ${{ matrix.platform.name }}"
+        name: "ffi-asts-${{ matrix.platform.name }}"
         path: |
           ${{ github.workspace }}/src/c/tests/**/ast/*.json
 
-  test-dotnet-merge-job:
-    name: "Test .NET merge"
+  test-merge-job:
+    name: "Merge FFI ASTs"
     runs-on: ubuntu-latest
-    needs: [test-dotnet-extract-job]
+    needs: [test-extract-job]
     defaults:
       run:
         shell: bash
@@ -67,10 +67,24 @@ jobs:
       with:
         dotnet-version: '8.x'
 
-    - name: "Download generated JSON files"
+    - name: "Download generated FFI AST files: windows"
       uses: actions/download-artifact@v3
       with:
-        name: "ASTs"
+        name: "ffi-asts-windows"
+        path: |
+          ${{ github.workspace }}/src/c/tests
+
+    - name: "Download generated FFI AST files: linux"
+      uses: actions/download-artifact@v3
+      with:
+        name: "ffi-asts-linux"
+        path: |
+          ${{ github.workspace }}/src/c/tests
+
+    - name: "Download generated FFI AST files: macos"
+      uses: actions/download-artifact@v3
+      with:
+        name: "ffi-asts-macos"
         path: |
           ${{ github.workspace }}/src/c/tests
 
