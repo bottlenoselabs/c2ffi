@@ -6,4 +6,4 @@
 bin/
 obj/
 /artifacts/
-src/c/tests/**/ast/*.json
+src/c/tests/**/ffi/*.json

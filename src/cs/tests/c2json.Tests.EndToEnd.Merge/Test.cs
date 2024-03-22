@@ -28,7 +28,7 @@ public class Test
     public void Exists()
     {
         var rootDirectoryPath = _fileSystemHelper.GitRepositoryRootDirectoryPath;
-        var x = _fileSystem.Path.Combine(rootDirectoryPath, "src/c/tests/functions/function_int/ast");
+        var x = _fileSystem.Path.Combine(rootDirectoryPath, "src/c/tests/functions/function_int/ffi");
         var y = _fileSystem.DirectoryInfo.New(x);
         Assert.True(y.Exists);
         foreach (var z in y.EnumerateFiles())
