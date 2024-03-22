@@ -5,12 +5,8 @@ using c2json.Tests.Library.Helpers;
 using c2json.Tool;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Xunit;
 
-#pragma warning disable CS0657 // Not a valid attribute location for this declaration
-[assembly: CollectionBehavior(MaxParallelThreads = 1)]
-
-namespace c2json.Tests;
+namespace c2json.Tests.Library;
 
 #pragma warning disable CA1724
 public static class TestHost

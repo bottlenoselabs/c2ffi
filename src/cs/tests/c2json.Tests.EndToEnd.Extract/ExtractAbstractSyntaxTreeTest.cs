@@ -7,6 +7,7 @@ using System.IO.Abstractions;
 using c2json.Data;
 using c2json.Data.Nodes;
 using c2json.Data.Serialization;
+using c2json.Tests.Library;
 using c2json.Tests.Library.Helpers;
 using c2json.Tests.Library.Models;
 using c2json.Tool.Commands.Extract;

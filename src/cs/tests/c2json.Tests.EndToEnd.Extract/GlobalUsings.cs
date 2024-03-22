@@ -2,3 +2,5 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 global using Xunit;
+
+[assembly: CollectionBehavior(MaxParallelThreads = 1)]
