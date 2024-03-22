@@ -183,12 +183,12 @@ Note that the internals of the C library is irrelevant and to which this list do
 
 <sup>1</sup>: Do use standard integer types from `stdint.h` such as `int32_t`, `uint64_t`, etc which are portable. Do not use C's primitive integer types directly such as `unsigned long` as they are not garanteed to be portable due to possibly having different bitwidths for target platforms.
 
-Bad:
+Bad
 ```c
 unsigned long value; // is it 4 bytes or 8 bytes?
 ```
 
-Good:
+Good
 ```c
 #include <stdint.h>
 ...
@@ -197,7 +197,7 @@ uint32_t value; // 4 bytes
 
 <sup>2</sup>: Do not use 64-bit enums due to compiler determinism in C; [in C enums are only well defined for 32-bit in size or less](https://stackoverflow.com/questions/41836658/enum-constants-behaving-differently-in-c-and-c#:~:text=The%20expression%20that%20deﬁnes%20the,value%20representable%20as%20an%20int%20.). 
 
-Bad:
+Bad
 ```c
 enum MY_ENUM
 {  
@@ -241,7 +241,7 @@ Acceptable
 #define BUFFER_SIZE 1024 // Type is int16_t
 ```
 
-<sup>7</sup>: Types must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the FFI. If this is not the case, then the type is not used in the FFI and will not be extracted.
+<sup>6</sup>: Types must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the FFI. If this is not the case, then the type is not used in the FFI and will not be extracted.
 
 ### Platforms
 
