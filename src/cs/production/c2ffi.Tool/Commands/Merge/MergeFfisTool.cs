@@ -86,7 +86,9 @@ public sealed partial class MergeFfisTool
             BuildCrossPlatformNodes(platforms, nodes, name);
         }
 
-        result.Platforms = platforms.Sort();
+        result.Platforms = platforms.Sort(
+            (a, b) =>
+                string.Compare(a.ClangTargetTriple, b.ClangTargetTriple, StringComparison.Ordinal));
         result.Enums = _enums.ToImmutableDictionary(x => x.Name);
         result.Variables = _variables.ToImmutableDictionary(x => x.Name);
         result.OpaqueTypes = _opaqueTypes.ToImmutableDictionary(x => x.Name);
