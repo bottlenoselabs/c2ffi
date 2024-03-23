@@ -92,3 +92,10 @@ jobs:
       run: |
         dotnet test '${{ github.workspace }}/src/cs/tests/c2ffi.Tests.EndToEnd.Merge/c2ffi.Tests.EndToEnd.Merge.csproj' --nologo --verbosity minimal --configuration Release
 
+    - name: "Upload generated FFI files"
+      uses: actions/upload-artifact@v3
+      with:
+        name: "ffi-x"
+        path: |
+          ${{ github.workspace }}/src/c/tests/**/ffi-x/*.json
+
