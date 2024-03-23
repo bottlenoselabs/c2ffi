@@ -19,6 +19,31 @@ public class FileSystemHelper
         _fileSystem = fileSystem;
     }
 
+    public string GetFullFilePath(string relativeFilePath)
+    {
+        var rootDirectoryPath = GitRepositoryRootDirectoryPath;
+        var filePath = _fileSystem.Path.Combine(rootDirectoryPath, relativeFilePath);
+
+        if (!_fileSystem.File.Exists(filePath))
+        {
+            throw new InvalidOperationException($"Could not find file path: {filePath}");
+        }
+
+        return filePath;
+    }
+
+    public string GetFullDirectoryPath(string relativeDirectoryPath)
+    {
+        var rootDirectoryPath = GitRepositoryRootDirectoryPath;
+        var directoryPath = _fileSystem.Path.Combine(rootDirectoryPath, relativeDirectoryPath);
+        if (!_fileSystem.Directory.Exists(directoryPath))
+        {
+            throw new InvalidOperationException($"Could not find directory path: {relativeDirectoryPath}");
+        }
+
+        return directoryPath;
+    }
+
     private string FindGitRepositoryRootDirectoryPath()
     {
         var baseDirectory = AppContext.BaseDirectory;

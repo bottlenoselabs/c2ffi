@@ -10,24 +10,24 @@ using c2ffi.Data.Serialization;
 using c2ffi.Tests.Library;
 using c2ffi.Tests.Library.Helpers;
 using c2ffi.Tests.Library.Models;
-using c2ffi.Tool.Commands.Extract;
+using c2ffi.Tool.Commands.Merge;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace c2ffi.Tests.EndToEnd.Extract;
+namespace c2ffi.Tests.EndToEnd.Merge;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public abstract class ExtractFfiTest
+public abstract class MergeFfisTest
 {
     private readonly IFileSystem _fileSystem;
     private readonly IPath _path;
     private readonly IDirectory _directory;
     private readonly IFile _file;
     private readonly FileSystemHelper _fileSystemHelper;
-    private readonly ExtractFfiTool _tool;
+    private readonly MergeFfisTool _tool;
 
-    protected ExtractFfiTest()
+    protected MergeFfisTest()
     {
         var services = TestHost.Services;
         _fileSystem = services.GetService<IFileSystem>()!;
@@ -35,34 +35,20 @@ public abstract class ExtractFfiTest
         _directory = _fileSystem.Directory;
         _file = _fileSystem.File;
         _fileSystemHelper = services.GetService<FileSystemHelper>()!;
-        _tool = services.GetService<ExtractFfiTool>()!;
+        _tool = services.GetService<MergeFfisTool>()!;
     }
 
-    public ImmutableArray<CTestFfiTargetPlatform> GetFfis(string configurationFilePath)
+    public CTestFfiCrossPlatform GetFfi(string relativeInputDirectoryPath)
     {
-        var fullConfigurationFilePath = _fileSystemHelper.GetFullFilePath(configurationFilePath);
-        var oldFilePaths = GetFfiFilePaths(fullConfigurationFilePath);
-        DeleteFiles(oldFilePaths);
-        RunTool(fullConfigurationFilePath);
-        var filePaths = GetFfiFilePaths(fullConfigurationFilePath);
-        return ReadFfis(filePaths);
+        var fullInputDirectoryPath = _fileSystemHelper.GetFullDirectoryPath(relativeInputDirectoryPath);
+        var fullOutputFilePath = _fileSystem.Path.Combine(fullInputDirectoryPath, "../ffi-x/cross-platform.json");
+        RunTool(fullInputDirectoryPath, fullOutputFilePath);
+        return ReadFfi(fullOutputFilePath);
     }
 
-    private ImmutableArray<CTestFfiTargetPlatform> ReadFfis(IEnumerable<string> filePaths)
+    private void RunTool(string inputDirectoryPath, string outputFilePath)
     {
-        var builder = ImmutableArray.CreateBuilder<CTestFfiTargetPlatform>();
-        foreach (var filePath in filePaths)
-        {
-            var ffi = ReadFfi(filePath);
-            builder.Add(ffi);
-        }
-
-        return builder.ToImmutable();
-    }
-
-    private void RunTool(string configurationFilePath)
-    {
-        _tool.Run(configurationFilePath);
+        _tool.Run(inputDirectoryPath, outputFilePath);
     }
 
     private IEnumerable<string> GetFfiFilePaths(string configurationFilePath)
@@ -77,17 +63,9 @@ public abstract class ExtractFfiTest
         return _directory.EnumerateFiles(ffiDirectoryPath);
     }
 
-    private void DeleteFiles(IEnumerable<string> filePaths)
+    private CTestFfiCrossPlatform ReadFfi(string filePath)
     {
-        foreach (var filePath in filePaths)
-        {
-            _file.Delete(filePath);
-        }
-    }
-
-    private CTestFfiTargetPlatform ReadFfi(string filePath)
-    {
-        var ffi = Json.ReadFfiTargetPlatform(_fileSystem, filePath);
+        var ffi = Json.ReadFfiCrossPlatform(_fileSystem, filePath);
 
         var functions = CreateTestFunctions(ffi);
         var enums = CreateTestEnums(ffi);
@@ -97,9 +75,7 @@ public abstract class ExtractFfiTest
         var functionPointers = CreateTestFunctionPointers(ffi);
         var opaqueDataTypes = CreateTestOpaqueTypes(ffi);
 
-        var result = new CTestFfiTargetPlatform(
-            ffi.PlatformRequested.ToString(),
-            ffi.PlatformActual.ToString(),
+        var result = new CTestFfiCrossPlatform(
             functions,
             enums,
             structs,
@@ -110,7 +86,7 @@ public abstract class ExtractFfiTest
         return result;
     }
 
-    private static ImmutableDictionary<string, CTestFunction> CreateTestFunctions(CFfiTargetPlatform ffi)
+    private static ImmutableDictionary<string, CTestFunction> CreateTestFunctions(CFfiCrossPlatform ffi)
     {
         var builder = ImmutableDictionary.CreateBuilder<string, CTestFunction>();
 
@@ -165,7 +141,7 @@ public abstract class ExtractFfiTest
         return result;
     }
 
-    private static ImmutableDictionary<string, CTestEnum> CreateTestEnums(CFfiTargetPlatform ffi)
+    private static ImmutableDictionary<string, CTestEnum> CreateTestEnums(CFfiCrossPlatform ffi)
     {
         var builder = ImmutableDictionary.CreateBuilder<string, CTestEnum>();
 
@@ -214,7 +190,7 @@ public abstract class ExtractFfiTest
         return result;
     }
 
-    private static ImmutableDictionary<string, CTestRecord> CreateTestRecords(CFfiTargetPlatform ffi)
+    private static ImmutableDictionary<string, CTestRecord> CreateTestRecords(CFfiCrossPlatform ffi)
     {
         var builder = ImmutableDictionary.CreateBuilder<string, CTestRecord>();
 
@@ -270,7 +246,7 @@ public abstract class ExtractFfiTest
         return result;
     }
 
-    private ImmutableDictionary<string, CTestMacroObject> CreateTestMacroObjects(CFfiTargetPlatform ffi)
+    private ImmutableDictionary<string, CTestMacroObject> CreateTestMacroObjects(CFfiCrossPlatform ffi)
     {
         var builder = ImmutableDictionary.CreateBuilder<string, CTestMacroObject>();
 
@@ -295,7 +271,7 @@ public abstract class ExtractFfiTest
         return result;
     }
 
-    private ImmutableDictionary<string, CTestTypeAlias> CreateTestTypeAliases(CFfiTargetPlatform ffi)
+    private ImmutableDictionary<string, CTestTypeAlias> CreateTestTypeAliases(CFfiCrossPlatform ffi)
     {
         var builder = ImmutableDictionary.CreateBuilder<string, CTestTypeAlias>();
 
@@ -320,7 +296,7 @@ public abstract class ExtractFfiTest
         return result;
     }
 
-    private ImmutableDictionary<string, CTestFunctionPointer> CreateTestFunctionPointers(CFfiTargetPlatform ffi)
+    private ImmutableDictionary<string, CTestFunctionPointer> CreateTestFunctionPointers(CFfiCrossPlatform ffi)
     {
         var builder = ImmutableDictionary.CreateBuilder<string, CTestFunctionPointer>();
 
@@ -374,7 +350,7 @@ public abstract class ExtractFfiTest
     }
 
     private static ImmutableDictionary<string, CTestOpaqueType> CreateTestOpaqueTypes(
-        CFfiTargetPlatform ffi)
+        CFfiCrossPlatform ffi)
     {
         var builder = ImmutableDictionary.CreateBuilder<string, CTestOpaqueType>();
 

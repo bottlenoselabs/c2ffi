@@ -45,6 +45,16 @@ public class CMacroObject : CNodeWithLocation
         return TypeInfo.Equals(other2.TypeInfo) && Value == other2.Value;
     }
 
+    public bool EqualsWithoutValue(CMacroObject other)
+    {
+        if (!base.Equals(other))
+        {
+            return false;
+        }
+
+        return TypeInfo.Equals(other.TypeInfo);
+    }
+
     /// <inheritdoc />
     public override int GetHashCode()
     {

@@ -35,7 +35,7 @@ jobs:
         sudo apt-get install gcc-i686-linux-gnu gcc-x86-64-linux-gnu gcc-aarch64-linux-gnu llvm-14 clang-14
 
     - name: "Setup .NET"
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.x'
 
@@ -44,7 +44,7 @@ jobs:
         dotnet test '${{ github.workspace }}/src/cs/tests/c2ffi.Tests.EndToEnd.Extract/c2ffi.Tests.EndToEnd.Extract.csproj' --nologo --verbosity minimal --configuration Release
 
     - name: "Upload generated FFI files"
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: "ffi-${{ matrix.platform.name }}"
         path: |
@@ -63,26 +63,26 @@ jobs:
       uses: actions/checkout@v4
 
     - name: "Setup .NET"
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.x'
 
     - name: "Download generated FFI files: windows"
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: "ffi-windows"
         path: |
           ${{ github.workspace }}/src/c/tests
 
     - name: "Download generated FFI files: linux"
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: "ffi-linux"
         path: |
           ${{ github.workspace }}/src/c/tests
 
     - name: "Download generated FFI files: macos"
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: "ffi-macos"
         path: |
@@ -91,4 +91,11 @@ jobs:
     - name: "Test .NET merge"
       run: |
         dotnet test '${{ github.workspace }}/src/cs/tests/c2ffi.Tests.EndToEnd.Merge/c2ffi.Tests.EndToEnd.Merge.csproj' --nologo --verbosity minimal --configuration Release
+
+    - name: "Upload generated FFI files"
+      uses: actions/upload-artifact@v4
+      with:
+        name: "ffi-x"
+        path: |
+          ${{ github.workspace }}/src/c/tests/**/ffi-x/*.json
 
