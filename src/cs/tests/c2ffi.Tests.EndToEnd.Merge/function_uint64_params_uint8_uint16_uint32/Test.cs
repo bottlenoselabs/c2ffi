@@ -2,30 +2,22 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Tests.Library.Models;
+using Xunit;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.Functions.function_uint64_params_uint8_uint16_uint32;
+namespace c2ffi.Tests.EndToEnd.Merge.function_uint64_params_uint8_uint16_uint32;
 
-public class Test : ExtractFfiTest
+public class Test : MergeFfisTest
 {
     private const string FunctionName = "function_uint64_params_uint8_uint16_uint32";
 
     [Fact]
     public void FunctionExists()
     {
-        var ffis = GetFfis(
-            $"src/c/tests/functions/{FunctionName}/config.json");
-        Assert.True(ffis.Length > 0);
+        var ffi = GetFfi(
+            $"src/c/tests/functions/{FunctionName}/ffi");
 
-        foreach (var ffi in ffis)
-        {
-            FfiFunctionExists(ffi);
-        }
-    }
-
-    private static void FfiFunctionExists(CTestFfiTargetPlatform ffi)
-    {
         var function = ffi.GetFunction(FunctionName);
         Assert.True(function.CallingConvention == "cdecl");
         Assert.True(function.ReturnTypeName == "uint64_t");

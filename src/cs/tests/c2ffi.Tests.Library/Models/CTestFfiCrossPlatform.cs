@@ -10,7 +10,7 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed class CTestFfi
+public sealed class CTestFfiCrossPlatform
 {
     private readonly ImmutableDictionary<string, CTestEnum> _enums;
     private readonly ImmutableDictionary<string, CTestFunction> _functions;
@@ -22,13 +22,7 @@ public sealed class CTestFfi
 
     private readonly ImmutableHashSet<string>.Builder _namesTested;
 
-    public string TargetPlatformRequested { get; }
-
-    public string TargetPlatformActual { get; }
-
-    public CTestFfi(
-        string targetPlatformRequested,
-        string targetPlatformActual,
+    public CTestFfiCrossPlatform(
         ImmutableDictionary<string, CTestFunction> functions,
         ImmutableDictionary<string, CTestEnum> enums,
         ImmutableDictionary<string, CTestRecord> records,
@@ -37,9 +31,6 @@ public sealed class CTestFfi
         ImmutableDictionary<string, CTestFunctionPointer> functionPointers,
         ImmutableDictionary<string, CTestOpaqueType> opaqueTypes)
     {
-        TargetPlatformRequested = targetPlatformRequested;
-        TargetPlatformActual = targetPlatformActual;
-
         _functions = functions;
         _enums = enums;
         _records = records;
@@ -103,7 +94,7 @@ public sealed class CTestFfi
     public CTestEnum GetEnum(string name)
     {
         var exists = _enums.TryGetValue(name, out var value);
-        Assert.True(exists, $"The enum '{name}' does not exist: {TargetPlatformRequested}");
+        Assert.True(exists, $"The enum '{name}' does not exist.");
         _namesTested.Add(name);
         return value!;
     }
@@ -123,7 +114,7 @@ public sealed class CTestFfi
     public CTestRecord GetRecord(string name)
     {
         var exists = _records.TryGetValue(name, out var value);
-        Assert.True(exists, $"The record '{name}' does not exist: {TargetPlatformRequested}");
+        Assert.True(exists, $"The record '{name}' does not exist.");
         _namesTested.Add(name);
         AssertRecord(value!);
         return value!;
@@ -145,7 +136,7 @@ public sealed class CTestFfi
     public CTestMacroObject GetMacroObject(string name)
     {
         var exists = _macroObjects.TryGetValue(name, out var value);
-        Assert.True(exists, $"The macro object '{name}' does not exist: {TargetPlatformRequested}");
+        Assert.True(exists, $"The macro object '{name}' does not exist.");
         _namesTested.Add(name);
         return value!;
     }
@@ -165,7 +156,7 @@ public sealed class CTestFfi
     public CTestTypeAlias GetTypeAlias(string name)
     {
         var exists = _typeAliases.TryGetValue(name, out var value);
-        Assert.True(exists, $"The type alias '{name}' does not exist: {TargetPlatformRequested}");
+        Assert.True(exists, $"The type alias '{name}' does not exist.");
         _namesTested.Add(name);
         return value!;
     }
@@ -185,7 +176,7 @@ public sealed class CTestFfi
     public CTestFunctionPointer GetFunctionPointer(string name)
     {
         var exists = _functionPointers.TryGetValue(name, out var value);
-        Assert.True(exists, $"The function pointer '{name}' does not exist: {TargetPlatformRequested}");
+        Assert.True(exists, $"The function pointer '{name}' does not exist.");
         _namesTested.Add(name);
         return value!;
     }
@@ -199,7 +190,7 @@ public sealed class CTestFfi
     public CTestOpaqueType GetOpaqueType(string name)
     {
         var exists = _opaqueTypes.TryGetValue(name, out var value);
-        Assert.True(exists, $"The opaque type '{name}' does not exist: {TargetPlatformRequested}");
+        Assert.True(exists, $"The opaque type '{name}' does not exist.");
         _namesTested.Add(name);
         return value!;
     }

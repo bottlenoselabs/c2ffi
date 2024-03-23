@@ -2,23 +2,26 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.CommandLine;
-using JetBrains.Annotations;
+using c2ffi.Tool.Commands.Merge.Input.Unsanitized;
 
 namespace c2ffi.Tool.Commands.Merge;
 
-[UsedImplicitly]
-public class MergeFfisCommand : Command
+public sealed class MergeFfisCommand : Command
 {
-    public MergeFfisCommand()
+    private readonly MergeFfisTool _tool;
+
+    public MergeFfisCommand(MergeFfisTool tool)
         : base(
             "merge",
             "Merge multiple target platform FFI (foreign function interface) `.json` files into a cross-platform FFI `.json` file.")
     {
+        _tool = tool;
+
         var directoryOption = new Option<string>(
             "--inputDirectoryPath", "The input directory where the multiple target platform FFI (foreign function interface) `.json` files are located.")
-        {
-            IsRequired = true
-        };
+            {
+                IsRequired = true
+            };
         AddOption(directoryOption);
 
         var fileOption = new Option<string>(
@@ -30,6 +33,6 @@ public class MergeFfisCommand : Command
 
     private void Main(string inputDirectoryPath, string outputFilePath)
     {
-        Console.WriteLine("Merge!");
+        _tool.Run(inputDirectoryPath, outputFilePath);
     }
 }
