@@ -59,7 +59,7 @@ public sealed partial class MergeFfisTool
         var platforms = platformFfis.
             Select(x => x.PlatformRequested).ToImmutableArray();
         var platformNodesByName = GetPlatformNodesByName(platformFfis);
-        var ffi = CreateCrossPlatformAbstractSyntaxTree(platforms, platformNodesByName);
+        var ffi = CreateCrossPlatformFfi(platforms, platformNodesByName);
 
         Json.WriteFfiCrossPlatform(_fileSystem, options.OutputFilePath, ffi);
         LogWriteAbstractSyntaxTreeSuccess(string.Join(", ", platforms), options.OutputFilePath);
@@ -75,7 +75,7 @@ public sealed partial class MergeFfisTool
         return _mergeInputSanitizer.Sanitize(unsanitizedOptions);
     }
 
-    private CFfiCrossPlatform CreateCrossPlatformAbstractSyntaxTree(
+    private CFfiCrossPlatform CreateCrossPlatformFfi(
         ImmutableArray<TargetPlatform> platforms,
         ImmutableSortedDictionary<string, ImmutableArray<CNodeWithTargetPlatform>> platformNodesByName)
     {
@@ -86,7 +86,7 @@ public sealed partial class MergeFfisTool
             BuildCrossPlatformNodes(platforms, nodes, name);
         }
 
-        result.Platforms = platforms;
+        result.Platforms = platforms.Sort();
         result.Enums = _enums.ToImmutableDictionary(x => x.Name);
         result.Variables = _variables.ToImmutableDictionary(x => x.Name);
         result.OpaqueTypes = _opaqueTypes.ToImmutableDictionary(x => x.Name);
