@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 using Xunit;
 
@@ -19,6 +20,7 @@ public sealed class CTestFfiTargetPlatform
     private readonly ImmutableDictionary<string, CTestTypeAlias> _typeAliases;
     private readonly ImmutableDictionary<string, CTestFunctionPointer> _functionPointers;
     private readonly ImmutableDictionary<string, CTestOpaqueType> _opaqueTypes;
+    private readonly ImmutableDictionary<string, CTestVariable> _variables;
 
     private readonly ImmutableHashSet<string>.Builder _namesTested;
 
@@ -35,7 +37,8 @@ public sealed class CTestFfiTargetPlatform
         ImmutableDictionary<string, CTestMacroObject> macroObjects,
         ImmutableDictionary<string, CTestTypeAlias> typeAliases,
         ImmutableDictionary<string, CTestFunctionPointer> functionPointers,
-        ImmutableDictionary<string, CTestOpaqueType> opaqueTypes)
+        ImmutableDictionary<string, CTestOpaqueType> opaqueTypes,
+        ImmutableDictionary<string, CTestVariable> variables)
     {
         TargetPlatformRequested = targetPlatformRequested;
         TargetPlatformActual = targetPlatformActual;
@@ -47,6 +50,7 @@ public sealed class CTestFfiTargetPlatform
         _typeAliases = typeAliases;
         _functionPointers = functionPointers;
         _opaqueTypes = opaqueTypes;
+        _variables = variables;
         _namesTested = ImmutableHashSet.CreateBuilder<string>();
     }
 
@@ -205,6 +209,20 @@ public sealed class CTestFfiTargetPlatform
     public CTestOpaqueType? TryGetOpaqueType(string name)
     {
         var exists = _opaqueTypes.TryGetValue(name, out var value);
+        return exists ? value : null;
+    }
+
+    public CTestVariable GetVariable(string name)
+    {
+        var exists = _variables.TryGetValue(name, out var value);
+        Assert.True(exists, $"The variable '{name}' does not exist: {TargetPlatformRequested}");
+        _namesTested.Add(name);
+        return value!;
+    }
+
+    public CTestVariable? TryGetVariable(string name)
+    {
+        var exists = _variables.TryGetValue(name, out var value);
         return exists ? value : null;
     }
 

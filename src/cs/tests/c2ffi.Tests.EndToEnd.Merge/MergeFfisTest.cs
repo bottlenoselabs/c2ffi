@@ -74,6 +74,7 @@ public abstract class MergeFfisTest
         var typeAliases = CreateTestTypeAliases(ffi);
         var functionPointers = CreateTestFunctionPointers(ffi);
         var opaqueDataTypes = CreateTestOpaqueTypes(ffi);
+        var variables = CreateTestVariables(ffi);
 
         var result = new CTestFfiCrossPlatform(
             functions,
@@ -82,7 +83,8 @@ public abstract class MergeFfisTest
             macroObjects,
             typeAliases,
             functionPointers,
-            opaqueDataTypes);
+            opaqueDataTypes,
+            variables);
         return result;
     }
 
@@ -369,6 +371,31 @@ public abstract class MergeFfisTest
         {
             Name = value.Name,
             SizeOf = value.SizeOf
+        };
+
+        return result;
+    }
+
+    private static ImmutableDictionary<string, CTestVariable> CreateTestVariables(
+        CFfiCrossPlatform ffi)
+    {
+        var builder = ImmutableDictionary.CreateBuilder<string, CTestVariable>();
+
+        foreach (var value in ffi.Variables.Values)
+        {
+            var result = CreateTestVariable(value);
+            builder.Add(result.Name, result);
+        }
+
+        return builder.ToImmutable();
+    }
+
+    private static CTestVariable CreateTestVariable(CVariable value)
+    {
+        var result = new CTestVariable
+        {
+            Name = value.Name,
+            TypeName = value.Type
         };
 
         return result;

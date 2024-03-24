@@ -96,6 +96,7 @@ public abstract class ExtractFfiTest
         var typeAliases = CreateTestTypeAliases(ffi);
         var functionPointers = CreateTestFunctionPointers(ffi);
         var opaqueDataTypes = CreateTestOpaqueTypes(ffi);
+        var variables = CreateTestVariables(ffi);
 
         var result = new CTestFfiTargetPlatform(
             ffi.PlatformRequested.ToString(),
@@ -106,7 +107,8 @@ public abstract class ExtractFfiTest
             macroObjects,
             typeAliases,
             functionPointers,
-            opaqueDataTypes);
+            opaqueDataTypes,
+            variables);
         return result;
     }
 
@@ -393,6 +395,31 @@ public abstract class ExtractFfiTest
         {
             Name = value.Name,
             SizeOf = value.SizeOf
+        };
+
+        return result;
+    }
+
+    private static ImmutableDictionary<string, CTestVariable> CreateTestVariables(
+        CFfiTargetPlatform ffi)
+    {
+        var builder = ImmutableDictionary.CreateBuilder<string, CTestVariable>();
+
+        foreach (var value in ffi.Variables.Values)
+        {
+            var result = CreateTestVariable(value);
+            builder.Add(result.Name, result);
+        }
+
+        return builder.ToImmutable();
+    }
+
+    private static CTestVariable CreateTestVariable(CVariable value)
+    {
+        var result = new CTestVariable
+        {
+            Name = value.Name,
+            TypeName = value.Type
         };
 
         return result;
