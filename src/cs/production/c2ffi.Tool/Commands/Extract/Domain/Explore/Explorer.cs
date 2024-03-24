@@ -86,7 +86,10 @@ public sealed partial class Explorer
 
     private void ExploreFrontierVariables(ExploreContext context)
     {
-        // TODO
+        var totalCount = _frontierVariableCandidates.Count;
+        var variableNameCandidates = string.Join(", ", _frontierVariableCandidates.Select(x => x.Name));
+        LogExploringVariableCandidates(totalCount, variableNameCandidates);
+        ExploreFrontier(context, _frontierVariableCandidates);
     }
 
     private void ExploreFrontierMacroObjects(ExploreContext context)
@@ -137,7 +140,8 @@ public sealed partial class Explorer
 
     private void VisitVariable(ExploreContext context, clang.CXCursor clangCursor)
     {
-        // TODO
+        var info = context.CreateCandidateInfoNode(CNodeKind.Variable, clangCursor);
+        TryEnqueueCandidateInfoNode(context, info);
     }
 
     private void VisitMacroObjects(ExploreContext context, ParseContext parseContext)
