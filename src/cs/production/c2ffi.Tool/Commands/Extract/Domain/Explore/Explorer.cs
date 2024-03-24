@@ -178,15 +178,14 @@ public sealed partial class Explorer
 
         if (context.IsIncludeIgnored(filePath))
         {
+            LogIgnoreInclude(filePath);
             return;
         }
 
-        if (_visitedIncludeFilePaths.Contains(filePath))
+        if (!_visitedIncludeFilePaths.Add(filePath))
         {
             return;
         }
-
-        _visitedIncludeFilePaths.Add(filePath);
 
         var parseContext2 = _clangTranslationUnitParser.ParseTranslationUnit(
             filePath,
@@ -261,7 +260,7 @@ public sealed partial class Explorer
     [LoggerMessage(2, LogLevel.Debug, "- Visiting translation unit: {FilePath}")]
     private partial void LogVisitingTranslationUnit(string filePath);
 
-    [LoggerMessage(3, LogLevel.Information, "- Visited translation unit: {FilePath}")]
+    [LoggerMessage(3, LogLevel.Information, "- Finished visiting translation unit: {FilePath}")]
     private partial void LogVisitedTranslationUnit(string filePath);
 
     [LoggerMessage(4, LogLevel.Information, "- Exploring {Count} macro object candidates: {Names}")]
@@ -293,4 +292,7 @@ public sealed partial class Explorer
 
     [LoggerMessage(13, LogLevel.Information, "- Explored {NodeKind} '{Name}' ({Location})")]
     private partial void LogExploredNode(CNodeKind nodeKind, string name, CLocation? location);
+
+    [LoggerMessage(14, LogLevel.Information, "- Ignored include file header: {FilePath}")]
+    private partial void LogIgnoreInclude(string filePath);
 }

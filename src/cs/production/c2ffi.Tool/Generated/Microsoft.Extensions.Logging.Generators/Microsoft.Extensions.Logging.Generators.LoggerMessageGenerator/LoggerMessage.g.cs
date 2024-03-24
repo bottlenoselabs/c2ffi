@@ -43,7 +43,7 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.Exception?> __LogVisitedTranslationUnitCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogVisitedTranslationUnit)), "- Visited translation unit: {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogVisitedTranslationUnit)), "- Finished visiting translation unit: {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogVisitedTranslationUnit(global::System.String filePath)
@@ -171,6 +171,18 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
             {
                 __LogExploredNodeCallback(_logger, nodeKind, name, location, null);
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
+        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.Exception?> __LogIgnoreIncludeCallback =
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(14, nameof(LogIgnoreInclude)), "- Ignored include file header: {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
+        private partial void LogIgnoreInclude(global::System.String filePath)
+        {
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            {
+                __LogIgnoreIncludeCallback(_logger, filePath, null);
             }
         }
     }
