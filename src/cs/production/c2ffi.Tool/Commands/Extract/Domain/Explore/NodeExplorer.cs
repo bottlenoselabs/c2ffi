@@ -95,15 +95,7 @@ public abstract partial class NodeExplorer
 
     private void MarkAsVisited(ExploreCandidateInfoNode info)
     {
-        try
-        {
-            _visitedNodeNames.Add(info.Name, info.Location);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        _visitedNodeNames.Add(info.Name, info.Location);
     }
 
     private bool IsExpectedCursor(ExploreCandidateInfoNode info)
@@ -123,15 +115,15 @@ public abstract partial class NodeExplorer
     [LoggerMessage(1, LogLevel.Error, "- Unexpected type kind '{TypeKind}'")]
     private partial void LogFailureUnexpectedType(CXTypeKind typeKind);
 
-    [LoggerMessage(2, LogLevel.Debug, "- Exploring {NodeKind} '{Name}' ({Location})'")]
-    private partial void LogExploring(CNodeKind nodeKind, string name, CLocation? location);
-
-    [LoggerMessage(3, LogLevel.Error, "- Already visited {NodeKind} '{Name}' ({Location})")]
+    [LoggerMessage(2, LogLevel.Information, "- Already visited {NodeKind} '{Name}' ({Location})")]
     private partial void LogAlreadyVisited(CNodeKind nodeKind,
         string name,
         CLocation? location);
 
-    [LoggerMessage(4, LogLevel.Debug, "- Exploring {NodeKind} '{Name}' ({Location})'")]
+    [LoggerMessage(3, LogLevel.Debug, "- Exploring {NodeKind} '{Name}' ({Location})'")]
+    private partial void LogExploring(CNodeKind nodeKind, string name, CLocation? location);
+
+    [LoggerMessage(4, LogLevel.Debug, "- Explored {NodeKind} '{Name}' ({Location})'")]
     private partial void LogExplored(CNodeKind nodeKind, string name, CLocation? location);
 
     [LoggerMessage(5, LogLevel.Debug, "- Skipped exploring {NodeKind} '{Name}' ({Location})'")]
