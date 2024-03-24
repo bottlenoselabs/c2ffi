@@ -38,12 +38,12 @@ public sealed class PrimitiveExplorer(ILogger<PrimitiveExplorer> logger)
         CXTypeKind.CXType_Double,
         CXTypeKind.CXType_LongDouble);
 
-    protected override CNode GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         return Primitive(context, info);
     }
 
-    private static CPrimitive Primitive(ExploreContext context, ExploreInfoNode info)
+    private static CPrimitive Primitive(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var typeInfo = context.VisitType(info.Type, info)!;
         var comment = context.Comment(info.Cursor);

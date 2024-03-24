@@ -27,13 +27,13 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Either(
         CXTypeKind.CXType_FunctionProto, CXTypeKind.CXType_FunctionNoProto);
 
-    protected override CNode? GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode? GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var function = Function(context, info);
         return function;
     }
 
-    private CFunction? Function(ExploreContext context, ExploreInfoNode info)
+    private CFunction? Function(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var returnTypeInfo = FunctionReturnType(context, info);
         var parameters = FunctionParameters(context, info);
@@ -75,7 +75,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     }
 
     private static CTypeInfo FunctionReturnType(
-        ExploreContext context, ExploreInfoNode info)
+        ExploreContext context, ExploreCandidateInfoNode info)
     {
         var resultType = clang_getCursorResultType(info.Cursor);
         return context.VisitType(resultType, info)!;
@@ -83,7 +83,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
 
     private ImmutableArray<CFunctionParameter>? FunctionParameters(
         ExploreContext context,
-        ExploreInfoNode info)
+        ExploreCandidateInfoNode info)
     {
         var builder = ImmutableArray.CreateBuilder<CFunctionParameter>();
 
@@ -107,7 +107,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     private static CFunctionParameter? FunctionParameter(
         ExploreContext context,
         CXCursor parameterCursor,
-        ExploreInfoNode parentInfo)
+        ExploreCandidateInfoNode parentInfo)
     {
         var name = parameterCursor.Spelling();
         var parameterType = clang_getCursorType(parameterCursor);

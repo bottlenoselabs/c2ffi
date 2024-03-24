@@ -51,6 +51,46 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
             return clang_getTypeSpelling(clangType).String();
         }
 
+        public static bool IsPrimitive(this CXType clangType)
+        {
+            return clangType.kind switch
+            {
+                CXTypeKind.CXType_Void => true,
+                CXTypeKind.CXType_Bool => true,
+                CXTypeKind.CXType_Char_S => true,
+                CXTypeKind.CXType_SChar => true,
+                CXTypeKind.CXType_Char_U => true,
+                CXTypeKind.CXType_UChar => true,
+                CXTypeKind.CXType_UShort => true,
+                CXTypeKind.CXType_UInt => true,
+                CXTypeKind.CXType_ULong => true,
+                CXTypeKind.CXType_ULongLong => true,
+                CXTypeKind.CXType_Short => true,
+                CXTypeKind.CXType_Int => true,
+                CXTypeKind.CXType_Long => true,
+                CXTypeKind.CXType_LongLong => true,
+                CXTypeKind.CXType_Float => true,
+                CXTypeKind.CXType_Double => true,
+                CXTypeKind.CXType_LongDouble => true,
+                _ => false
+            };
+        }
+
+        public static bool IsSignedPrimitive(this CXType clangType)
+        {
+            return clangType.kind switch
+            {
+                CXTypeKind.CXType_Char_S => true,
+                CXTypeKind.CXType_SChar => true,
+                CXTypeKind.CXType_Char_U => true,
+                CXTypeKind.CXType_Short => true,
+                CXTypeKind.CXType_Int => true,
+                CXTypeKind.CXType_Long => true,
+                CXTypeKind.CXType_LongLong => true,
+                _ => false
+            };
+        }
+
         public static CLocation Location(this CXCursor clangCursor)
         {
             var locationSource = clang_getCursorLocation(clangCursor);
@@ -110,6 +150,54 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
 
             var result = stringBuilder.ToString();
             stringBuilder.Clear();
+            return result;
+        }
+
+        public static unsafe bool TryParseTranslationUnit(
+            string filePath,
+            ImmutableArray<string> commandLineArgs,
+            out CXTranslationUnit translationUnit,
+            bool skipFunctionBodies = true,
+            bool keepGoing = false)
+        {
+            // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
+            uint options = 0x0 |
+                           0x1 | // CXTranslationUnit_DetailedPreprocessingRecord
+                           0x80 | // IncludeBriefCommentsInCodeCompletion
+                           0x1000 | // CXTranslationUnit_IncludeAttributedTypes
+                           0x2000 | // CXTranslationUnit_VisitImplicitAttributes
+                           0x4000 | // CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles
+                           0x0;
+
+            if (skipFunctionBodies)
+            {
+                options |= 0x40; // CXTranslationUnit_SkipFunctionBodies
+            }
+
+            if (keepGoing)
+            {
+                options |= 0x200; // CXTranslationUnit_KeepGoing
+            }
+
+            var index = clang_createIndex(0, 0);
+            var cSourceFilePath = CString.FromString(filePath);
+            var cCommandLineArgs = CStrings.CStringArray(commandLineArgs.AsSpan());
+
+            CXErrorCode errorCode;
+            fixed (CXTranslationUnit* translationUnitPointer = &translationUnit)
+            {
+                errorCode = clang_parseTranslationUnit2(
+                    index,
+                    cSourceFilePath,
+                    cCommandLineArgs,
+                    commandLineArgs.Length,
+                    (CXUnsavedFile*)IntPtr.Zero,
+                    0,
+                    options,
+                    translationUnitPointer);
+            }
+
+            var result = errorCode == CXErrorCode.CXError_Success;
             return result;
         }
 

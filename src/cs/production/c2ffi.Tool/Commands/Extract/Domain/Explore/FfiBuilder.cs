@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using System.IO.Abstractions;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
 using c2ffi.Tool.Commands.Extract.Domain.Parse;
@@ -10,10 +11,6 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
 
 public sealed class FfiBuilder
 {
-    private readonly List<CArray> _arrays = new();
-    private readonly List<CPointer> _pointers = new();
-    private readonly List<CPrimitive> _primitives = new();
-
     private readonly List<CVariable> _variables = new();
     private readonly List<CFunction> _functions = new();
     private readonly List<CRecord> _records = new();
@@ -22,10 +19,14 @@ public sealed class FfiBuilder
     private readonly List<COpaqueType> _opaqueTypes = new();
     private readonly List<CFunctionPointer> _functionPointers = new();
     private readonly List<CEnumConstant> _enumConstants = new();
+    private readonly List<CMacroObject> _macroObjects = new();
+
+    private readonly List<CArray> _arrays = new();
+    private readonly List<CPointer> _pointers = new();
+    private readonly List<CPrimitive> _primitives = new();
 
     public CFfiTargetPlatform GetFfi(ParseContext context)
     {
-        // var macroObjects = CollectMacroObjects(context);
         var variables = CollectVariables();
         var functions = CollectFunctions();
         var records = CollectRecords();
@@ -34,13 +35,13 @@ public sealed class FfiBuilder
         var opaqueTypes = CollectOpaqueTypes();
         var functionPointers = CollectFunctionPointers();
         var enumConstants = CollectEnumConstants();
+        var macroObjects = CollectMacroObjects(context);
 
         var result = new CFfiTargetPlatform
         {
             FileName = context.FilePath,
             PlatformRequested = context.TargetPlatformRequested,
             PlatformActual = context.TargetPlatformActual,
-            // MacroObjects = macroObjects.ToImmutableDictionary(x => x.Name),
             Variables = variables,
             Functions = functions,
             Records = records,
@@ -48,7 +49,8 @@ public sealed class FfiBuilder
             TypeAliases = typeAliases,
             OpaqueTypes = opaqueTypes,
             FunctionPointers = functionPointers,
-            EnumConstants = enumConstants
+            EnumConstants = enumConstants,
+            MacroObjects = macroObjects,
         };
 
         return result;
@@ -80,6 +82,9 @@ public sealed class FfiBuilder
                 break;
             case CNodeKind.FunctionPointer:
                 AddFunctionPointer((CFunctionPointer)node);
+                break;
+            case CNodeKind.MacroObject:
+                AddMacroObject((CMacroObject)node);
                 break;
             case CNodeKind.Pointer:
                 AddPointer((CPointer)node);
@@ -133,6 +138,11 @@ public sealed class FfiBuilder
     private void AddFunctionPointer(CFunctionPointer node)
     {
         _functionPointers.Add(node);
+    }
+
+    private void AddMacroObject(CMacroObject node)
+    {
+        _macroObjects.Add(node);
     }
 
     private void AddEnumConstant(CEnumConstant node)
@@ -209,5 +219,12 @@ public sealed class FfiBuilder
         _enumConstants.Sort();
         var enumConstants = _enumConstants.ToImmutableDictionary(x => x.Name);
         return enumConstants;
+    }
+
+    private ImmutableDictionary<string, CMacroObject> CollectMacroObjects(ParseContext originalContext)
+    {
+        _macroObjects.Sort();
+        var macroObjects = _macroObjects.ToImmutableDictionary(x => x.Name);
+        return macroObjects;
     }
 }

@@ -128,8 +128,8 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             targetPlatformInput.UserIncludeDirectories,
             inputFilePath);
 
-        var ignoredIncludeDirectories = SanitizeDirectoryPaths(
-            input.IgnoredIncludeDirectories, targetPlatformInput.IgnoredIncludeDirectories);
+        var ignoredIncludeFiles = SanitizeDirectoryPaths(
+            input.IgnoredIncludeFiles, targetPlatformInput.IgnoredIncludeDirectories);
 
         var clangDefines = SanitizeStrings(targetPlatformInput.Defines);
         var clangArguments = SanitizeStrings(targetPlatformInput.ClangArguments);
@@ -142,7 +142,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             OutputFilePath = outputFilePath,
             UserIncludeDirectories = userIncludeDirectories,
             SystemIncludeDirectories = systemIncludeDirectories,
-            IgnoredIncludeDirectories = ignoredIncludeDirectories,
+            IgnoredIncludeFiles = ignoredIncludeFiles,
             MacroObjectDefines = clangDefines,
             AdditionalArguments = clangArguments,
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,

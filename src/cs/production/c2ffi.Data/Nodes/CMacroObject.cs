@@ -31,7 +31,7 @@ public class CMacroObject : CNodeWithLocation
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {
-        return $"Macro '{Name}' : {Value} @ {Location}";
+        return $"{nameof(CMacroObject)} '{Name}' : {Value} @ {Location}";
     }
 
     /// <inheritdoc />

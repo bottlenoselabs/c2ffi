@@ -42,10 +42,10 @@ public sealed class UnsanitizedExtractInput
     public ImmutableArray<string>? SystemIncludeDirectories { get; set; }
 
     /// <summary>
-    ///     Gets or sets the directories to ignore header files for either user or system.
+    ///     Gets or sets the directories to ignore header files.
     /// </summary>
-    [JsonPropertyName("ignoredIncludeDirectories")]
-    public ImmutableArray<string>? IgnoredIncludeDirectories { get; set; }
+    [JsonPropertyName("ignoreIncludeFiles")]
+    public ImmutableArray<string>? IgnoredIncludeFiles { get; set; }
 
     /// <summary>
     ///     Gets or sets a value that determines whether to show the the path of header code locations with full paths

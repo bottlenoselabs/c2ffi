@@ -17,12 +17,12 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
     protected override ExploreKindCursors ExpectedCursors { get; } =
         ExploreKindCursors.Is(CXCursorKind.CXCursor_UnionDecl);
 
-    protected override CNode GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         return Union(context, info);
     }
 
-    private CRecord Union(ExploreContext context, ExploreInfoNode info)
+    private CRecord Union(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var fields = UnionFields(context, info.Type, info);
         var comment = context.Comment(info.Cursor);
@@ -48,7 +48,7 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
     private ImmutableArray<CRecordField> UnionFields(
         ExploreContext context,
         CXType type,
-        ExploreInfoNode parentInfo)
+        ExploreCandidateInfoNode parentInfo)
     {
         var builder = ImmutableArray.CreateBuilder<CRecordField>();
         var fieldCursors = FieldCursors(type);
@@ -67,7 +67,7 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
     private CRecordField UnionField(
         ExploreContext context,
         CXCursor cursor,
-        ExploreInfoNode parentInfo,
+        ExploreCandidateInfoNode parentInfo,
         int fieldIndex)
     {
         var name = cursor.Spelling();

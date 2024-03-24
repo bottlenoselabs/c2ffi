@@ -31,12 +31,12 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Either(
         CXTypeKind.CXType_FunctionProto, CXTypeKind.CXType_FunctionNoProto);
 
-    protected override CNode GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         return FunctionPointer(context, info);
     }
 
-    private static CFunctionPointer FunctionPointer(ExploreContext context, ExploreInfoNode info)
+    private static CFunctionPointer FunctionPointer(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var typeInfo = context.VisitType(info.Type, info, nodeKind: CNodeKind.FunctionPointer)!;
         var returnTypeInfo = FunctionPointerReturnType(context, info);
@@ -58,7 +58,7 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
         return result;
     }
 
-    private static CTypeInfo FunctionPointerReturnType(ExploreContext context, ExploreInfoNode info)
+    private static CTypeInfo FunctionPointerReturnType(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var returnType = clang_getResultType(info.Type);
         var returnTypeInfo = context.VisitType(returnType, info)!;
@@ -67,7 +67,7 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
 
     private static ImmutableArray<CFunctionPointerParameter> FunctionPointerParameters(
         ExploreContext context,
-        ExploreInfoNode info)
+        ExploreCandidateInfoNode info)
     {
         var builder = ImmutableArray.CreateBuilder<CFunctionPointerParameter>();
 
@@ -86,7 +86,7 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
     private static CFunctionPointerParameter FunctionPointerParameter(
         ExploreContext context,
         CXType parameterType,
-        ExploreInfoNode parentInfo)
+        ExploreCandidateInfoNode parentInfo)
     {
         var parameterTypeInfo = context.VisitType(parameterType, parentInfo)!;
 
