@@ -4,6 +4,7 @@
 using c2ffi.Tests.Library.Models;
 using Xunit;
 
+#pragma warning disable CA1308
 #pragma warning disable CA1707
 
 namespace c2ffi.Tests.EndToEnd.Merge.MacroObjects.macro_object_int;
@@ -16,7 +17,7 @@ public class Test : MergeFfisTest
     public void MacroObjectExists()
     {
         var ffi = GetFfi(
-            $"src/c/tests/macro_objects/{MacroObjectName}/ffi");
+            $"src/c/tests/macro_objects/{MacroObjectName.ToLowerInvariant()}/ffi");
         FfiMacroObjectExists(ffi);
     }
 

@@ -3,6 +3,7 @@
 
 using c2ffi.Tests.Library.Models;
 
+#pragma warning disable CA1308
 #pragma warning disable CA1707
 
 namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_int;
@@ -15,7 +16,7 @@ public class Test : ExtractFfiTest
     public void MacroObjectExists()
     {
         var ffis = GetFfis(
-            $"src/c/tests/macro_objects/{MacroObjectName}/config.json");
+            $"src/c/tests/macro_objects/{MacroObjectName.ToLowerInvariant()}/config.json");
         Assert.True(ffis.Length > 0);
 
         foreach (var ffi in ffis)
