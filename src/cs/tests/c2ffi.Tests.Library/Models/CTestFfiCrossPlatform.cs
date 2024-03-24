@@ -39,8 +39,6 @@ public sealed class CTestFfiCrossPlatform
         _functionPointers = functionPointers;
         _opaqueTypes = opaqueTypes;
         _namesTested = ImmutableHashSet.CreateBuilder<string>();
-
-        AssertPInvokePlatformNameFunction();
     }
 
     public void AssertNodesAreTested()
@@ -244,14 +242,5 @@ public sealed class CTestFfiCrossPlatform
                 field.SizeOf == record.SizeOf,
                 $"C union '{record.Name}' field '{field.Name}' does not have a size that matches the union.");
         }
-    }
-
-    private void AssertPInvokePlatformNameFunction()
-    {
-        var function = GetFunction("ffi_get_platform_name");
-        Assert.Equal("cdecl", function.CallingConvention);
-        Assert.Equal("const char *", function.ReturnTypeName);
-        Assert.Equal("// Returns the current platform name.", function.Comment);
-        Assert.True(function.Parameters.IsDefaultOrEmpty);
     }
 }

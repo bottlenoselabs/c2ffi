@@ -21,12 +21,12 @@ public sealed class ArrayExplorer : NodeExplorer<CArray>
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Either(
         CXTypeKind.CXType_ConstantArray, CXTypeKind.CXType_IncompleteArray);
 
-    protected override CNode? GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode? GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         return Array(context, info);
     }
 
-    private static CArray Array(ExploreContext context, ExploreInfoNode info)
+    private static CArray Array(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var type = clang_getElementType(info.Type);
         var typeInfo = context.GetTypeInfo(type, info)!;

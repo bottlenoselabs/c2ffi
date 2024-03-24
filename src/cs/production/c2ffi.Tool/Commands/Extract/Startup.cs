@@ -20,8 +20,8 @@ public sealed class Startup : IDependencyInjectionStartup
 
         services.AddSingleton<ClangInstaller>();
         services.AddSingleton<ClangTranslationUnitParser>();
-        services.AddSingleton<ParseContextBuilderArgumentsProvider>();
-        services.AddSingleton<ParseContextBuilderSystemIncludeDirectoriesProvider>();
+        services.AddSingleton<ParseArgumentsProvider>();
+        services.AddSingleton<ParseSystemIncludeDirectoriesProvider>();
         services.AddSingleton<Explorer>();
 
         services.AddTransient<ArrayExplorer>();
@@ -29,13 +29,14 @@ public sealed class Startup : IDependencyInjectionStartup
         services.AddTransient<EnumExplorer>();
         services.AddTransient<FunctionExplorer>();
         services.AddTransient<FunctionPointerExplorer>();
+        services.AddTransient<MacroObjectExplorer>();
         services.AddTransient<OpaqueTypeExplorer>();
-        services.AddTransient<PointerExplorer>();
-        services.AddTransient<PrimitiveExplorer>();
         services.AddTransient<StructExplorer>();
         services.AddTransient<UnionExplorer>();
         services.AddTransient<TypeAliasExplorer>();
         services.AddTransient<VariableExplorer>();
+        services.AddTransient<PointerExplorer>();
+        services.AddTransient<PrimitiveExplorer>();
 
         services.AddSingleton<ExtractFfiCommand>();
         services.AddSingleton<ExtractFfiTool>();

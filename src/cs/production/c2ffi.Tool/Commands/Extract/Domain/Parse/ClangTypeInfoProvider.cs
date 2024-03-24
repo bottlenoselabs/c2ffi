@@ -41,7 +41,7 @@ public static class ClangTypeInfoProvider
             ? clang.clang_getCursorType(clangCursor)
             : clangType;
 
-        if (IsPrimitive(clangCursorType))
+        if (clangCursorType.IsPrimitive())
         {
             return TypeKindPrimitive(clangCursorType);
         }
@@ -178,30 +178,5 @@ public static class ClangTypeInfoProvider
         return parentNodeKind == CNodeKind.TypeAlias
             ? ClangTypeInfo.Create(CNodeKind.FunctionPointer, clangCursorType)
             : ClangTypeInfo.Create(CNodeKind.Function, clangCursorType);
-    }
-
-    private static bool IsPrimitive(clang.CXType type)
-    {
-        return type.kind switch
-        {
-            clang.CXTypeKind.CXType_Void => true,
-            clang.CXTypeKind.CXType_Bool => true,
-            clang.CXTypeKind.CXType_Char_S => true,
-            clang.CXTypeKind.CXType_SChar => true,
-            clang.CXTypeKind.CXType_Char_U => true,
-            clang.CXTypeKind.CXType_UChar => true,
-            clang.CXTypeKind.CXType_UShort => true,
-            clang.CXTypeKind.CXType_UInt => true,
-            clang.CXTypeKind.CXType_ULong => true,
-            clang.CXTypeKind.CXType_ULongLong => true,
-            clang.CXTypeKind.CXType_Short => true,
-            clang.CXTypeKind.CXType_Int => true,
-            clang.CXTypeKind.CXType_Long => true,
-            clang.CXTypeKind.CXType_LongLong => true,
-            clang.CXTypeKind.CXType_Float => true,
-            clang.CXTypeKind.CXType_Double => true,
-            clang.CXTypeKind.CXType_LongDouble => true,
-            _ => false
-        };
     }
 }

@@ -17,6 +17,7 @@ public sealed class ExploreContext : IDisposable
     public readonly ParseContext ParseContext;
     private readonly ImmutableDictionary<CNodeKind, NodeExplorer> _nodeHandlers;
     private readonly FfiBuilder _ffiBuilder;
+    private readonly ImmutableHashSet<string> _ignoredIncludeFiles;
 
     public string FilePath => ParseContext.FilePath;
 
@@ -27,6 +28,7 @@ public sealed class ExploreContext : IDisposable
         ParseContext = parseContext;
         _nodeHandlers = GetNodeHandlers(services);
         _ffiBuilder = new FfiBuilder();
+        _ignoredIncludeFiles = parseContext.ExtractOptions.IgnoredIncludeFiles.ToImmutableHashSet();
     }
 
     public CFfiTargetPlatform GetFfi()
@@ -34,9 +36,9 @@ public sealed class ExploreContext : IDisposable
         return _ffiBuilder.GetFfi(ParseContext);
     }
 
-    public CNode? Explore(ExploreInfoNode info)
+    public CNode? Explore(ExploreCandidateInfoNode info)
     {
-        var handler = GetHandler(info.Kind);
+        var handler = GetHandler(info.NodeKind);
         var node = handler.ExploreInternal(this, info);
         if (node != null)
         {
@@ -46,11 +48,16 @@ public sealed class ExploreContext : IDisposable
         return node;
     }
 
-    public bool CanExplore(CNodeKind kind, ExploreInfoNode node)
+    public bool CanVisit(CNodeKind kind, ExploreCandidateInfoNode node)
     {
         var handler = GetHandler(kind);
-        var result = handler.CanExploreInternal(this, node);
+        var result = handler.CanVisitInternal(this, node);
         return result;
+    }
+
+    public bool IsIncludeIgnored(string filePath)
+    {
+        return _ignoredIncludeFiles.Contains(filePath);
     }
 
     public bool IsSystemCursor(clang.CXCursor cursor)
@@ -58,18 +65,18 @@ public sealed class ExploreContext : IDisposable
         return ParseContext.IsSystemCursor(cursor);
     }
 
-    public CTypeInfo? GetTypeInfo(clang.CXType type, ExploreInfoNode info)
+    public CTypeInfo? GetTypeInfo(clang.CXType type, ExploreCandidateInfoNode info)
     {
         throw new NotImplementedException();
     }
 
     public CTypeInfo? VisitType(
         clang.CXType clangTypeCandidate,
-        ExploreInfoNode info,
+        ExploreCandidateInfoNode info,
         CNodeKind? nodeKind = null,
         int? fieldIndex = 0)
     {
-        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangTypeCandidate, info.Kind);
+        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangTypeCandidate, info.NodeKind);
         var nodeKindUsed = nodeKind ?? clangTypeInfo.NodeKind;
 
         var rootInfo = info;
@@ -100,21 +107,30 @@ public sealed class ExploreContext : IDisposable
         return string.IsNullOrEmpty(commentString) ? null : commentString;
     }
 
-    public ExploreInfoNode CreateInfoNode(
+    public ExploreCandidateInfoNode CreateCandidateInfoNode(
+        CNodeKind nodeKind,
+        clang.CXCursor cursor)
+    {
+        var cursorName = cursor.Spelling();
+        var cursorType = clang.clang_getCursorType(cursor);
+        return CreateCandidateInfoNode(nodeKind, cursorName, cursor, cursorType, null);
+    }
+
+    public ExploreCandidateInfoNode CreateCandidateInfoNode(
         CNodeKind kind,
         string name,
         clang.CXCursor cursor,
         clang.CXType type,
-        ExploreInfoNode? parentInfo)
+        ExploreCandidateInfoNode? parentInfo)
     {
         var location = cursor.Location();
         var typeName = type.Spelling();
         var sizeOf = ParseContext.SizeOf(kind, type);
         var alignOf = ParseContext.AlignOf(kind, type);
 
-        var result = new ExploreInfoNode
+        var result = new ExploreCandidateInfoNode
         {
-            Kind = kind,
+            NodeKind = kind,
             Name = name,
             TypeName = typeName,
             Type = type,
@@ -133,11 +149,6 @@ public sealed class ExploreContext : IDisposable
         ParseContext.Dispose();
     }
 
-    private ImmutableArray<CMacroObject> CollectMacroObjects(ExploreContext context)
-    {
-        throw new NotImplementedException();
-    }
-
     private static ImmutableDictionary<CNodeKind, NodeExplorer> GetNodeHandlers(IServiceProvider services)
     {
         var result = new Dictionary<CNodeKind, NodeExplorer>
@@ -151,6 +162,7 @@ public sealed class ExploreContext : IDisposable
             { CNodeKind.TypeAlias, services.GetService<TypeAliasExplorer>()! },
             { CNodeKind.OpaqueType, services.GetService<OpaqueTypeExplorer>()! },
             { CNodeKind.FunctionPointer, services.GetService<FunctionPointerExplorer>()! },
+            { CNodeKind.MacroObject, services.GetService<MacroObjectExplorer>()! },
             { CNodeKind.Array, services.GetService<ArrayExplorer>()! },
             { CNodeKind.Pointer, services.GetService<PointerExplorer>()! },
             { CNodeKind.Primitive, services.GetService<PrimitiveExplorer>()! },

@@ -20,12 +20,12 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
 
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Is(CXTypeKind.CXType_Enum);
 
-    protected override CNode GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         return Enum(context, info);
     }
 
-    private CEnum Enum(ExploreContext context, ExploreInfoNode info)
+    private CEnum Enum(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var integerTypeInfo = IntegerTypeInfo(context, info);
         var enumValues = EnumValues(info.Cursor);
@@ -45,7 +45,7 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
         return result;
     }
 
-    private static CTypeInfo IntegerTypeInfo(ExploreContext context, ExploreInfoNode info)
+    private static CTypeInfo IntegerTypeInfo(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var integerType = clang_getEnumDeclIntegerType(info.Cursor);
         var typeInfo = context.VisitType(integerType, info)!;

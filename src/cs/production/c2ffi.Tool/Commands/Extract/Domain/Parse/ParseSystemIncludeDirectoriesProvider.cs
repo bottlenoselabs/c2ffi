@@ -14,13 +14,13 @@ using TargetPlatform = c2ffi.Data.TargetPlatform;
 namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 
 [UsedImplicitly]
-public sealed partial class ParseContextBuilderSystemIncludeDirectoriesProvider
+public sealed partial class ParseSystemIncludeDirectoriesProvider
 {
-    private readonly ILogger<ParseContextBuilderSystemIncludeDirectoriesProvider> _logger;
+    private readonly ILogger<ParseSystemIncludeDirectoriesProvider> _logger;
     private readonly IFileSystem _fileSystem;
 
-    public ParseContextBuilderSystemIncludeDirectoriesProvider(
-        ILogger<ParseContextBuilderSystemIncludeDirectoriesProvider> logger,
+    public ParseSystemIncludeDirectoriesProvider(
+        ILogger<ParseSystemIncludeDirectoriesProvider> logger,
         IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;

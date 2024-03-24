@@ -5,7 +5,7 @@ using Xunit;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.function_int;
+namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_int;
 
 public class Test : MergeFfisTest
 {

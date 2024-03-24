@@ -24,9 +24,9 @@ public class Test : ExtractFfiTest
         }
     }
 
-    private void FfiFunctionExists(CTestFfiTargetPlatform ast)
+    private void FfiFunctionExists(CTestFfiTargetPlatform ffi)
     {
-        var function = ast.GetFunction(FunctionName);
+        var function = ffi.GetFunction(FunctionName);
         Assert.True(function.CallingConvention == "cdecl");
         Assert.True(function.ReturnTypeName == "int");
 

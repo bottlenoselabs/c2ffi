@@ -113,18 +113,48 @@ public sealed class ParseContext : IDisposable
         };
     }
 
-    public ImmutableArray<clang.CXCursor> GetTranslationUnitExternalTopLevelCursors()
-    {
-        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        return translationUnitCursor.GetDescendents(
-            static (child, _) => IsExternalTopLevelCursor(child));
-    }
-
-    public ImmutableArray<clang.CXCursor> GetTranslationUnitIncludes()
+    public ImmutableArray<clang.CXCursor> GetIncludes()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
         return translationUnitCursor.GetDescendents(
             static (child, _) => child.kind == clang.CXCursorKind.CXCursor_InclusionDirective);
+    }
+
+    public ImmutableArray<clang.CXCursor> GetExternalFunctions()
+    {
+        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
+        return translationUnitCursor.GetDescendents(
+            static (child, _) => IsExternal(child) && child.kind == clang.CXCursorKind.CXCursor_FunctionDecl);
+    }
+
+    public ImmutableArray<clang.CXCursor> GetExternalVariables()
+    {
+        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
+        return translationUnitCursor.GetDescendents(
+            static (child, _) => IsExternal(child) && child.kind == clang.CXCursorKind.CXCursor_VarDecl);
+    }
+
+    public ImmutableArray<clang.CXCursor> GetMacroObjects()
+    {
+        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
+        return translationUnitCursor.GetDescendents(
+            (child, _) => IsMacroObject(child));
+
+        bool IsMacroObject(clang.CXCursor clangCursor)
+        {
+            if (clangCursor.kind != clang.CXCursorKind.CXCursor_MacroDefinition)
+            {
+                return false;
+            }
+
+            var isMacroBuiltIn = clang.clang_Cursor_isMacroBuiltin(clangCursor) > 0;
+            if (isMacroBuiltIn)
+            {
+                return false;
+            }
+
+            return !IsSystemCursor(clangCursor);
+        }
     }
 
     public void Dispose()
@@ -164,27 +194,12 @@ public sealed class ParseContext : IDisposable
         return (platform, pointerSizeBytes);
     }
 
-    private static bool IsExternalTopLevelCursor(clang.CXCursor cursor)
+    private static bool IsExternal(clang.CXCursor cursor)
     {
-        var kind = clang.clang_getCursorKind(cursor);
-        if (kind != clang.CXCursorKind.CXCursor_FunctionDecl &&
-            kind != clang.CXCursorKind.CXCursor_VarDecl &&
-            kind != clang.CXCursorKind.CXCursor_EnumDecl &&
-            kind != clang.CXCursorKind.CXCursor_TypedefDecl &&
-            kind != clang.CXCursorKind.CXCursor_StructDecl)
-        {
-            return false;
-        }
-
-        if (kind == clang.CXCursorKind.CXCursor_EnumDecl)
-        {
-            return true;
-        }
-
         var linkage = clang.clang_getCursorLinkage(cursor);
         var visibility = clang.clang_getCursorVisibility(cursor);
-        var isExported = linkage == clang.CXLinkageKind.CXLinkage_External &&
+        var isExternal = linkage == clang.CXLinkageKind.CXLinkage_External &&
                          visibility == clang.CXVisibilityKind.CXVisibility_Default;
-        return isExported;
+        return isExternal;
     }
 }

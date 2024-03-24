@@ -17,12 +17,12 @@ public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     protected override ExploreKindTypes ExpectedTypes => ExploreKindTypes.Any;
 
-    protected override CNode GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         return Variable(context, info);
     }
 
-    private static CVariable Variable(ExploreContext context, ExploreInfoNode info)
+    private static CVariable Variable(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var comment = context.Comment(info.Cursor);
         var isSystemCursor = context.IsSystemCursor(info.Cursor);

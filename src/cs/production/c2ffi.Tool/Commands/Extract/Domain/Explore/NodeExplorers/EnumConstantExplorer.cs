@@ -19,12 +19,12 @@ public class EnumConstantExplorer(ILogger<EnumConstantExplorer> logger)
     protected override ExploreKindTypes ExpectedTypes { get; } =
         ExploreKindTypes.Either(CXTypeKind.CXType_Int, CXTypeKind.CXType_UInt, CXTypeKind.CXType_ULong);
 
-    protected override CNode GetNode(ExploreContext context, ExploreInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
     {
         return EnumConstant(context, info);
     }
 
-    private CEnumConstant EnumConstant(ExploreContext context, ExploreInfoNode info)
+    private CEnumConstant EnumConstant(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var typeInfo = context.VisitType(info.Type, info)!;
         var value = clang_getEnumConstantDeclValue(info.Cursor).ToString(CultureInfo.InvariantCulture);

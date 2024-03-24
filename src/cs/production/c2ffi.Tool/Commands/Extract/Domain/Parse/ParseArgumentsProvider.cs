@@ -8,7 +8,7 @@ using TargetPlatform = c2ffi.Data.TargetPlatform;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 
-public class ParseContextBuilderArgumentsProvider
+public sealed class ParseArgumentsProvider
 {
     public ImmutableArray<string> GetArguments(
         ExtractTargetPlatformOptions options,
