@@ -36,7 +36,7 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     protected override ExploreKindTypes ExpectedTypes => ExploreKindTypes.Any;
 
-    protected override CNode? GetNode(ExploreContext context, ExploreNodeInfo info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return MacroObject(context, info);
     }
@@ -47,16 +47,21 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
         return allowedMacroObjects.IsEmpty || allowedMacroObjects.Contains(info.Name);
     }
 
-    private CMacroObject? MacroObject(ExploreContext context, ExploreNodeInfo info)
+    private CMacroObject MacroObject(ExploreContext context, ExploreNodeInfo info)
     {
         var macroObjectCandidate = MacroObjectCandidate.Parse(info.Cursor);
         if (macroObjectCandidate == null)
         {
-            return null;
+            throw new InvalidOperationException($"Failed to parse macro object '{info.Name}'.");
         }
 
         var filePath = WriteMacroObjectsFile(macroObjectCandidate);
         var macroObject = GetMacroObjectFromParsingFile(filePath, context.ParseContext);
+        if (macroObject == null)
+        {
+            throw new InvalidOperationException($"Failed to parse macro object '{info.Name}'.");
+        }
+
         return macroObject;
     }
 
@@ -125,7 +130,7 @@ int main(void)
         if (functionCursor.kind == 0)
         {
             throw new ToolException(
-                $@"Failed to parse C++ file to determine types of macro objects. Please ensure your libclang version is up-to-date.");
+                @"Failed to parse C++ file to determine types of macro objects. Please ensure your libclang version is up-to-date.");
         }
 
         var compoundStatement = functionCursor.GetDescendents(static (cursor, _) =>

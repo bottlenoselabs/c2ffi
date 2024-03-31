@@ -28,7 +28,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Either(
         CXTypeKind.CXType_FunctionProto, CXTypeKind.CXType_FunctionNoProto);
 
-    protected override CNode? GetNode(ExploreContext context, ExploreNodeInfo info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         var function = Function(context, info);
         return function;

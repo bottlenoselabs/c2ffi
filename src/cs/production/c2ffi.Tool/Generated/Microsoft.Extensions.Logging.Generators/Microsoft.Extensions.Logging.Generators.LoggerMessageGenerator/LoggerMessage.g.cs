@@ -202,11 +202,11 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
             global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String, global::c2ffi.Data.CLocation?>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogFailureExplore)), "- Failed to explore {Kind} '{Name}' ({Location})'", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogFailureExplore(global::System.String kind, global::System.String name, global::c2ffi.Data.CLocation? location)
+        private partial void LogFailureExplore(global::System.Exception e, global::System.String kind, global::System.String name, global::c2ffi.Data.CLocation? location)
         {
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Error))
             {
-                __LogFailureExploreCallback(_logger, kind, name, location, null);
+                __LogFailureExploreCallback(_logger, kind, name, location, e);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
