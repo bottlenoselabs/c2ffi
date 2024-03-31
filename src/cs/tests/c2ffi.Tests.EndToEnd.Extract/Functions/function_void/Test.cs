@@ -6,11 +6,11 @@ using FluentAssertions;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.Functions.function_int_params_int;
+namespace c2ffi.Tests.EndToEnd.Extract.Functions.function_void;
 
 public class Test : ExtractFfiTest
 {
-    private const string FunctionName = "function_int_params_int";
+    private const string FunctionName = "function_void";
 
     [Fact]
     public void FunctionExists()
@@ -25,16 +25,13 @@ public class Test : ExtractFfiTest
         }
     }
 
-    private static void FfiFunctionExists(CTestFfiTargetPlatform ffi)
+    private void FfiFunctionExists(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.GetFunction(FunctionName);
         function.CallingConvention.Should().Be("cdecl");
-        function.ReturnTypeName.Should().Be("int");
-        function.ReturnTypeSizeOf.Should().Be(4);
+        function.ReturnTypeName.Should().Be("void");
+        function.ReturnTypeSizeOf.Should().Be(null);
 
-        function.Parameters.Length.Should().Be(1);
-        var parameter = function.Parameters[0];
-        parameter.Name.Should().Be("a");
-        parameter.TypeName.Should().Be("int");
+        function.Parameters.Should().BeEmpty();
     }
 }

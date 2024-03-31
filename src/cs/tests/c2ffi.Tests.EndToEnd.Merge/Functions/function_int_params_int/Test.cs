@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Tests.Library.Models;
+using FluentAssertions;
 using Xunit;
 
 #pragma warning disable CA1707
@@ -24,12 +25,13 @@ public class Test : MergeFfisTest
     private void FfiFunctionExists(CTestFfiCrossPlatform ffi)
     {
         var function = ffi.GetFunction(FunctionName);
-        Assert.True(function.CallingConvention == "cdecl");
-        Assert.True(function.ReturnTypeName == "int");
+        function.CallingConvention.Should().Be("cdecl");
+        function.ReturnTypeName.Should().Be("int");
+        function.ReturnTypeSizeOf.Should().Be(4);
 
-        Assert.True(function.Parameters.Length == 1);
+        function.Parameters.Length.Should().Be(1);
         var parameter = function.Parameters[0];
-        Assert.True(parameter.Name == "a");
-        Assert.True(parameter.TypeName == "int");
+        parameter.Name.Should().Be("a");
+        parameter.TypeName.Should().Be("int");
     }
 }

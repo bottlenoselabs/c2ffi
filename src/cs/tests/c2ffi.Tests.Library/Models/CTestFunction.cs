@@ -18,6 +18,8 @@ public class CTestFunction
 
     public string ReturnTypeName { get; }
 
+    public int? ReturnTypeSizeOf { get; }
+
     public ImmutableArray<CTestFunctionParameter> Parameters { get; }
 
     public string? Comment { get; }
@@ -27,6 +29,7 @@ public class CTestFunction
         Name = function.Name;
         CallingConvention = function.CallingConvention.ToString().ToLowerInvariant();
         ReturnTypeName = function.ReturnTypeInfo.Name;
+        ReturnTypeSizeOf = function.ReturnTypeInfo.SizeOf!;
         Parameters = function.Parameters
             .Select(x => new CTestFunctionParameter(x)).ToImmutableArray();
         Comment = function.Comment;

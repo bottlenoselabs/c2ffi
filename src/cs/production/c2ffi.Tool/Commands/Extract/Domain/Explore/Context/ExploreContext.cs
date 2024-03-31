@@ -156,7 +156,12 @@ public sealed class ExploreContext : IDisposable
         var isSystemCursor = IsSystemCursor(clangCursor);
         if (isSystemCursor)
         {
-            return new CTypeInfo { Name = typeName };
+            return new CTypeInfo
+            {
+                Name = typeName,
+                SizeOf = ParseContext.SizeOf(kind, clangType),
+                Location = clangCursor.Location()
+            };
         }
 
         var clangCursorLocation = clang.clang_getTypeDeclaration(clangType);

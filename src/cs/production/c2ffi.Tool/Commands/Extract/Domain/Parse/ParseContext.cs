@@ -50,9 +50,11 @@ public sealed class ParseContext : IDisposable
 
     public int? SizeOf(CNodeKind nodeKind, clang.CXType clangType)
     {
-        if (nodeKind is CNodeKind.Function or CNodeKind.OpaqueType)
+        switch (nodeKind)
         {
-            return null;
+            case CNodeKind.Function or CNodeKind.OpaqueType:
+            case CNodeKind.Primitive when clangType.kind == clang.CXTypeKind.CXType_Void:
+                return null;
         }
 
         var sizeOf = (int)clang.clang_Type_getSizeOf(clangType);
@@ -71,14 +73,16 @@ public sealed class ParseContext : IDisposable
         }
     }
 
-    public int? AlignOf(CNodeKind kind, clang.CXType containerType)
+    public int? AlignOf(CNodeKind nodeKind, clang.CXType clangType)
     {
-        if (kind == CNodeKind.OpaqueType)
+        switch (nodeKind)
         {
-            return null;
+            case CNodeKind.Function or CNodeKind.OpaqueType:
+            case CNodeKind.Primitive when clangType.kind == clang.CXTypeKind.CXType_Void:
+                return null;
         }
 
-        var alignOfValue = (int)clang.clang_Type_getAlignOf(containerType);
+        var alignOfValue = (int)clang.clang_Type_getAlignOf(clangType);
         int? alignOf = alignOfValue >= 0 ? alignOfValue : null;
         return alignOf;
     }

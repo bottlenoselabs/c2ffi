@@ -129,15 +129,15 @@ public sealed partial class Explorer
 
     private void VisitInclude(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var code = clangCursor.GetCode();
-        var isSystemHeader = code.Contains('<', StringComparison.InvariantCulture);
-        if (isSystemHeader)
-        {
-            return;
-        }
-
         var file = clang.clang_getIncludedFile(clangCursor);
         var filePath = Path.GetFullPath(clang.clang_getFileName(file).String());
+        foreach (var systemIncludeDirectory in context.ParseContext.SystemIncludeDirectories)
+        {
+            if (filePath.Contains(systemIncludeDirectory, StringComparison.InvariantCulture))
+            {
+                return;
+            }
+        }
 
         if (context.IsIncludeIgnored(filePath))
         {
