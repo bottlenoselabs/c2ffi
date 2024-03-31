@@ -14,17 +14,14 @@ public class CTestEnum
 {
     public string Name { get; }
 
-    public string IntegerTypeName { get; }
+    public int SizeOf { get; }
 
     public ImmutableArray<CTestEnumValue> Values { get; }
-
-    public int SizeOf { get; }
 
     public CTestEnum(CEnum @enum)
     {
         Name = @enum.Name;
-        IntegerTypeName = @enum.IntegerTypeInfo.Name;
-        SizeOf = @enum.IntegerTypeInfo.SizeOf!.Value;
+        SizeOf = @enum.SizeOf;
         Values = @enum.Values.Select(x => new CTestEnumValue(x)).ToImmutableArray();
     }
 

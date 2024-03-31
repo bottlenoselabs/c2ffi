@@ -29,7 +29,7 @@ public class Test : ExtractFfiTest
     {
         const string name = $"enum {EnumName}";
         var @enum = ffi.GetEnum(name);
-        @enum.IntegerTypeName.Should().BeOneOf("unsigned int", "int");
+        @enum.SizeOf.Should().Be(4);
 
         @enum.Values[0].Name.Should().Be("ENUM_UINT8_MIN");
         @enum.Values[0].Value.Should().Be(0);

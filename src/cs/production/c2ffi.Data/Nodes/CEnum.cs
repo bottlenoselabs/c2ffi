@@ -17,11 +17,14 @@ namespace c2ffi.Data.Nodes;
 public class CEnum : CNodeWithLocation
 {
     /// <summary>
-    ///     Gets or sets the type information about the enum's integer type.
+    ///     Gets or sets the byte size of the enum.
     /// </summary>
-    [JsonPropertyName("type_integer")]
-    public CTypeInfo IntegerTypeInfo { get; set; } = null!;
+    [JsonPropertyName("size_of")]
+    public int SizeOf { get; set; }
 
+    /// <summary>
+    ///     Gets or sets the enum's values.
+    /// </summary>
     [JsonPropertyName("values")]
     public ImmutableArray<CEnumValue> Values { get; set; } = ImmutableArray<CEnumValue>.Empty;
 
@@ -29,7 +32,7 @@ public class CEnum : CNodeWithLocation
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {
-        return $"Enum '{Name}': {IntegerTypeInfo} @ {Location}";
+        return $"Enum '{Name}': @ {Location}";
     }
 
     /// <inheritdoc />
@@ -40,7 +43,7 @@ public class CEnum : CNodeWithLocation
             return false;
         }
 
-        return IntegerTypeInfo.Equals(other2.IntegerTypeInfo) && Values.SequenceEqual(other2.Values);
+        return SizeOf.Equals(other2.SizeOf) && Values.SequenceEqual(other2.Values);
     }
 
     /// <inheritdoc />
@@ -52,7 +55,7 @@ public class CEnum : CNodeWithLocation
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(IntegerTypeInfo);
+        hashCode.Add(SizeOf);
 
         foreach (var value in Values)
         {

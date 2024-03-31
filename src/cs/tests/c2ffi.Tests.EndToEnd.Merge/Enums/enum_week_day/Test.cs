@@ -25,7 +25,7 @@ public class Test : MergeFfisTest
     {
         const string name = $"enum {EnumName}";
         var @enum = ffi.GetEnum(name);
-        @enum.IntegerTypeName.Should().Be("int");
+        @enum.SizeOf.Should().Be(4);
 
         @enum.Values[0].Name.Should().Be("ENUM_WEEK_DAY_UNKNOWN");
         @enum.Values[0].Value.Should().Be(-1);

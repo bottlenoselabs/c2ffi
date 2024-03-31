@@ -58,8 +58,8 @@ public sealed partial class MergeFfisTool
             GetPlatformFfis(options.InputFilePaths);
         var platforms = platformFfis.
             Select(x => x.PlatformRequested).ToImmutableArray();
-        var platformNodesByName = GetPlatformNodesByName(platformFfis);
-        var ffi = CreateCrossPlatformFfi(platforms, platformNodesByName);
+        var platformNodesByKey = GetPlatformNodesByKey(platformFfis);
+        var ffi = CreateCrossPlatformFfi(platforms, platformNodesByKey);
 
         Json.WriteFfiCrossPlatform(_fileSystem, options.OutputFilePath, ffi);
         LogWriteAbstractSyntaxTreeSuccess(string.Join(", ", platforms), options.OutputFilePath);
@@ -77,13 +77,13 @@ public sealed partial class MergeFfisTool
 
     private CFfiCrossPlatform CreateCrossPlatformFfi(
         ImmutableArray<TargetPlatform> platforms,
-        ImmutableSortedDictionary<string, ImmutableArray<CNodeWithTargetPlatform>> platformNodesByName)
+        ImmutableSortedDictionary<string, ImmutableArray<CNodeWithTargetPlatform>> platformNodesByKey)
     {
         var result = new CFfiCrossPlatform();
 
-        foreach (var (name, nodes) in platformNodesByName)
+        foreach (var (key, nodes) in platformNodesByKey)
         {
-            BuildCrossPlatformNodes(platforms, nodes, name);
+            BuildCrossPlatformNodes(platforms, nodes);
         }
 
         result.Platforms = platforms.Sort(
@@ -113,7 +113,6 @@ public sealed partial class MergeFfisTool
         switch (node)
         {
             case CEnum @enum:
-                ClearLocationForTypeInfo(@enum.IntegerTypeInfo);
                 _enums.Add(@enum);
                 break;
             case CVariable variable:
@@ -179,9 +178,10 @@ public sealed partial class MergeFfisTool
 
     private void BuildCrossPlatformNodes(
         ImmutableArray<TargetPlatform> platforms,
-        ImmutableArray<CNodeWithTargetPlatform> nodes,
-        string nodeName)
+        ImmutableArray<CNodeWithTargetPlatform> nodes)
     {
+        var nodeName = nodes.FirstOrDefault()?.Node.Name ?? string.Empty;
+
         if (nodes.Length != platforms.Length)
         {
             var nodePlatforms = nodes.Select(x => x.TargetPlatform);
@@ -203,7 +203,8 @@ public sealed partial class MergeFfisTool
         {
             var node = nodes[i].Node;
 
-            if (!node.Equals(firstNode))
+            var nodesAreEqual = node.Equals(firstNode);
+            if (!nodesAreEqual)
             {
                 if (node is CMacroObject nodeMacroObject && firstNode is CMacroObject firstNodeMacroObject)
                 {
@@ -226,7 +227,7 @@ public sealed partial class MergeFfisTool
         }
     }
 
-    private ImmutableSortedDictionary<string, ImmutableArray<CNodeWithTargetPlatform>> GetPlatformNodesByName(
+    private ImmutableSortedDictionary<string, ImmutableArray<CNodeWithTargetPlatform>> GetPlatformNodesByKey(
         ImmutableArray<CFfiTargetPlatform> platformFfis)
     {
         var platformNodesByKey = new Dictionary<string, List<CNodeWithTargetPlatform>>();

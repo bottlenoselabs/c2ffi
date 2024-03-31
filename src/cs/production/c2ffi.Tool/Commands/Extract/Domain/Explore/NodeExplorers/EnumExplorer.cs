@@ -37,7 +37,7 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
         {
             Name = info.Name,
             Location = info.Location,
-            IntegerTypeInfo = integerTypeInfo,
+            SizeOf = integerTypeInfo.SizeOf!.Value,
             Values = enumValues,
             Comment = comment,
             IsSystem = isSystemCursor
