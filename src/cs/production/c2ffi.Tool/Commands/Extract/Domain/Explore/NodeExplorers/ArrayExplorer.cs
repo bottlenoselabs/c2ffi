@@ -22,7 +22,7 @@ public sealed class ArrayExplorer : NodeExplorer<CArray>
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Either(
         CXTypeKind.CXType_ConstantArray, CXTypeKind.CXType_IncompleteArray);
 
-    protected override CNode? GetNode(ExploreContext context, ExploreNodeInfo info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return Array(context, info);
     }

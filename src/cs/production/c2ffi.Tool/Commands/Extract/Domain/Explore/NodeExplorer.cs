@@ -42,10 +42,17 @@ public abstract partial class NodeExplorer
     internal CNode? ExploreInternal(ExploreContext context, ExploreNodeInfo info)
     {
         LogExploring(info.NodeKind.ToString(), info.Name, info.Location);
-        var result = GetNode(context, info);
-        if (result == null)
+        CNode result;
+
+        try
         {
-            LogFailureExplore(info.NodeKind.ToString(), info.Name, info.Location);
+            result = GetNode(context, info);
+        }
+#pragma warning disable CA1031
+        catch (Exception e)
+#pragma warning restore CA1031
+        {
+            LogFailureExplore(e, info.NodeKind.ToString(), info.Name, info.Location);
             return null;
         }
 
@@ -92,7 +99,7 @@ public abstract partial class NodeExplorer
         return true;
     }
 
-    protected abstract CNode? GetNode(ExploreContext context, ExploreNodeInfo info);
+    protected abstract CNode GetNode(ExploreContext context, ExploreNodeInfo info);
 
     protected virtual bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
@@ -128,7 +135,7 @@ public abstract partial class NodeExplorer
     private partial void LogFailureUnexpectedType(CXTypeKind typeKind);
 
     [LoggerMessage(2, LogLevel.Error, "- Failed to explore {Kind} '{Name}' ({Location})'")]
-    private partial void LogFailureExplore(string kind, string name, CLocation? location);
+    private partial void LogFailureExplore(Exception e, string kind, string name, CLocation? location);
 
     [LoggerMessage(3, LogLevel.Information, "- Already visited {Kind} '{Name}' ({Location})")]
     private partial void LogAlreadyVisited(string kind, string name, CLocation? location);
