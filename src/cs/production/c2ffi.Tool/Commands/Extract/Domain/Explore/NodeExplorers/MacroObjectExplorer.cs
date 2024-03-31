@@ -41,6 +41,12 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
         return MacroObject(context, info);
     }
 
+    protected override bool IsAllowed(ExploreContext context, ExploreCandidateInfoNode info)
+    {
+        var allowedMacroObjects = context.ParseContext.ExtractOptions.AllowedMacroObjects;
+        return allowedMacroObjects.IsEmpty || allowedMacroObjects.Contains(info.Name);
+    }
+
     private CMacroObject? MacroObject(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var macroObjectCandidate = MacroObjectCandidate.Parse(info.Cursor);

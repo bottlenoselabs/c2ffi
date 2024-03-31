@@ -92,9 +92,6 @@ public sealed class ExploreFfiBuilder
             case CNodeKind.Array:
                 AddArray((CArray)node);
                 break;
-            case CNodeKind.EnumConstant:
-                AddEnumConstant((CEnumConstant)node);
-                break;
             case CNodeKind.Primitive:
                 AddPrimitive((CPrimitive)node);
                 break;

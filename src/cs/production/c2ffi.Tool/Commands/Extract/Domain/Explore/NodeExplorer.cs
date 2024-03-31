@@ -41,15 +41,15 @@ public abstract partial class NodeExplorer
 
     internal CNode? ExploreInternal(ExploreContext context, ExploreCandidateInfoNode info)
     {
-        LogExploring(info.NodeKind.ToString().ToLowerInvariant(), info.Name, info.Location);
+        LogExploring(info.NodeKind.ToString(), info.Name, info.Location);
         var result = GetNode(context, info);
         if (result == null)
         {
-            LogExploreSkipped(info.NodeKind.ToString().ToLowerInvariant(), info.Name, info.Location);
+            LogFailureExplore(info.NodeKind.ToString(), info.Name, info.Location);
             return null;
         }
 
-        LogExplored(info.NodeKind.ToString().ToLowerInvariant(), info.Name, info.Location);
+        LogExplored(info.NodeKind.ToString(), info.Name, info.Location);
         return result;
     }
 
@@ -76,9 +76,15 @@ public abstract partial class NodeExplorer
         {
             if (_logAlreadyExplored)
             {
-                LogAlreadyVisited(info.NodeKind.ToString().ToLowerInvariant(), info.Name, firstLocation);
+                LogAlreadyVisited(info.NodeKind.ToString(), info.Name, firstLocation);
             }
 
+            return false;
+        }
+
+        if (!IsAllowed(context, info))
+        {
+            LogExploreNotAllowed(info.NodeKind.ToString(), info.Name, firstLocation);
             return false;
         }
 
@@ -87,6 +93,11 @@ public abstract partial class NodeExplorer
     }
 
     protected abstract CNode? GetNode(ExploreContext context, ExploreCandidateInfoNode info);
+
+    protected virtual bool IsAllowed(ExploreContext context, ExploreCandidateInfoNode info)
+    {
+        return true;
+    }
 
     private bool IsAlreadyVisited(ExploreCandidateInfoNode info, out CLocation? firstLocation)
     {
@@ -116,15 +127,18 @@ public abstract partial class NodeExplorer
     [LoggerMessage(1, LogLevel.Error, "- Unexpected type kind '{TypeKind}'")]
     private partial void LogFailureUnexpectedType(CXTypeKind typeKind);
 
-    [LoggerMessage(2, LogLevel.Information, "- Already visited {Kind} '{Name}' ({Location})")]
+    [LoggerMessage(2, LogLevel.Error, "- Failed to explore {Kind} '{Name}' ({Location})'")]
+    private partial void LogFailureExplore(string kind, string name, CLocation? location);
+
+    [LoggerMessage(3, LogLevel.Information, "- Already visited {Kind} '{Name}' ({Location})")]
     private partial void LogAlreadyVisited(string kind, string name, CLocation? location);
 
-    [LoggerMessage(3, LogLevel.Debug, "- Exploring {Kind} '{Name}' ({Location})'")]
+    [LoggerMessage(4, LogLevel.Debug, "- Exploring {Kind} '{Name}' ({Location})'")]
     private partial void LogExploring(string kind, string name, CLocation? location);
 
-    [LoggerMessage(4, LogLevel.Debug, "- Explored {Kind} '{Name}' ({Location})'")]
+    [LoggerMessage(5, LogLevel.Debug, "- Explored {Kind} '{Name}' ({Location})'")]
     private partial void LogExplored(string kind, string name, CLocation? location);
 
-    [LoggerMessage(5, LogLevel.Debug, "- Skipped exploring {Kind} '{Name}' ({Location})'")]
-    private partial void LogExploreSkipped(string kind, string name, CLocation? location);
+    [LoggerMessage(6, LogLevel.Debug, "- Not allowed to explore {Kind} '{Name}', skipping")]
+    private partial void LogExploreNotAllowed(string kind, string name);
 }
