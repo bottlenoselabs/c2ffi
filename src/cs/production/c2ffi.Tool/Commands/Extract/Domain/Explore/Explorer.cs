@@ -42,7 +42,7 @@ public sealed partial class Explorer
         {
             VisitTranslationUnit(context, context.ParseContext);
             result = context.GetFfi();
-            LogFfi(result);
+            LogFound(result);
         }
         catch (Exception e)
         {
@@ -167,11 +167,32 @@ public sealed partial class Explorer
         return result;
     }
 
-    private void LogFfi(CFfiTargetPlatform ffi)
+    private void LogFound(CFfiTargetPlatform ffi)
     {
-        var functionNamesFound = ffi.Functions.Keys.ToArray();
-        var functionNamesFoundString = string.Join(", ", functionNamesFound);
-        LogFoundFunctions(functionNamesFound.Length, functionNamesFoundString);
+        LogFoundMacroObjects(ffi);
+        LogFoundVariables(ffi);
+        LogFoundFunctions(ffi);
+    }
+
+    private void LogFoundMacroObjects(CFfiTargetPlatform ffi)
+    {
+        var names = ffi.MacroObjects.Keys.ToArray();
+        var namesString = string.Join(", ", names);
+        LogFoundMacroObjects(names.Length, namesString);
+    }
+
+    private void LogFoundVariables(CFfiTargetPlatform ffi)
+    {
+        var names = ffi.Variables.Keys.ToArray();
+        var namesString = string.Join(", ", names);
+        LogFoundVariables(names.Length, namesString);
+    }
+
+    private void LogFoundFunctions(CFfiTargetPlatform ffi)
+    {
+        var names = ffi.Functions.Keys.ToArray();
+        var namesString = string.Join(", ", names);
+        LogFoundFunctions(names.Length, namesString);
     }
 
     [LoggerMessage(0, LogLevel.Error, "- Failure")]
@@ -186,18 +207,15 @@ public sealed partial class Explorer
     [LoggerMessage(3, LogLevel.Information, "- Finished visiting translation unit: {FilePath}")]
     private partial void LogVisitedTranslationUnit(string filePath);
 
-    [LoggerMessage(5, LogLevel.Information, "- Found {FoundCount} macro objects: {Names}")]
+    [LoggerMessage(4, LogLevel.Information, "- Found {FoundCount} macro objects: {Names}")]
     private partial void LogFoundMacroObjects(int foundCount, string names);
 
-    [LoggerMessage(7, LogLevel.Information, "- Found {FoundCount} variables: {Names}")]
+    [LoggerMessage(5, LogLevel.Information, "- Found {FoundCount} variables: {Names}")]
     private partial void LogFoundVariables(int foundCount, string names);
 
-    [LoggerMessage(9, LogLevel.Information, "- Found {FoundCount} functions: {Names}")]
+    [LoggerMessage(6, LogLevel.Information, "- Found {FoundCount} functions: {Names}")]
     private partial void LogFoundFunctions(int foundCount, string names);
 
-    [LoggerMessage(11, LogLevel.Information, "- Found {FoundCount} types: {Names}")]
-    private partial void LogFoundTypes(int foundCount, string names);
-
-    [LoggerMessage(14, LogLevel.Information, "- Ignored include file header: {FilePath}")]
+    [LoggerMessage(7, LogLevel.Information, "- Ignored include file header: {FilePath}")]
     private partial void LogIgnoreInclude(string filePath);
 }
