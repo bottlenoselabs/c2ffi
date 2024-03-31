@@ -84,7 +84,7 @@ public abstract partial class NodeExplorer
 
         if (!IsAllowed(context, info))
         {
-            LogNotAllowed(info.NodeKind.ToString(), info.Name, firstLocation);
+            LogNotAllowed(info.NodeKind.ToString(), info.Name);
             return false;
         }
 
