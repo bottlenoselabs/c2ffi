@@ -178,10 +178,11 @@ public sealed partial class MergeFfisTool
 
         if (nodes.Length != platforms.Length)
         {
+            var targetPlatform = nodes.FirstOrDefault()?.TargetPlatform.ToString();
             var nodePlatforms = nodes.Select(x => x.TargetPlatform);
             var missingNodePlatforms = platforms.Except(nodePlatforms);
             var missingNodePlatformsString = string.Join(", ", missingNodePlatforms);
-            LogNodeNotCrossPlatform(nodeName, missingNodePlatformsString);
+            LogNodeNotCrossPlatform(nodeName, targetPlatform, missingNodePlatformsString);
             return;
         }
 
@@ -277,11 +278,15 @@ public sealed partial class MergeFfisTool
             if (node.NodeKind != previousNode.NodeKind)
             {
                 var nodeKindString = node.NodeKind.ToString();
-                var nodePlatform = targetPlatform.ToString();
-                var nodeExpectedKind = previousNode.NodeKind.ToString();
-                var nodePlatformExpectedKind = platformNodes[^1].TargetPlatform.ToString();
+                var targetPlatformString = targetPlatform.ToString();
+                var nodeKindExpected = previousNode.NodeKind.ToString();
+                var platformNameExpected = platformNodes[^1].TargetPlatform.ToString();
                 LogNodeNotSameKind(
-                    node.Name, nodeKindString, nodePlatform, nodeExpectedKind, nodePlatformExpectedKind);
+                    node.Name,
+                    nodeKindString,
+                    targetPlatformString,
+                    nodeKindExpected,
+                    platformNameExpected);
                 return;
             }
         }
@@ -322,11 +327,11 @@ public sealed partial class MergeFfisTool
         return builder.ToImmutable();
     }
 
-    [LoggerMessage(0, LogLevel.Warning, "The node '{NodeName}' is not cross-platform; there is no matching node for platforms: {MissingPlatformNames}")]
-    private partial void LogNodeNotCrossPlatform(string nodeName, string missingPlatformNames);
+    [LoggerMessage(0, LogLevel.Warning, "The node '{NodeName}' for platform '{PlatformName}' is not cross-platform; there is no matching node for platforms: {MissingPlatformNames}")]
+    private partial void LogNodeNotCrossPlatform(string nodeName, string platformName, string missingPlatformNames);
 
-    [LoggerMessage(1, LogLevel.Error, "The node '{NodeName}' of kind '{NodeActualKind}' for platform '{NodePlatform}' does not match the kind '{nodeExpectedKind}' for platform {NodePlatformExpectedKind}.")]
-    private partial void LogNodeNotSameKind(string nodeName, string nodeActualKind, string nodePlatform, string nodeExpectedKind, string nodePlatformExpectedKind);
+    [LoggerMessage(1, LogLevel.Error, "The node '{NodeName}' of kind '{NodeKind}' for platform '{PlatformName}' does not match the kind '{NodeKindExpected}' for platform {PlatformNameExpected}.")]
+    private partial void LogNodeNotSameKind(string nodeName, string nodeKind, string platformName, string nodeKindExpected, string platformNameExpected);
 
     [LoggerMessage(2, LogLevel.Error, "The node '{NodeName}' is not equal to all other platform nodes of the same name.")]
     private partial void LogNodeNotEqual(string nodeName);
