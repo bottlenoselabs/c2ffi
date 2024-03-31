@@ -174,11 +174,11 @@ public sealed partial class MergeFfisTool
         ImmutableArray<TargetPlatform> platforms,
         ImmutableArray<CNodeWithTargetPlatform> nodes)
     {
-        var nodeName = nodes.FirstOrDefault()?.Node.Name ?? string.Empty;
+        var nodeName = nodes.FirstOrDefault()!.Node.Name;
+        var targetPlatform = nodes.FirstOrDefault()!.TargetPlatform.ToString();
 
         if (nodes.Length != platforms.Length)
         {
-            var targetPlatform = nodes.FirstOrDefault()?.TargetPlatform.ToString();
             var nodePlatforms = nodes.Select(x => x.TargetPlatform);
             var missingNodePlatforms = platforms.Except(nodePlatforms);
             var missingNodePlatformsString = string.Join(", ", missingNodePlatforms);

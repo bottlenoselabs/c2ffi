@@ -420,27 +420,27 @@ namespace c2ffi.Tool.Commands.Merge
     partial class MergeFfisTool
     {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.String, global::System.Exception?> __LogNodeNotCrossPlatformCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Warning, new global::Microsoft.Extensions.Logging.EventId(0, nameof(LogNodeNotCrossPlatform)), "The node '{NodeName}' is not cross-platform; there is no matching node for platforms: {MissingPlatformNames}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.String, global::System.String, global::System.Exception?> __LogNodeNotCrossPlatformCallback =
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Warning, new global::Microsoft.Extensions.Logging.EventId(0, nameof(LogNodeNotCrossPlatform)), "The node '{NodeName}' for platform '{PlatformName}' is not cross-platform; there is no matching node for platforms: {MissingPlatformNames}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogNodeNotCrossPlatform(global::System.String nodeName, global::System.String missingPlatformNames)
+        private partial void LogNodeNotCrossPlatform(global::System.String nodeName, global::System.String platformName, global::System.String missingPlatformNames)
         {
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Warning))
             {
-                __LogNodeNotCrossPlatformCallback(_logger, nodeName, missingPlatformNames, null);
+                __LogNodeNotCrossPlatformCallback(_logger, nodeName, platformName, missingPlatformNames, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.String, global::System.String, global::System.String, global::System.String, global::System.Exception?> __LogNodeNotSameKindCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String, global::System.String, global::System.String, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(1, nameof(LogNodeNotSameKind)), "The node '{NodeName}' of kind '{NodeActualKind}' for platform '{NodePlatform}' does not match the kind '{nodeExpectedKind}' for platform {NodePlatformExpectedKind}.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String, global::System.String, global::System.String, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(1, nameof(LogNodeNotSameKind)), "The node '{NodeName}' of kind '{NodeKind}' for platform '{PlatformName}' does not match the kind '{NodeKindExpected}' for platform {PlatformNameExpected}.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogNodeNotSameKind(global::System.String nodeName, global::System.String nodeActualKind, global::System.String nodePlatform, global::System.String nodeExpectedKind, global::System.String nodePlatformExpectedKind)
+        private partial void LogNodeNotSameKind(global::System.String nodeName, global::System.String nodeKind, global::System.String platformName, global::System.String nodeKindExpected, global::System.String platformNameExpected)
         {
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Error))
             {
-                __LogNodeNotSameKindCallback(_logger, nodeName, nodeActualKind, nodePlatform, nodeExpectedKind, nodePlatformExpectedKind, null);
+                __LogNodeNotSameKindCallback(_logger, nodeName, nodeKind, platformName, nodeKindExpected, platformNameExpected, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
