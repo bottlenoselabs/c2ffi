@@ -242,7 +242,7 @@ public abstract class MergeFfisTest
             Name = value.Name,
             TypeName = value.TypeInfo.Name,
             OffsetOf = value.OffsetOf,
-            SizeOf = value.TypeInfo.SizeOf
+            SizeOf = value.TypeInfo.SizeOf!.Value
         };
 
         return result;
@@ -369,8 +369,7 @@ public abstract class MergeFfisTest
     {
         var result = new CTestOpaqueType
         {
-            Name = value.Name,
-            SizeOf = value.SizeOf
+            Name = value.Name
         };
 
         return result;
@@ -395,7 +394,7 @@ public abstract class MergeFfisTest
         var result = new CTestVariable
         {
             Name = value.Name,
-            TypeName = value.Type
+            TypeName = value.TypeInfo.Name
         };
 
         return result;

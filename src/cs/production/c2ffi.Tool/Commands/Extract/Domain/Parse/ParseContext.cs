@@ -17,7 +17,7 @@ public sealed class ParseContext : IDisposable
     public readonly ImmutableArray<string> SystemIncludeDirectories;
     public readonly TargetPlatform TargetPlatformRequested;
     public readonly TargetPlatform TargetPlatformActual;
-    public readonly int PointerSizeBytes;
+    public readonly int PointerSize;
 
     private clang.CXTranslationUnit _translationUnit;
 
@@ -38,29 +38,24 @@ public sealed class ParseContext : IDisposable
 
         var targetInfo = GetTargetInfo(translationUnit);
         TargetPlatformActual = targetInfo.TargetPlatform;
-        PointerSizeBytes = targetInfo.PointerSizeBytes;
+        PointerSize = targetInfo.PointerSizeBytes;
     }
 
-    public bool IsSystemCursor(clang.CXCursor cursor)
+    public bool IsSystemCursor(clang.CXCursor clangCursor)
     {
-        var cursorLocation = clang.clang_getCursorLocation(cursor);
+        var cursorLocation = clang.clang_getCursorLocation(clangCursor);
         var isSystemCursor = clang.clang_Location_isInSystemHeader(cursorLocation) > 0;
         return isSystemCursor;
     }
 
-    public int? SizeOf(CNodeKind nodeKind, clang.CXType type)
+    public int? SizeOf(CNodeKind nodeKind, clang.CXType clangType)
     {
-        if (nodeKind == CNodeKind.Function)
+        if (nodeKind is CNodeKind.Function or CNodeKind.OpaqueType)
         {
             return null;
         }
 
-        if (nodeKind == CNodeKind.OpaqueType)
-        {
-            return 0;
-        }
-
-        var sizeOf = (int)clang.clang_Type_getSizeOf(type);
+        var sizeOf = (int)clang.clang_Type_getSizeOf(clangType);
         if (sizeOf >= 0)
         {
             return sizeOf;
@@ -70,7 +65,7 @@ public sealed class ParseContext : IDisposable
         {
             case CNodeKind.Pointer:
             case CNodeKind.Array:
-                return PointerSizeBytes;
+                return PointerSize;
             default:
                 return sizeOf;
         }

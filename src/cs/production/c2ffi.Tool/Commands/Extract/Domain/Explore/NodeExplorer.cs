@@ -3,6 +3,7 @@
 
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
 
@@ -40,15 +41,15 @@ public abstract partial class NodeExplorer
 
     internal CNode? ExploreInternal(ExploreContext context, ExploreCandidateInfoNode info)
     {
-        LogExploring(info.NodeKind, info.Name, info.Location);
+        LogExploring(info.NodeKind.ToString().ToLowerInvariant(), info.Name, info.Location);
         var result = GetNode(context, info);
         if (result == null)
         {
-            LogExploreSkipped(info.NodeKind, info.Name, info.Location);
+            LogExploreSkipped(info.NodeKind.ToString().ToLowerInvariant(), info.Name, info.Location);
             return null;
         }
 
-        LogExplored(info.NodeKind, info.Name, info.Location);
+        LogExplored(info.NodeKind.ToString().ToLowerInvariant(), info.Name, info.Location);
         return result;
     }
 
@@ -75,7 +76,7 @@ public abstract partial class NodeExplorer
         {
             if (_logAlreadyExplored)
             {
-                LogAlreadyVisited(info.NodeKind, info.Name, firstLocation);
+                LogAlreadyVisited(info.NodeKind.ToString().ToLowerInvariant(), info.Name, firstLocation);
             }
 
             return false;
@@ -115,19 +116,15 @@ public abstract partial class NodeExplorer
     [LoggerMessage(1, LogLevel.Error, "- Unexpected type kind '{TypeKind}'")]
     private partial void LogFailureUnexpectedType(CXTypeKind typeKind);
 
-    [LoggerMessage(2, LogLevel.Information, "- Already visited {NodeKind} '{Name}' ({Location})")]
-    private partial void LogAlreadyVisited(CNodeKind nodeKind,
-        string name,
-        CLocation? location);
+    [LoggerMessage(2, LogLevel.Information, "- Already visited {Kind} '{Name}' ({Location})")]
+    private partial void LogAlreadyVisited(string kind, string name, CLocation? location);
 
-    [LoggerMessage(3, LogLevel.Debug, "- Exploring {NodeKind} '{Name}' ({Location})'")]
-    private partial void LogExploring(CNodeKind nodeKind, string name, CLocation? location);
+    [LoggerMessage(3, LogLevel.Debug, "- Exploring {Kind} '{Name}' ({Location})'")]
+    private partial void LogExploring(string kind, string name, CLocation? location);
 
-    [LoggerMessage(4, LogLevel.Debug, "- Explored {NodeKind} '{Name}' ({Location})'")]
-    private partial void LogExplored(CNodeKind nodeKind, string name, CLocation? location);
+    [LoggerMessage(4, LogLevel.Debug, "- Explored {Kind} '{Name}' ({Location})'")]
+    private partial void LogExplored(string kind, string name, CLocation? location);
 
-    [LoggerMessage(5, LogLevel.Debug, "- Skipped exploring {NodeKind} '{Name}' ({Location})'")]
-    private partial void LogExploreSkipped(CNodeKind nodeKind,
-        string name,
-        CLocation? location);
+    [LoggerMessage(5, LogLevel.Debug, "- Skipped exploring {Kind} '{Name}' ({Location})'")]
+    private partial void LogExploreSkipped(string kind, string name, CLocation? location);
 }

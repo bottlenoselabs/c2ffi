@@ -4,6 +4,7 @@
 using bottlenoselabs;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using c2ffi.Tool.Commands.Extract.Domain.Parse;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
@@ -19,11 +20,6 @@ public sealed partial class Explorer
     private readonly ClangTranslationUnitParser _clangTranslationUnitParser;
 
     private readonly List<ParseContext> _parseContexts = new();
-
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierMacroObjectCandidates = new();
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierVariableCandidates = new();
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierFunctionsCandidates = new();
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierTypeCandidates = new();
 
     private readonly HashSet<string> _visitedIncludeFilePaths = new();
 
@@ -45,7 +41,6 @@ public sealed partial class Explorer
         try
         {
             VisitTranslationUnit(context, context.ParseContext);
-            ExploreFrontiers(context);
             result = context.GetFfi();
             LogFfi(result);
         }
@@ -66,42 +61,6 @@ public sealed partial class Explorer
 
         LogSuccess();
         return result;
-    }
-
-    private void ExploreFrontiers(ExploreContext context)
-    {
-        ExploreFrontierFunctions(context);
-        ExploreFrontierVariables(context);
-        ExploreFrontierMacroObjects(context);
-        ExploreFrontierTypes(context);
-    }
-
-    private void ExploreFrontierFunctions(ExploreContext context)
-    {
-        var totalCount = _frontierFunctionsCandidates.Count;
-        var functionNameCandidates = string.Join(", ", _frontierFunctionsCandidates.Select(x => x.Name));
-        LogExploringFunctionCandidates(totalCount, functionNameCandidates);
-        ExploreFrontier(context, _frontierFunctionsCandidates);
-    }
-
-    private void ExploreFrontierVariables(ExploreContext context)
-    {
-        var totalCount = _frontierVariableCandidates.Count;
-        var variableNameCandidates = string.Join(", ", _frontierVariableCandidates.Select(x => x.Name));
-        LogExploringVariableCandidates(totalCount, variableNameCandidates);
-        ExploreFrontier(context, _frontierVariableCandidates);
-    }
-
-    private void ExploreFrontierMacroObjects(ExploreContext context)
-    {
-        var totalCount = _frontierMacroObjectCandidates.Count;
-        var macroCandidateNames = string.Join(", ", _frontierMacroObjectCandidates.Select(x => x.Name));
-        LogExploringMacroObjectCandidates(totalCount, macroCandidateNames);
-        ExploreFrontier(context, _frontierMacroObjectCandidates);
-    }
-
-    private void ExploreFrontierTypes(ExploreContext context)
-    {
     }
 
     private void VisitTranslationUnit(ExploreContext context, ParseContext parseContext)
@@ -126,7 +85,7 @@ public sealed partial class Explorer
     private void VisitFunction(ExploreContext context, clang.CXCursor clangCursor)
     {
         var info = context.CreateCandidateInfoNode(CNodeKind.Function, clangCursor);
-        TryEnqueueCandidateInfoNode(context, info);
+        context.TryEnqueueCandidate(info);
     }
 
     private void VisitVariables(ExploreContext context, ParseContext parseContext)
@@ -141,7 +100,7 @@ public sealed partial class Explorer
     private void VisitVariable(ExploreContext context, clang.CXCursor clangCursor)
     {
         var info = context.CreateCandidateInfoNode(CNodeKind.Variable, clangCursor);
-        TryEnqueueCandidateInfoNode(context, info);
+        context.TryEnqueueCandidate(info);
     }
 
     private void VisitMacroObjects(ExploreContext context, ParseContext parseContext)
@@ -156,7 +115,7 @@ public sealed partial class Explorer
     private void VisitMacroObject(ExploreContext context, clang.CXCursor clangCursor)
     {
         var info = context.CreateCandidateInfoNode(CNodeKind.MacroObject, clangCursor);
-        TryEnqueueCandidateInfoNode(context, info);
+        context.TryEnqueueCandidate(info);
     }
 
     private void VisitIncludes(ExploreContext context, ParseContext parseContext)
@@ -201,51 +160,11 @@ public sealed partial class Explorer
         VisitTranslationUnit(context, parseContext2);
     }
 
-    private void TryEnqueueCandidateInfoNode(ExploreContext context, ExploreCandidateInfoNode info)
-    {
-        var frontier = info.NodeKind switch
-        {
-            CNodeKind.Variable => _frontierVariableCandidates,
-            CNodeKind.Function => _frontierFunctionsCandidates,
-            CNodeKind.MacroObject => _frontierMacroObjectCandidates,
-            _ => _frontierTypeCandidates
-        };
-
-        if (!context.CanVisit(info.NodeKind, info))
-        {
-            return;
-        }
-
-        LogEnqueueCandidate(info.NodeKind, info.Name, info.Location);
-        frontier.PushBack(info);
-    }
-
     private ExploreContext CreateExploreContext(string filePath, ExtractTargetPlatformOptions options)
     {
         var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(filePath, options);
         var result = new ExploreContext(_services, parseContext);
         return result;
-    }
-
-    private void ExploreFrontier(ExploreContext context, ArrayDeque<ExploreCandidateInfoNode> frontier)
-    {
-        while (frontier.Count > 0)
-        {
-            var node = frontier.PopFront()!;
-            ExploreNode(context, node);
-        }
-    }
-
-    private void ExploreNode(ExploreContext context, ExploreCandidateInfoNode info)
-    {
-        var node = context.Explore(info);
-        if (node == null)
-        {
-            return;
-        }
-
-        var location = node is CNodeWithLocation nodeWithLocation ? nodeWithLocation.Location : null;
-        LogExploredNode(node.NodeKind, node.Name, location);
     }
 
     private void LogFfi(CFfiTargetPlatform ffi)
@@ -267,35 +186,17 @@ public sealed partial class Explorer
     [LoggerMessage(3, LogLevel.Information, "- Finished visiting translation unit: {FilePath}")]
     private partial void LogVisitedTranslationUnit(string filePath);
 
-    [LoggerMessage(4, LogLevel.Information, "- Exploring {Count} macro object candidates: {Names}")]
-    private partial void LogExploringMacroObjectCandidates(int count, string names);
-
     [LoggerMessage(5, LogLevel.Information, "- Found {FoundCount} macro objects: {Names}")]
     private partial void LogFoundMacroObjects(int foundCount, string names);
-
-    [LoggerMessage(6, LogLevel.Information, "- Exploring {Count} variable candidates: {Names}")]
-    private partial void LogExploringVariableCandidates(int count, string names);
 
     [LoggerMessage(7, LogLevel.Information, "- Found {FoundCount} variables: {Names}")]
     private partial void LogFoundVariables(int foundCount, string names);
 
-    [LoggerMessage(8, LogLevel.Information, "- Exploring {Count} function candidates: {Names}")]
-    private partial void LogExploringFunctionCandidates(int count, string names);
-
     [LoggerMessage(9, LogLevel.Information, "- Found {FoundCount} functions: {Names}")]
     private partial void LogFoundFunctions(int foundCount, string names);
 
-    [LoggerMessage(10, LogLevel.Information, "- Exploring {Count} type candidates: {Names}")]
-    private partial void LogExploringTypeCandidates(int count, string names);
-
     [LoggerMessage(11, LogLevel.Information, "- Found {FoundCount} types: {Names}")]
     private partial void LogFoundTypes(int foundCount, string names);
-
-    [LoggerMessage(12, LogLevel.Debug, "- Enqueued {NodeKind} candidate for exploration '{Name}' ({Location})")]
-    private partial void LogEnqueueCandidate(CNodeKind nodeKind, string name, CLocation? location);
-
-    [LoggerMessage(13, LogLevel.Information, "- Explored {NodeKind} '{Name}' ({Location})")]
-    private partial void LogExploredNode(CNodeKind nodeKind, string name, CLocation? location);
 
     [LoggerMessage(14, LogLevel.Information, "- Ignored include file header: {FilePath}")]
     private partial void LogIgnoreInclude(string filePath);

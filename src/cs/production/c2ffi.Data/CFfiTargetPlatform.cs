@@ -35,6 +35,12 @@ public record CFfiTargetPlatform
     public TargetPlatform PlatformActual { get; set; } = TargetPlatform.Unknown;
 
     /// <summary>
+    ///     Gets or sets the pointer size in bytes.
+    /// </summary>
+    [JsonPropertyName("pointerSize")]
+    public int PointerSize { get; set; }
+
+    /// <summary>
     ///     Gets or sets the macro objects.
     /// </summary>
     [JsonPropertyName("macroObjects")]

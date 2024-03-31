@@ -9,6 +9,7 @@ using bottlenoselabs;
 using bottlenoselabs.Common.Tools;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using c2ffi.Tool.Commands.Extract.Domain.Parse;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using JetBrains.Annotations;

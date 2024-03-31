@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
@@ -24,6 +25,8 @@ public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     private static CVariable Variable(ExploreContext context, ExploreCandidateInfoNode info)
     {
+        var typeInfo = context.VisitType(info.Type, info);
+
         var comment = context.Comment(info.Cursor);
         var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
@@ -31,7 +34,7 @@ public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
         {
             Location = info.Location,
             Name = info.Name,
-            Type = info.TypeName,
+            TypeInfo = typeInfo,
             Comment = comment,
             IsSystem = isSystemCursor
         };

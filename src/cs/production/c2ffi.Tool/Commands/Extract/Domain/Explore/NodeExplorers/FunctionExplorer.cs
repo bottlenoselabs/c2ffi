@@ -4,6 +4,7 @@
 using System.Collections.Immutable;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
@@ -33,15 +34,10 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         return function;
     }
 
-    private CFunction? Function(ExploreContext context, ExploreCandidateInfoNode info)
+    private CFunction Function(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var returnTypeInfo = FunctionReturnType(context, info);
         var parameters = FunctionParameters(context, info);
-        if (parameters == null)
-        {
-            return null;
-        }
-
         var callingConvention = FunctionCallingConvention(info.Type);
         var comment = context.Comment(info.Cursor);
         var isSystemCursor = context.IsSystemCursor(info.Cursor);
@@ -52,7 +48,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
             Location = info.Location,
             CallingConvention = callingConvention,
             ReturnTypeInfo = returnTypeInfo,
-            Parameters = parameters.Value,
+            Parameters = parameters,
             Comment = comment,
             IsSystem = isSystemCursor
         };
@@ -81,7 +77,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         return context.VisitType(resultType, info)!;
     }
 
-    private ImmutableArray<CFunctionParameter>? FunctionParameters(
+    private ImmutableArray<CFunctionParameter> FunctionParameters(
         ExploreContext context,
         ExploreCandidateInfoNode info)
     {
@@ -92,10 +88,6 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         {
             var parameterCursor = clang_Cursor_getArgument(info.Cursor, i);
             var functionParameter = FunctionParameter(context, parameterCursor, info);
-            if (functionParameter == null)
-            {
-                return null;
-            }
 
             builder.Add(functionParameter);
         }
@@ -104,7 +96,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         return result;
     }
 
-    private static CFunctionParameter? FunctionParameter(
+    private static CFunctionParameter FunctionParameter(
         ExploreContext context,
         CXCursor parameterCursor,
         ExploreCandidateInfoNode parentInfo)
@@ -113,11 +105,6 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         var parameterType = clang_getCursorType(parameterCursor);
 
         var parameterTypeInfo = context.VisitType(parameterType, parentInfo);
-        if (parameterTypeInfo == null)
-        {
-            return null;
-        }
-
         var comment = context.Comment(parameterCursor);
 
         var functionExternParameter = new CFunctionParameter

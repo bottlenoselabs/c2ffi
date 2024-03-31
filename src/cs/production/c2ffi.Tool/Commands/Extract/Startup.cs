@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Tool.Commands.Extract.Domain.Explore;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 using c2ffi.Tool.Commands.Extract.Domain.Parse;
 using c2ffi.Tool.Commands.Extract.Input;
@@ -23,6 +24,8 @@ public sealed class Startup : IDependencyInjectionStartup
         services.AddSingleton<ParseArgumentsProvider>();
         services.AddSingleton<ParseSystemIncludeDirectoriesProvider>();
         services.AddSingleton<Explorer>();
+
+        services.AddTransient<ExploreFrontier>();
 
         services.AddTransient<ArrayExplorer>();
         services.AddTransient<EnumConstantExplorer>();

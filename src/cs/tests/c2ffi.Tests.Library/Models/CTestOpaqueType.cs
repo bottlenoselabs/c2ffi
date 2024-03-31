@@ -13,7 +13,4 @@ public class CTestOpaqueType
 {
     [JsonPropertyName("name")]
     public string Name { get; init; } = string.Empty;
-
-    [JsonPropertyName("sizeOf")]
-    public int SizeOf { get; init; }
 }

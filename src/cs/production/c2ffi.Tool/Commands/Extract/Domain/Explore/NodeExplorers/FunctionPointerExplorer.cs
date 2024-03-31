@@ -4,6 +4,7 @@
 using System.Collections.Immutable;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
