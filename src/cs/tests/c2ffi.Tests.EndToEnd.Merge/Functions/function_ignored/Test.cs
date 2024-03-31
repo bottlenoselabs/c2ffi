@@ -7,19 +7,21 @@ using Xunit;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_void;
+namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_ignored;
 
 public class Test : MergeFfisTest
 {
-    private const string FunctionName = "function_void";
+    private const string FunctionName = "function_allowed";
+    private const string IgnoredFunctionName = "function_not_allowed";
 
     [Fact]
     public void Function()
     {
         var ffi = GetCrossPlatformFfi(
-            $"src/c/tests/functions/{FunctionName}/ffi");
+            "src/c/tests/functions/function_ignored/ffi");
 
         FfiFunctionExists(ffi);
+        FfiFunctionDoesNotExist(ffi);
     }
 
     private void FfiFunctionExists(CTestFfiCrossPlatform ffi)
@@ -30,5 +32,11 @@ public class Test : MergeFfisTest
         function.ReturnTypeSizeOf.Should().Be(null);
 
         function.Parameters.Should().BeEmpty();
+    }
+
+    private void FfiFunctionDoesNotExist(CTestFfiCrossPlatform ffi)
+    {
+        var function = ffi.TryGetFunction(IgnoredFunctionName);
+        function.Should().Be(null);
     }
 }

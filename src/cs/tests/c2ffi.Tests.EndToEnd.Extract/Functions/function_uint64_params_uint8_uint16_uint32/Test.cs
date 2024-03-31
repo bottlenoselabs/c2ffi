@@ -13,9 +13,9 @@ public class Test : ExtractFfiTest
     private const string FunctionName = "function_uint64_params_uint8_uint16_uint32";
 
     [Fact]
-    public void FunctionExists()
+    public void Function()
     {
-        var ffis = GetFfis(
+        var ffis = GetTargetPlatformFfis(
             $"src/c/tests/functions/{FunctionName}/config.json");
         Assert.True(ffis.Length > 0);
 

@@ -14,9 +14,9 @@ public class Test : MergeFfisTest
     private const string FunctionName = "function_int";
 
     [Fact]
-    public void FunctionExists()
+    public void Function()
     {
-        var ffi = GetFfi(
+        var ffi = GetCrossPlatformFfi(
             $"src/c/tests/functions/{FunctionName}/ffi");
 
         FfiFunctionExists(ffi);

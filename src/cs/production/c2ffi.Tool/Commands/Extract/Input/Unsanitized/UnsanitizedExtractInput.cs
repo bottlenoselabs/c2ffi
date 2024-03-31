@@ -44,7 +44,7 @@ public sealed class UnsanitizedExtractInput
     /// <summary>
     ///     Gets or sets the directories to ignore header files.
     /// </summary>
-    [JsonPropertyName("ignoreIncludeFiles")]
+    [JsonPropertyName("ignoredIncludeFiles")]
     public ImmutableArray<string>? IgnoredIncludeFiles { get; set; }
 
     /// <summary>
@@ -117,16 +117,22 @@ public sealed class UnsanitizedExtractInput
     public ImmutableArray<string>? OpaqueTypeNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the name of macro objects allowed. Use <c>null</c> to allow all macro objects.
+    ///     Gets or sets the name of macro objects that are not allowed. Use <c>null</c> to allow all macro objects.
     /// </summary>
-    [JsonPropertyName("allowedMacroObjects")]
-    public ImmutableArray<string>? AllowedMacroObjects { get; set; }
+    [JsonPropertyName("ignoredMacroObjects")]
+    public ImmutableArray<string>? IgnoredMacroObjects { get; set; }
 
     /// <summary>
-    ///     Gets or sets the name of variables allowed. Use <c>null</c> to allow all variables.
+    ///     Gets or sets the name of variables that are not allowed. Use <c>null</c> to allow all variables.
     /// </summary>
-    [JsonPropertyName("allowedVariables")]
-    public ImmutableArray<string>? AllowedVariables { get; set; }
+    [JsonPropertyName("ignoredVariables")]
+    public ImmutableArray<string>? IgnoredVariables { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the name of functions that are not allowed. Use <c>null</c> to allow all functions.
+    /// </summary>
+    [JsonPropertyName("ignoredFunctions")]
+    public ImmutableArray<string>? IgnoredFunctions { get; set; }
 
     /// <summary>
     ///     Gets or sets the target platform configurations for extracting the FFIs per desktop host

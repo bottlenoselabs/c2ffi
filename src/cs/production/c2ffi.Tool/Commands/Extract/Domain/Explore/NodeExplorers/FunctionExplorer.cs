@@ -28,6 +28,12 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Either(
         CXTypeKind.CXType_FunctionProto, CXTypeKind.CXType_FunctionNoProto);
 
+    protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
+    {
+        var ignoredFunctions = context.ParseContext.ExtractOptions.IgnoredFunctions;
+        return ignoredFunctions.IsEmpty || !ignoredFunctions.Contains(info.Name);
+    }
+
     protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         var function = Function(context, info);

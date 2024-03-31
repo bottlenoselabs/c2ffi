@@ -115,47 +115,88 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         string inputFilePath)
     {
         var targetPlatform = new TargetPlatform(targetPlatformString);
-
-        var outputFilePath = SanitizeOutputDirectoryPath(input.OutputDirectory, targetPlatformString);
-
-        var systemIncludeDirectories =
-            SanitizeDirectoryPaths(
-                input.SystemIncludeDirectories,
-                targetPlatformInput.SystemIncludeDirectories);
-
-        var userIncludeDirectories = SanitizeUserIncludeDirectories(
-            input.UserIncludeDirectories,
-            targetPlatformInput.UserIncludeDirectories,
-            inputFilePath);
-
-        var ignoredIncludeFiles = SanitizeDirectoryPaths(
-            input.IgnoredIncludeFiles, targetPlatformInput.IgnoredIncludeDirectories);
-
-        var clangDefines = SanitizeStrings(targetPlatformInput.Defines);
-        var clangArguments = SanitizeStrings(targetPlatformInput.ClangArguments);
-
-        var opaqueTypeNames = SanitizeStrings(input.OpaqueTypeNames).ToImmutableHashSet();
-        var allowedMacroObjects = SanitizeStrings(input.AllowedMacroObjects).ToImmutableHashSet();
-        var allowedVariables = SanitizeStrings(input.AllowedVariables).ToImmutableHashSet();
-
         var options = new ExtractTargetPlatformOptions
         {
             TargetPlatform = targetPlatform,
-            OutputFilePath = outputFilePath,
-            UserIncludeDirectories = userIncludeDirectories,
-            SystemIncludeDirectories = systemIncludeDirectories,
-            IgnoredIncludeFiles = ignoredIncludeFiles,
-            MacroObjectDefines = clangDefines,
-            AdditionalArguments = clangArguments,
+            OutputFilePath = OutputFilePath(input, targetPlatformString),
+            SystemIncludeDirectories = SystemIncludeDirectories(input, targetPlatformInput),
+            UserIncludeDirectories = UserIncludeDirectories(input, targetPlatformInput, inputFilePath),
+            IgnoredIncludeFiles = IgnoredIncludeFiles(input, targetPlatformInput),
+            MacroObjectDefines = ClangDefines(targetPlatformInput),
+            AdditionalArguments = ClangArguments(targetPlatformInput),
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
             IsEnabledSystemDeclarations = input.IsEnabledSystemDeclarations ?? false,
             IsEnabledOnlyExternalTopLevelCursors = input.IsEnabledOnlyExternalTopLevelCursors ?? true,
-            OpaqueTypeNames = opaqueTypeNames,
-            AllowedMacroObjects = allowedMacroObjects,
-            AllowedVariables = allowedVariables
+            OpaqueTypeNames = OpaqueTypeNames(input),
+            IgnoredMacroObjects = IgnoredMacroObjects(input),
+            IgnoredVariables = IgnoredVariables(input),
+            IgnoredFunctions = IgnoredFunctions(input)
         };
 
         return options;
+    }
+
+    private string OutputFilePath(UnsanitizedExtractInput input, string targetPlatformString)
+    {
+        return SanitizeOutputDirectoryPath(input.OutputDirectory, targetPlatformString);
+    }
+
+    private ImmutableArray<string> SystemIncludeDirectories(
+        UnsanitizedExtractInput input,
+        UnsanitizedExtractInputTargetPlatform targetPlatformInput)
+    {
+        return SanitizeDirectoryPaths(
+            input.SystemIncludeDirectories,
+            targetPlatformInput.SystemIncludeDirectories);
+    }
+
+    private ImmutableArray<string> UserIncludeDirectories(
+        UnsanitizedExtractInput input,
+        UnsanitizedExtractInputTargetPlatform targetPlatformInput,
+        string inputFilePath)
+    {
+        return SanitizeUserIncludeDirectories(
+            input.UserIncludeDirectories,
+            targetPlatformInput.UserIncludeDirectories,
+            inputFilePath);
+    }
+
+    private ImmutableArray<string> IgnoredIncludeFiles(
+        UnsanitizedExtractInput input,
+        UnsanitizedExtractInputTargetPlatform targetPlatformInput)
+    {
+        return SanitizeDirectoryPaths(
+            input.IgnoredIncludeFiles, targetPlatformInput.IgnoredIncludeDirectories);
+    }
+
+    private ImmutableArray<string> ClangDefines(UnsanitizedExtractInputTargetPlatform targetPlatformInput)
+    {
+        return SanitizeStrings(targetPlatformInput.Defines);
+    }
+
+    private ImmutableArray<string> ClangArguments(UnsanitizedExtractInputTargetPlatform targetPlatformInput)
+    {
+        return SanitizeStrings(targetPlatformInput.ClangArguments);
+    }
+
+    private ImmutableHashSet<string> OpaqueTypeNames(UnsanitizedExtractInput input)
+    {
+        return SanitizeStrings(input.OpaqueTypeNames).ToImmutableHashSet();
+    }
+
+    private ImmutableHashSet<string> IgnoredMacroObjects(UnsanitizedExtractInput input)
+    {
+        return SanitizeStrings(input.IgnoredMacroObjects).ToImmutableHashSet();
+    }
+
+    private ImmutableHashSet<string> IgnoredVariables(UnsanitizedExtractInput input)
+    {
+        return SanitizeStrings(input.IgnoredVariables).ToImmutableHashSet();
+    }
+
+    private ImmutableHashSet<string> IgnoredFunctions(UnsanitizedExtractInput input)
+    {
+        return SanitizeStrings(input.IgnoredFunctions).ToImmutableHashSet();
     }
 
     private string SanitizeOutputDirectoryPath(

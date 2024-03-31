@@ -13,9 +13,9 @@ public class Test : ExtractFfiTest
     private const string EnumName = "enum_uint8";
 
     [Fact]
-    public void EnumExists()
+    public void Enum()
     {
-        var ffis = GetFfis(
+        var ffis = GetTargetPlatformFfis(
             $"src/c/tests/enums/{EnumName}/config.json");
         Assert.True(ffis.Length > 0);
 

@@ -15,9 +15,9 @@ public class Test : MergeFfisTest
     private const string MacroObjectName = "MACRO_OBJECT_INT";
 
     [Fact]
-    public void MacroObjectExists()
+    public void MacroObject()
     {
-        var ffi = GetFfi(
+        var ffi = GetCrossPlatformFfi(
             $"src/c/tests/macro_objects/{MacroObjectName.ToLowerInvariant()}/ffi");
         FfiMacroObjectExists(ffi);
     }

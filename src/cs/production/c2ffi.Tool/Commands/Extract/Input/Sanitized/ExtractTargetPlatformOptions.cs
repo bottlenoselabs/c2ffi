@@ -30,9 +30,11 @@ public sealed class ExtractTargetPlatformOptions
 
     public ImmutableHashSet<string> OpaqueTypeNames { get; init; } = ImmutableHashSet<string>.Empty;
 
-    public ImmutableHashSet<string> AllowedMacroObjects { get; init; } = ImmutableHashSet<string>.Empty;
+    public ImmutableHashSet<string> IgnoredMacroObjects { get; init; } = ImmutableHashSet<string>.Empty;
 
-    public ImmutableHashSet<string> AllowedVariables { get; init; } = ImmutableHashSet<string>.Empty;
+    public ImmutableHashSet<string> IgnoredVariables { get; init; } = ImmutableHashSet<string>.Empty;
+
+    public ImmutableHashSet<string> IgnoredFunctions { get; init; } = ImmutableHashSet<string>.Empty;
 
     public override string ToString()
     {

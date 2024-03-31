@@ -3,7 +3,7 @@
   "userIncludeDirectories": [
     "../../../production/ffi_helper/include"
   ],
-  "ignoreIncludeFiles": [
+  "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
     "targetPlatforms": {
