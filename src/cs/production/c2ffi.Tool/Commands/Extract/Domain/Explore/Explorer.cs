@@ -204,7 +204,7 @@ public sealed partial class Explorer
     [LoggerMessage(2, LogLevel.Debug, "- Visiting translation unit: {FilePath}")]
     private partial void LogVisitingTranslationUnit(string filePath);
 
-    [LoggerMessage(3, LogLevel.Information, "- Finished visiting translation unit: {FilePath}")]
+    [LoggerMessage(3, LogLevel.Debug, "- Finished visiting translation unit: {FilePath}")]
     private partial void LogVisitedTranslationUnit(string filePath);
 
     [LoggerMessage(4, LogLevel.Information, "- Found {FoundCount} macro objects: {Names}")]

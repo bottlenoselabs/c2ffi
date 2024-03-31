@@ -7,60 +7,60 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore.Context
     {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::c2ffi.Data.CNodeKind, global::System.String, global::c2ffi.Data.CLocation?, global::System.Exception?> __LogEnqueueCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2ffi.Data.CNodeKind, global::System.String, global::c2ffi.Data.CLocation?>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(0, nameof(LogEnqueue)), "- Enqueued {NodeKind} for exploration '{Name}' ({Location})", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2ffi.Data.CNodeKind, global::System.String, global::c2ffi.Data.CLocation?>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(0, nameof(LogEnqueue)), "- Enqueued {NodeKind} for exploration '{Name}' ({Location})", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogEnqueue(global::c2ffi.Data.CNodeKind nodeKind, global::System.String name, global::c2ffi.Data.CLocation? location)
         {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
                 __LogEnqueueCallback(_logger, nodeKind, name, location, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogFunctionsCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogFunctions)), "- Exploring {Count} functions: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogFunctions)), "- Exploring {Count} functions: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogFunctions(global::System.Int32 count, global::System.String names)
         {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
                 __LogFunctionsCallback(_logger, count, names, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogVariablesCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogVariables)), "- Exploring {Count} variables: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogVariables)), "- Exploring {Count} variables: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogVariables(global::System.Int32 count, global::System.String names)
         {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
                 __LogVariablesCallback(_logger, count, names, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogMacroObjectsCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(4, nameof(LogMacroObjects)), "- Exploring {Count} macro objects: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(4, nameof(LogMacroObjects)), "- Exploring {Count} macro objects: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogMacroObjects(global::System.Int32 count, global::System.String names)
         {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
                 __LogMacroObjectsCallback(_logger, count, names, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogTypesCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(5, nameof(LogTypes)), "- Exploring {Count} types: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(5, nameof(LogTypes)), "- Exploring {Count} types: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogTypes(global::System.Int32 count, global::System.String names)
         {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
                 __LogTypesCallback(_logger, count, names, null);
             }
@@ -109,19 +109,19 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.Exception?> __LogVisitedTranslationUnitCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogVisitedTranslationUnit)), "- Finished visiting translation unit: {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogVisitedTranslationUnit)), "- Finished visiting translation unit: {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogVisitedTranslationUnit(global::System.String filePath)
         {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
                 __LogVisitedTranslationUnitCallback(_logger, filePath, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogFoundMacroObjectsCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(5, nameof(LogFoundMacroObjects)), "- Found {FoundCount} macro objects: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(4, nameof(LogFoundMacroObjects)), "- Found {FoundCount} macro objects: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogFoundMacroObjects(global::System.Int32 foundCount, global::System.String names)
@@ -133,7 +133,7 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogFoundVariablesCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(7, nameof(LogFoundVariables)), "- Found {FoundCount} variables: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(5, nameof(LogFoundVariables)), "- Found {FoundCount} variables: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogFoundVariables(global::System.Int32 foundCount, global::System.String names)
@@ -145,7 +145,7 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogFoundFunctionsCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(9, nameof(LogFoundFunctions)), "- Found {FoundCount} functions: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(6, nameof(LogFoundFunctions)), "- Found {FoundCount} functions: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogFoundFunctions(global::System.Int32 foundCount, global::System.String names)
@@ -156,20 +156,8 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Int32, global::System.String, global::System.Exception?> __LogFoundTypesCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Int32, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(11, nameof(LogFoundTypes)), "- Found {FoundCount} types: {Names}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
-
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogFoundTypes(global::System.Int32 foundCount, global::System.String names)
-        {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
-            {
-                __LogFoundTypesCallback(_logger, foundCount, names, null);
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.Exception?> __LogIgnoreIncludeCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(14, nameof(LogIgnoreInclude)), "- Ignored include file header: {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(7, nameof(LogIgnoreInclude)), "- Ignored include file header: {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogIgnoreInclude(global::System.String filePath)

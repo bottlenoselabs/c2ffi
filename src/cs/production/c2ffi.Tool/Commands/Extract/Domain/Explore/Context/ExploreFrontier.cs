@@ -94,21 +94,21 @@ public sealed partial class ExploreFrontier
         }
     }
 
-    [LoggerMessage(0, LogLevel.Information, "- Enqueued {NodeKind} for exploration '{Name}' ({Location})")]
+    [LoggerMessage(0, LogLevel.Debug, "- Enqueued {NodeKind} for exploration '{Name}' ({Location})")]
     private partial void LogEnqueue(
         CNodeKind nodeKind,
         string name,
         CLocation? location);
 
-    [LoggerMessage(2, LogLevel.Information, "- Exploring {Count} functions: {Names}")]
+    [LoggerMessage(2, LogLevel.Debug, "- Exploring {Count} functions: {Names}")]
     private partial void LogFunctions(int count, string names);
 
-    [LoggerMessage(3, LogLevel.Information, "- Exploring {Count} variables: {Names}")]
+    [LoggerMessage(3, LogLevel.Debug, "- Exploring {Count} variables: {Names}")]
     private partial void LogVariables(int count, string names);
 
-    [LoggerMessage(4, LogLevel.Information, "- Exploring {Count} macro objects: {Names}")]
+    [LoggerMessage(4, LogLevel.Debug, "- Exploring {Count} macro objects: {Names}")]
     private partial void LogMacroObjects(int count, string names);
 
-    [LoggerMessage(5, LogLevel.Information, "- Exploring {Count} types: {Names}")]
+    [LoggerMessage(5, LogLevel.Debug, "- Exploring {Count} types: {Names}")]
     private partial void LogTypes(int count, string names);
 }
