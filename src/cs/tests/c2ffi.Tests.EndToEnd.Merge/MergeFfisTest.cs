@@ -38,17 +38,33 @@ public abstract class MergeFfisTest
         _tool = services.GetService<MergeFfisTool>()!;
     }
 
-    public CTestFfiCrossPlatform GetFfi(string relativeInputDirectoryPath)
+    public CTestFfiCrossPlatform GetFfi(string ffiDirectoryPath)
     {
-        var fullInputDirectoryPath = _fileSystemHelper.GetFullDirectoryPath(relativeInputDirectoryPath);
-        var fullOutputFilePath = _fileSystem.Path.Combine(fullInputDirectoryPath, "../ffi-x/cross-platform.json");
-        RunTool(fullInputDirectoryPath, fullOutputFilePath);
+        var fullFfiDirectoryPath = _fileSystemHelper.GetFullDirectoryPath(ffiDirectoryPath);
+        try
+        {
+            _fileSystem.Directory.Delete(_fileSystem.Path.Combine(fullFfiDirectoryPath, "../ffi-x"), true);
+        }
+        catch (DirectoryNotFoundException)
+        {
+        }
+
+        var fullOutputFilePath = _fileSystem.Path.Combine(fullFfiDirectoryPath, "../ffi-x/cross-platform.json");
+        RunTool(fullFfiDirectoryPath, fullOutputFilePath);
         return ReadFfi(fullOutputFilePath);
     }
 
     private void RunTool(string inputDirectoryPath, string outputFilePath)
     {
         _tool.Run(inputDirectoryPath, outputFilePath);
+    }
+
+    private void DeleteFiles(IEnumerable<string> filePaths)
+    {
+        foreach (var filePath in filePaths)
+        {
+            _file.Delete(filePath);
+        }
     }
 
     private IEnumerable<string> GetFfiFilePaths(string configurationFilePath)

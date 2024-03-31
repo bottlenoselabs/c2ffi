@@ -11,7 +11,7 @@ public sealed class Startup : IDependencyInjectionStartup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<MergeFfisCommand>();
-        services.AddSingleton<MergeFfisTool>();
+        services.AddTransient<MergeFfisTool>();
         services.AddSingleton<MergeInputSanitizer>();
     }
 }
