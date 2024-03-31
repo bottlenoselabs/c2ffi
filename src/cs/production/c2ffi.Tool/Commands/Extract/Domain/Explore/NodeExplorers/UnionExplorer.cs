@@ -4,6 +4,7 @@
 using System.Collections.Immutable;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
@@ -73,7 +74,7 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
         var name = cursor.Spelling();
         var type = clang_getCursorType(cursor);
         var location = cursor.Location();
-        var typeInfo = context.VisitType(type, parentInfo, fieldIndex: fieldIndex)!;
+        var typeInfo = context.VisitType(type, parentInfo)!;
         var comment = context.Comment(cursor);
 
         var result = new CRecordField

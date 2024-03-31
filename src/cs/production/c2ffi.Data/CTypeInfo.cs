@@ -31,10 +31,10 @@ public class CTypeInfo : IEquatable<CTypeInfo>
     ///     Gets or sets the byte size of the C type.
     /// </summary>
     [JsonPropertyName("sizeOf")]
-    public int SizeOf { get; set; }
+    public int? SizeOf { get; set; }
 
     /// <summary>
-    ///     Gets or sets the byte alignment of the C type node.
+    ///     Gets or sets the byte alignment of the C type.
     /// </summary>
     [JsonPropertyName("alignOf")]
     public int? AlignOf { get; set; }

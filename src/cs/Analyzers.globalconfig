@@ -2,6 +2,7 @@
 is_global = true
 
 # Microsoft
+dotnet_diagnostic.CA1308.severity = none
 dotnet_diagnostic.CA1707.severity = error
 
 # StyleCop

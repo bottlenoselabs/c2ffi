@@ -3,7 +3,6 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 using Xunit;
 
@@ -28,9 +27,12 @@ public sealed class CTestFfiTargetPlatform
 
     public string TargetPlatformActual { get; }
 
+    public int PointerSize { get; }
+
     public CTestFfiTargetPlatform(
         string targetPlatformRequested,
         string targetPlatformActual,
+        int pointerSize,
         ImmutableDictionary<string, CTestFunction> functions,
         ImmutableDictionary<string, CTestEnum> enums,
         ImmutableDictionary<string, CTestRecord> records,
@@ -42,6 +44,7 @@ public sealed class CTestFfiTargetPlatform
     {
         TargetPlatformRequested = targetPlatformRequested;
         TargetPlatformActual = targetPlatformActual;
+        PointerSize = pointerSize;
 
         _functions = functions;
         _enums = enums;

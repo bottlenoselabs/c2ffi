@@ -229,14 +229,14 @@ public sealed partial class MergeFfisTool
     private ImmutableSortedDictionary<string, ImmutableArray<CNodeWithTargetPlatform>> GetPlatformNodesByName(
         ImmutableArray<CFfiTargetPlatform> platformFfis)
     {
-        var platformNodesByName = new Dictionary<string, List<CNodeWithTargetPlatform>>();
+        var platformNodesByKey = new Dictionary<string, List<CNodeWithTargetPlatform>>();
 
         foreach (var ffi in platformFfis)
         {
-            AddPlatformFfi(ffi, platformNodesByName);
+            AddPlatformFfi(ffi, platformNodesByKey);
         }
 
-        var result = platformNodesByName.
+        var result = platformNodesByKey.
             ToImmutableSortedDictionary(
                 x => x.Key,
                 y => y.Value.ToImmutableArray());
@@ -245,64 +245,36 @@ public sealed partial class MergeFfisTool
 
     private void AddPlatformFfi(
         CFfiTargetPlatform ffi,
-        Dictionary<string, List<CNodeWithTargetPlatform>> platformNodesByName)
+        Dictionary<string, List<CNodeWithTargetPlatform>> platformNodesByKey)
     {
-        foreach (var (name, node) in ffi.Enums)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
+        var nodes = ImmutableArray.CreateBuilder<CNode>();
+        nodes.AddRange(ffi.Enums.Values);
+        nodes.AddRange(ffi.Functions.Values);
+        nodes.AddRange(ffi.Records.Values);
+        nodes.AddRange(ffi.Variables.Values);
+        nodes.AddRange(ffi.EnumConstants.Values);
+        nodes.AddRange(ffi.FunctionPointers.Values);
+        nodes.AddRange(ffi.MacroObjects.Values);
+        nodes.AddRange(ffi.OpaqueTypes.Values);
+        nodes.AddRange(ffi.TypeAliases.Values);
 
-        foreach (var (name, node) in ffi.Functions)
+        foreach (var node in nodes.ToImmutable())
         {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
-
-        foreach (var (name, node) in ffi.Records)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
-
-        foreach (var (name, node) in ffi.Variables)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
-
-        foreach (var (name, node) in ffi.EnumConstants)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
-
-        foreach (var (name, node) in ffi.FunctionPointers)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
-
-        foreach (var (name, node) in ffi.MacroObjects)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
-
-        foreach (var (name, node) in ffi.OpaqueTypes)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
-        }
-
-        foreach (var (name, node) in ffi.TypeAliases)
-        {
-            AddPlatformNode(name, node, ffi.PlatformRequested, platformNodesByName);
+            AddPlatformNode(node, ffi.PlatformRequested, platformNodesByKey);
         }
     }
 
     private void AddPlatformNode(
-        string name,
         CNode node,
         TargetPlatform targetPlatform,
-        Dictionary<string, List<CNodeWithTargetPlatform>> platformNodesByName)
+        Dictionary<string, List<CNodeWithTargetPlatform>> platformNodesByKey)
     {
-        if (!platformNodesByName.TryGetValue(name, out var platformNodes))
+        var key = $"{node.NodeKind}:{node.Name}";
+
+        if (!platformNodesByKey.TryGetValue(key, out var platformNodes))
         {
             platformNodes = new List<CNodeWithTargetPlatform>();
-            platformNodesByName.Add(name, platformNodes);
+            platformNodesByKey.Add(key, platformNodes);
         }
 
         if (platformNodes.Count >= 1)
@@ -310,11 +282,12 @@ public sealed partial class MergeFfisTool
             var previousNode = platformNodes[^1].Node;
             if (node.NodeKind != previousNode.NodeKind)
             {
-                var nodeActualKind = node.NodeKind.ToString();
+                var nodeKindString = node.NodeKind.ToString();
                 var nodePlatform = targetPlatform.ToString();
                 var nodeExpectedKind = previousNode.NodeKind.ToString();
                 var nodePlatformExpectedKind = platformNodes[^1].TargetPlatform.ToString();
-                LogNodeNotSameKind(name, nodeActualKind, nodePlatform, nodeExpectedKind, nodePlatformExpectedKind);
+                LogNodeNotSameKind(
+                    node.Name, nodeKindString, nodePlatform, nodeExpectedKind, nodePlatformExpectedKind);
                 return;
             }
         }

@@ -2,14 +2,13 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
-using System.IO.Abstractions;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
 using c2ffi.Tool.Commands.Extract.Domain.Parse;
 
-namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
+namespace c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 
-public sealed class FfiBuilder
+public sealed class ExploreFfiBuilder
 {
     private readonly List<CVariable> _variables = new();
     private readonly List<CFunction> _functions = new();
@@ -42,6 +41,7 @@ public sealed class FfiBuilder
             FileName = context.FilePath,
             PlatformRequested = context.TargetPlatformRequested,
             PlatformActual = context.TargetPlatformActual,
+            PointerSize = context.PointerSize,
             Variables = variables,
             Functions = functions,
             Records = records,

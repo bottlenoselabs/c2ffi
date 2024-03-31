@@ -83,7 +83,7 @@ namespace c2ffi.Data.Serialization
             
             properties[1] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CNodeKind>(options, info1);
 
-            var info2 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<int>
+            var info2 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<int?>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -100,7 +100,7 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "sizeOf"
             };
             
-            properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info2);
+            properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info2);
 
             var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<int?>
             {

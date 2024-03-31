@@ -4,6 +4,7 @@
 using System.Collections.Immutable;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
@@ -65,7 +66,7 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
             for (var i = 0; i < fieldCursors.Length; i++)
             {
                 var fieldCursor = fieldCursors[i];
-                var field = StructField(context, structInfo, fieldCursor, i);
+                var field = StructField(context, structInfo, fieldCursor);
                 builder.Add(field);
             }
         }
@@ -77,13 +78,12 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
     private CRecordField StructField(
         ExploreContext context,
         ExploreCandidateInfoNode structInfo,
-        CXCursor fieldCursor,
-        int fieldIndex)
+        CXCursor fieldCursor)
     {
         var fieldName = fieldCursor.Spelling();
         var type = clang_getCursorType(fieldCursor);
         var location = fieldCursor.Location();
-        var typeInfo = context.VisitType(type, structInfo, fieldIndex: fieldIndex)!;
+        var typeInfo = context.VisitType(type, structInfo)!;
         var offsetOf = (int)clang_Cursor_getOffsetOfField(fieldCursor) / 8;
         var comment = context.Comment(fieldCursor);
 

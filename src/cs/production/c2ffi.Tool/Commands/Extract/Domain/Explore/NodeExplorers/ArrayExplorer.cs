@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Data.Nodes;
+using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
@@ -29,7 +30,7 @@ public sealed class ArrayExplorer : NodeExplorer<CArray>
     private static CArray Array(ExploreContext context, ExploreCandidateInfoNode info)
     {
         var type = clang_getElementType(info.Type);
-        var typeInfo = context.GetTypeInfo(type, info)!;
+        var typeInfo = context.VisitType(type, info)!;
         var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new CArray

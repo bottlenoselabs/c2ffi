@@ -101,6 +101,7 @@ public abstract class ExtractFfiTest
         var result = new CTestFfiTargetPlatform(
             ffi.PlatformRequested.ToString(),
             ffi.PlatformActual.ToString(),
+            ffi.PointerSize,
             functions,
             enums,
             structs,
@@ -266,7 +267,7 @@ public abstract class ExtractFfiTest
             Name = value.Name,
             TypeName = value.TypeInfo.Name,
             OffsetOf = value.OffsetOf,
-            SizeOf = value.TypeInfo.SizeOf
+            SizeOf = value.TypeInfo.SizeOf!.Value
         };
 
         return result;
@@ -287,14 +288,14 @@ public abstract class ExtractFfiTest
 
     private CTestMacroObject CreateMacroObject(CMacroObject value)
     {
-        var result = new CTestMacroObject
+        var macroObject = new CTestMacroObject
         {
             Name = value.Name,
             TypeName = value.TypeInfo.Name,
             Value = value.Value
         };
 
-        return result;
+        return macroObject;
     }
 
     private ImmutableDictionary<string, CTestTypeAlias> CreateTestTypeAliases(CFfiTargetPlatform ffi)
@@ -312,14 +313,14 @@ public abstract class ExtractFfiTest
 
     private CTestTypeAlias CreateTestTypeAlias(CTypeAlias value)
     {
-        var result = new CTestTypeAlias
+        var typeAlias = new CTestTypeAlias
         {
             Name = value.Name,
             UnderlyingName = value.UnderlyingTypeInfo.Name,
             UnderlyingKind = value.UnderlyingTypeInfo.NodeKind.ToString()
         };
 
-        return result;
+        return typeAlias;
     }
 
     private ImmutableDictionary<string, CTestFunctionPointer> CreateTestFunctionPointers(CFfiTargetPlatform ffi)
@@ -366,13 +367,13 @@ public abstract class ExtractFfiTest
 
     private static CTestFunctionPointerParameter CreateTestFunctionPointerParameter(CFunctionPointerParameter value)
     {
-        var result = new CTestFunctionPointerParameter
+        var functionPointerParameter = new CTestFunctionPointerParameter
         {
             Name = value.Name,
             TypeName = value.TypeInfo.Name
         };
 
-        return result;
+        return functionPointerParameter;
     }
 
     private static ImmutableDictionary<string, CTestOpaqueType> CreateTestOpaqueTypes(
@@ -391,13 +392,12 @@ public abstract class ExtractFfiTest
 
     private static CTestOpaqueType CreateTestOpaqueType(COpaqueType value)
     {
-        var result = new CTestOpaqueType
+        var opaqueType = new CTestOpaqueType
         {
-            Name = value.Name,
-            SizeOf = value.SizeOf
+            Name = value.Name
         };
 
-        return result;
+        return opaqueType;
     }
 
     private static ImmutableDictionary<string, CTestVariable> CreateTestVariables(
@@ -416,12 +416,12 @@ public abstract class ExtractFfiTest
 
     private static CTestVariable CreateTestVariable(CVariable value)
     {
-        var result = new CTestVariable
+        var variable = new CTestVariable
         {
             Name = value.Name,
-            TypeName = value.Type
+            TypeName = value.TypeInfo.Name
         };
 
-        return result;
+        return variable;
     }
 }
