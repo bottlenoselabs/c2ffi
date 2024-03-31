@@ -36,15 +36,15 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     protected override ExploreKindTypes ExpectedTypes => ExploreKindTypes.Any;
 
+    protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
+    {
+        var ignoredMacroObjects = context.ParseContext.ExtractOptions.IgnoredMacroObjects;
+        return ignoredMacroObjects.IsEmpty || !ignoredMacroObjects.Contains(info.Name);
+    }
+
     protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return MacroObject(context, info);
-    }
-
-    protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
-    {
-        var allowedMacroObjects = context.ParseContext.ExtractOptions.AllowedMacroObjects;
-        return allowedMacroObjects.IsEmpty || allowedMacroObjects.Contains(info.Name);
     }
 
     private CMacroObject MacroObject(ExploreContext context, ExploreNodeInfo info)

@@ -3,11 +3,11 @@
   "userIncludeDirectories": [
     "../../../production/ffi_helper/include"
   ],
-  "ignoreIncludeFiles": [
+  "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
-  "allowedMacroObjects": [
-    "MACRO_OBJECT_ALLOWED"
+  "ignoredVariables": [
+    "variable_not_allowed"
   ],
   "targetPlatforms": {
     "windows": {

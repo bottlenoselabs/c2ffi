@@ -6,7 +6,10 @@
   "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
-    "targetPlatforms": {
+  "ignoredMacroObjects": [
+    "MACRO_OBJECT_NOT_ALLOWED"
+  ],
+  "targetPlatforms": {
     "windows": {
       "i686-pc-windows-msvc": {},
       "x86_64-pc-windows-msvc": {},

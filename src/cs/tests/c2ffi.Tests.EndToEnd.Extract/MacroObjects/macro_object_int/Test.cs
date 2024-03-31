@@ -14,9 +14,9 @@ public class Test : ExtractFfiTest
     private const string MacroObjectName = "MACRO_OBJECT_INT";
 
     [Fact]
-    public void MacroObjectExists()
+    public void MacroObject()
     {
-        var ffis = GetFfis(
+        var ffis = GetTargetPlatformFfis(
             $"src/c/tests/macro_objects/{MacroObjectName.ToLowerInvariant()}/config.json");
         Assert.True(ffis.Length > 0);
 

@@ -14,9 +14,9 @@ public class Test : MergeFfisTest
     private const string VariableName = "variable_int";
 
     [Fact]
-    public void VariableExists()
+    public void Variable()
     {
-        var ffi = GetFfi(
+        var ffi = GetCrossPlatformFfi(
             $"src/c/tests/variables/{VariableName}/ffi");
         FfiVariableExists(ffi);
     }

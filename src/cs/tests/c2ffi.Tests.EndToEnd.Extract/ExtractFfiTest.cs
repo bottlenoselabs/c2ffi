@@ -38,7 +38,7 @@ public abstract class ExtractFfiTest
         _tool = services.GetService<ExtractFfiTool>()!;
     }
 
-    public ImmutableArray<CTestFfiTargetPlatform> GetFfis(string configurationFilePath)
+    public ImmutableArray<CTestFfiTargetPlatform> GetTargetPlatformFfis(string configurationFilePath)
     {
         var fullConfigurationFilePath = _fileSystemHelper.GetFullFilePath(configurationFilePath);
         var oldFilePaths = GetFfiFilePaths(fullConfigurationFilePath);

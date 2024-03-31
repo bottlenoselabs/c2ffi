@@ -13,9 +13,9 @@ public class Test : MergeFfisTest
     private const string OpaqueTypeName = "opaque_struct_t";
 
     [Fact]
-    public void OpaqueTypeExists()
+    public void OpaqueType()
     {
-        var ffi = GetFfi(
+        var ffi = GetCrossPlatformFfi(
             $"src/c/tests/opaque_types/opaque_typedef_struct/ffi");
         FfiOpaqueTypeExists(ffi);
     }

@@ -12,9 +12,9 @@ public class Test : ExtractFfiTest
     private const string OpaqueTypeName = "opaque_struct_t";
 
     [Fact]
-    public void OpaqueTypeExists()
+    public void OpaqueType()
     {
-        var ffis = GetFfis(
+        var ffis = GetTargetPlatformFfis(
             $"src/c/tests/opaque_types/opaque_typedef_struct/config.json");
         Assert.True(ffis.Length > 0);
 

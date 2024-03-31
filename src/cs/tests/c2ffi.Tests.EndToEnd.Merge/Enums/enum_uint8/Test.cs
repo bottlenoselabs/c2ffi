@@ -14,9 +14,9 @@ public class Test : MergeFfisTest
     private const string EnumName = "enum_uint8";
 
     [Fact]
-    public void EnumExists()
+    public void Enum()
     {
-        var ffi = GetFfi(
+        var ffi = GetCrossPlatformFfi(
             $"src/c/tests/enums/{EnumName}/ffi");
         FfiEnumExists(ffi);
     }

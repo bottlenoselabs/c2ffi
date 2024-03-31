@@ -38,7 +38,7 @@ public abstract class MergeFfisTest
         _tool = services.GetService<MergeFfisTool>()!;
     }
 
-    public CTestFfiCrossPlatform GetFfi(string ffiDirectoryPath)
+    public CTestFfiCrossPlatform GetCrossPlatformFfi(string ffiDirectoryPath)
     {
         var fullFfiDirectoryPath = _fileSystemHelper.GetFullDirectoryPath(ffiDirectoryPath);
         try

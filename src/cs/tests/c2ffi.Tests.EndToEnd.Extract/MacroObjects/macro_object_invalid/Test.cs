@@ -14,9 +14,9 @@ public class Test : ExtractFfiTest
     private const string MacroObjectName = "MACRO_OBJECT_INVALID";
 
     [Fact]
-    public void MacroObjectDoesNotExist()
+    public void MacroObject()
     {
-        var ffis = GetFfis(
+        var ffis = GetTargetPlatformFfis(
             $"src/c/tests/macro_objects/macro_object_invalid/config.json");
         Assert.True(ffis.Length > 0);
 

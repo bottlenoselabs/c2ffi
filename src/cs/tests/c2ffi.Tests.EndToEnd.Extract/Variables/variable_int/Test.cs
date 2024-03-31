@@ -13,9 +13,9 @@ public class Test : ExtractFfiTest
     private const string VariableName = "variable_int";
 
     [Fact]
-    public void VariableExists()
+    public void Variable()
     {
-        var ffis = GetFfis(
+        var ffis = GetTargetPlatformFfis(
             $"src/c/tests/variables/{VariableName}/config.json");
         Assert.True(ffis.Length > 0);
 
