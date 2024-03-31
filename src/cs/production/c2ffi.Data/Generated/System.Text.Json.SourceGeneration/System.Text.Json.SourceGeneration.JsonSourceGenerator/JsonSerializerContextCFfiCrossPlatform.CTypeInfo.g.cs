@@ -97,7 +97,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "SizeOf",
-                JsonPropertyName = "sizeOf"
+                JsonPropertyName = "size_of"
             };
             
             properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info2);
@@ -116,7 +116,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "AlignOf",
-                JsonPropertyName = "alignOf"
+                JsonPropertyName = "align_of"
             };
             
             properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info3);
@@ -135,7 +135,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "ElementSize",
-                JsonPropertyName = "sizeOfElement"
+                JsonPropertyName = "size_of_element"
             };
             
             properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info4);
@@ -154,7 +154,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "ArraySizeOf",
-                JsonPropertyName = "arraySize"
+                JsonPropertyName = "array_size"
             };
             
             properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info5);
@@ -173,7 +173,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "IsAnonymous",
-                JsonPropertyName = "isAnonymous"
+                JsonPropertyName = "is_snonymous"
             };
             
             properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool?>(options, info6);
@@ -192,7 +192,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "IsConst",
-                JsonPropertyName = "isConst"
+                JsonPropertyName = "is_const"
             };
             
             properties[7] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool>(options, info7);
@@ -230,7 +230,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "InnerTypeInfo",
-                JsonPropertyName = "innerType"
+                JsonPropertyName = "inner_type"
             };
             
             properties[9] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CTypeInfo>(options, info9);

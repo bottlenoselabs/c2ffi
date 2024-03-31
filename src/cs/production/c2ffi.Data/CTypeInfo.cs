@@ -30,37 +30,37 @@ public class CTypeInfo : IEquatable<CTypeInfo>
     /// <summary>
     ///     Gets or sets the byte size of the C type.
     /// </summary>
-    [JsonPropertyName("sizeOf")]
+    [JsonPropertyName("size_of")]
     public int? SizeOf { get; set; }
 
     /// <summary>
     ///     Gets or sets the byte alignment of the C type.
     /// </summary>
-    [JsonPropertyName("alignOf")]
+    [JsonPropertyName("align_of")]
     public int? AlignOf { get; set; }
 
     /// <summary>
     ///     Gets or sets the byte size of the element for array and pointer types.
     /// </summary>
-    [JsonPropertyName("sizeOfElement")]
+    [JsonPropertyName("size_of_element")]
     public int? ElementSize { get; set; }
 
     /// <summary>
     ///     Gets or sets the element size of the array for array types.
     /// </summary>
-    [JsonPropertyName("arraySize")]
+    [JsonPropertyName("array_size")]
     public int? ArraySizeOf { get; set; }
 
     /// <summary>
     ///     Gets or sets a value indicating whether the C type is anonymous.
     /// </summary>
-    [JsonPropertyName("isAnonymous")]
+    [JsonPropertyName("is_snonymous")]
     public bool? IsAnonymous { get; set; }
 
     /// <summary>
     ///     Gets or sets a value indicating whether the C type is read-only.
     /// </summary>
-    [JsonPropertyName("isConst")]
+    [JsonPropertyName("is_const")]
     public bool IsConst { get; set; }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class CTypeInfo : IEquatable<CTypeInfo>
     /// <summary>
     ///     Gets or sets the inner type information for pointer, array, and typedef alias types.
     /// </summary>
-    [JsonPropertyName("innerType")]
+    [JsonPropertyName("inner_type")]
     public CTypeInfo? InnerTypeInfo { get; set; }
 
     /// <inheritdoc />
@@ -102,7 +102,8 @@ public class CTypeInfo : IEquatable<CTypeInfo>
             return true;
         }
 
-        return NodeKind == other.NodeKind &&
+        return Name == other.Name &&
+               NodeKind == other.NodeKind &&
                SizeOf == other.SizeOf &&
                AlignOf == other.AlignOf &&
                ElementSize == other.ElementSize &&

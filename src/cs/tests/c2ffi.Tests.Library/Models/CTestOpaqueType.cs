@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -11,6 +11,10 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestOpaqueType
 {
-    [JsonPropertyName("name")]
-    public string Name { get; init; } = string.Empty;
+    public string Name { get; }
+
+    public CTestOpaqueType(COpaqueType opaqueType)
+    {
+        Name = opaqueType.Name;
+    }
 }

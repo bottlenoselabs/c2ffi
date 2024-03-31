@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -11,9 +11,13 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestVariable
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("type")]
-    public string TypeName { get; set; } = string.Empty;
+    public string TypeName { get; }
+
+    public CTestVariable(CVariable variable)
+    {
+        Name = variable.Name;
+        TypeName = variable.TypeInfo.Name;
+    }
 }

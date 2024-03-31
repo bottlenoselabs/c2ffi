@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -11,11 +11,15 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestFunctionPointerParameter
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("type_name")]
-    public string TypeName { get; set; } = string.Empty;
+    public string TypeName { get; }
+
+    public CTestFunctionPointerParameter(CFunctionPointerParameter functionPointerParameter)
+    {
+        Name = functionPointerParameter.Name;
+        TypeName = functionPointerParameter.TypeInfo.Name;
+    }
 
     public override string ToString()
     {

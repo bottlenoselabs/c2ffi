@@ -45,24 +45,24 @@ namespace c2ffi.Data.Serialization
         {
             var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[6];
 
-            var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CTypeInfo>
+            var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<int>
             {
                 IsProperty = true,
                 IsPublic = true,
                 IsVirtual = false,
                 DeclaringType = typeof(global::c2ffi.Data.Nodes.CEnum),
                 Converter = null,
-                Getter = static obj => ((global::c2ffi.Data.Nodes.CEnum)obj).IntegerTypeInfo,
-                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CEnum)obj).IntegerTypeInfo = value!,
+                Getter = static obj => ((global::c2ffi.Data.Nodes.CEnum)obj).SizeOf,
+                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CEnum)obj).SizeOf = value!,
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
                 NumberHandling = null,
-                PropertyName = "IntegerTypeInfo",
-                JsonPropertyName = "type_integer"
+                PropertyName = "SizeOf",
+                JsonPropertyName = "size_of"
             };
             
-            properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CTypeInfo>(options, info0);
+            properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info0);
 
             var info1 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.Nodes.CEnumValue>>
             {

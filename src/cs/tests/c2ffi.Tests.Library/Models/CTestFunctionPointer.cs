@@ -3,7 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -12,17 +12,22 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestFunctionPointer
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("calling_convention")]
-    public string CallingConvention { get; set; } = string.Empty;
+    public string CallingConvention { get; }
 
-    [JsonPropertyName("return_type_name")]
-    public string ReturnTypeName { get; set; } = string.Empty;
+    public string ReturnTypeName { get; }
 
-    [JsonPropertyName("parameters")]
     public ImmutableArray<CTestFunctionPointerParameter> Parameters { get; set; }
+
+    public CTestFunctionPointer(CFunctionPointer functionPointer)
+    {
+        Name = functionPointer.Name;
+        CallingConvention = "todo";
+        ReturnTypeName = functionPointer.ReturnTypeInfo.Name;
+        Parameters = functionPointer.Parameters
+            .Select(x => new CTestFunctionPointerParameter(x)).ToImmutableArray();
+    }
 
     public override string ToString()
     {

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -11,17 +11,21 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestRecordField
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("type_name")]
-    public string TypeName { get; set; } = string.Empty;
+    public string TypeName { get; }
 
-    [JsonPropertyName("offset_of")]
-    public int OffsetOf { get; set; }
+    public int OffsetOf { get; }
 
-    [JsonPropertyName("size_of")]
-    public int SizeOf { get; set; }
+    public int SizeOf { get; }
+
+    public CTestRecordField(CRecordField field)
+    {
+        Name = field.Name;
+        TypeName = field.TypeInfo.Name;
+        OffsetOf = field.OffsetOf;
+        SizeOf = field.TypeInfo.SizeOf!.Value;
+    }
 
     public override string ToString()
     {

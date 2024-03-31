@@ -38,17 +38,33 @@ public abstract class MergeFfisTest
         _tool = services.GetService<MergeFfisTool>()!;
     }
 
-    public CTestFfiCrossPlatform GetFfi(string relativeInputDirectoryPath)
+    public CTestFfiCrossPlatform GetFfi(string ffiDirectoryPath)
     {
-        var fullInputDirectoryPath = _fileSystemHelper.GetFullDirectoryPath(relativeInputDirectoryPath);
-        var fullOutputFilePath = _fileSystem.Path.Combine(fullInputDirectoryPath, "../ffi-x/cross-platform.json");
-        RunTool(fullInputDirectoryPath, fullOutputFilePath);
+        var fullFfiDirectoryPath = _fileSystemHelper.GetFullDirectoryPath(ffiDirectoryPath);
+        try
+        {
+            _fileSystem.Directory.Delete(_fileSystem.Path.Combine(fullFfiDirectoryPath, "../ffi-x"), true);
+        }
+        catch (DirectoryNotFoundException)
+        {
+        }
+
+        var fullOutputFilePath = _fileSystem.Path.Combine(fullFfiDirectoryPath, "../ffi-x/cross-platform.json");
+        RunTool(fullFfiDirectoryPath, fullOutputFilePath);
         return ReadFfi(fullOutputFilePath);
     }
 
     private void RunTool(string inputDirectoryPath, string outputFilePath)
     {
         _tool.Run(inputDirectoryPath, outputFilePath);
+    }
+
+    private void DeleteFiles(IEnumerable<string> filePaths)
+    {
+        foreach (var filePath in filePaths)
+        {
+            _file.Delete(filePath);
+        }
     }
 
     private IEnumerable<string> GetFfiFilePaths(string configurationFilePath)
@@ -94,53 +110,11 @@ public abstract class MergeFfisTest
 
         foreach (var function in ffi.Functions.Values)
         {
-            var result = CreateTestFunction(function);
+            var result = new CTestFunction(function);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private static CTestFunction CreateTestFunction(CFunction value)
-    {
-        var parameters = CreateTestFunctionParameters(value.Parameters);
-
-        var result = new CTestFunction
-        {
-            Name = value.Name,
-#pragma warning disable CA1308
-            CallingConvention = value.CallingConvention.ToString().ToLowerInvariant(),
-#pragma warning restore CA1308
-            ReturnTypeName = value.ReturnTypeInfo.Name,
-            Parameters = parameters,
-            Comment = value.Comment
-        };
-        return result;
-    }
-
-    private static ImmutableArray<CTestFunctionParameter> CreateTestFunctionParameters(
-        ImmutableArray<CFunctionParameter> values)
-    {
-        var builder = ImmutableArray.CreateBuilder<CTestFunctionParameter>();
-
-        foreach (var value in values)
-        {
-            var result = CreateTestFunctionParameter(value);
-            builder.Add(result);
-        }
-
-        return builder.ToImmutable();
-    }
-
-    private static CTestFunctionParameter CreateTestFunctionParameter(CFunctionParameter value)
-    {
-        var result = new CTestFunctionParameter
-        {
-            Name = value.Name,
-            TypeName = value.TypeInfo.Name
-        };
-
-        return result;
     }
 
     private static ImmutableDictionary<string, CTestEnum> CreateTestEnums(CFfiCrossPlatform ffi)
@@ -149,47 +123,11 @@ public abstract class MergeFfisTest
 
         foreach (var @enum in ffi.Enums.Values)
         {
-            var result = CreateTestEnum(@enum);
+            var result = new CTestEnum(@enum);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private static CTestEnum CreateTestEnum(CEnum value)
-    {
-        var values = CreateTestEnumValues(value.Values);
-
-        var result = new CTestEnum
-        {
-            Name = value.Name,
-            IntegerType = value.IntegerTypeInfo.Name,
-            Values = values
-        };
-        return result;
-    }
-
-    private static ImmutableArray<CTestEnumValue> CreateTestEnumValues(ImmutableArray<CEnumValue> values)
-    {
-        var builder = ImmutableArray.CreateBuilder<CTestEnumValue>();
-
-        foreach (var value in values)
-        {
-            var result = CreateTestEnumValue(value);
-            builder.Add(result);
-        }
-
-        return builder.ToImmutable();
-    }
-
-    private static CTestEnumValue CreateTestEnumValue(CEnumValue value)
-    {
-        var result = new CTestEnumValue
-        {
-            Name = value.Name,
-            Value = value.Value
-        };
-        return result;
     }
 
     private static ImmutableDictionary<string, CTestRecord> CreateTestRecords(CFfiCrossPlatform ffi)
@@ -198,28 +136,11 @@ public abstract class MergeFfisTest
 
         foreach (var value in ffi.Records.Values)
         {
-            var result = CreateTestRecord(value);
+            var result = new CTestRecord(value);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private static CTestRecord CreateTestRecord(CRecord value)
-    {
-        var name = value.Name;
-        var fields = CreateTestRecordFields(value.Fields);
-
-        var result = new CTestRecord
-        {
-            Name = name,
-            SizeOf = value.SizeOf,
-            AlignOf = value.AlignOf,
-            Fields = fields,
-            IsUnion = false
-        };
-
-        return result;
     }
 
     private static ImmutableArray<CTestRecordField> CreateTestRecordFields(ImmutableArray<CRecordField> values)
@@ -228,24 +149,11 @@ public abstract class MergeFfisTest
 
         foreach (var value in values)
         {
-            var result = CreateTestRecordField(value);
+            var result = new CTestRecordField(value);
             builder.Add(result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private static CTestRecordField CreateTestRecordField(CRecordField value)
-    {
-        var result = new CTestRecordField
-        {
-            Name = value.Name,
-            TypeName = value.TypeInfo.Name,
-            OffsetOf = value.OffsetOf,
-            SizeOf = value.TypeInfo.SizeOf!.Value
-        };
-
-        return result;
     }
 
     private ImmutableDictionary<string, CTestMacroObject> CreateTestMacroObjects(CFfiCrossPlatform ffi)
@@ -254,23 +162,11 @@ public abstract class MergeFfisTest
 
         foreach (var value in ffi.MacroObjects.Values)
         {
-            var result = CreateMacroObject(value);
+            var result = new CTestMacroObject(value);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private CTestMacroObject CreateMacroObject(CMacroObject value)
-    {
-        var result = new CTestMacroObject
-        {
-            Name = value.Name,
-            TypeName = value.TypeInfo.Name,
-            Value = value.Value
-        };
-
-        return result;
     }
 
     private ImmutableDictionary<string, CTestTypeAlias> CreateTestTypeAliases(CFfiCrossPlatform ffi)
@@ -279,23 +175,11 @@ public abstract class MergeFfisTest
 
         foreach (var value in ffi.TypeAliases.Values)
         {
-            var result = CreateTestTypeAlias(value);
+            var result = new CTestTypeAlias(value);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private CTestTypeAlias CreateTestTypeAlias(CTypeAlias value)
-    {
-        var result = new CTestTypeAlias
-        {
-            Name = value.Name,
-            UnderlyingName = value.UnderlyingTypeInfo.Name,
-            UnderlyingKind = value.UnderlyingTypeInfo.NodeKind.ToString()
-        };
-
-        return result;
     }
 
     private ImmutableDictionary<string, CTestFunctionPointer> CreateTestFunctionPointers(CFfiCrossPlatform ffi)
@@ -304,51 +188,11 @@ public abstract class MergeFfisTest
 
         foreach (var value in ffi.FunctionPointers.Values)
         {
-            var result = CreateTestFunctionPointer(value);
+            var result = new CTestFunctionPointer(value);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private CTestFunctionPointer CreateTestFunctionPointer(CFunctionPointer value)
-    {
-        var parameters = CreateTestFunctionPointerParameters(value.Parameters);
-
-        var result = new CTestFunctionPointer
-        {
-            Name = value.Name,
-            CallingConvention = "todo",
-            ReturnTypeName = value.ReturnTypeInfo.Name,
-            Parameters = parameters
-        };
-
-        return result;
-    }
-
-    private static ImmutableArray<CTestFunctionPointerParameter> CreateTestFunctionPointerParameters(
-        ImmutableArray<CFunctionPointerParameter> values)
-    {
-        var builder = ImmutableArray.CreateBuilder<CTestFunctionPointerParameter>();
-
-        foreach (var value in values)
-        {
-            var result = CreateTestFunctionPointerParameter(value);
-            builder.Add(result);
-        }
-
-        return builder.ToImmutable();
-    }
-
-    private static CTestFunctionPointerParameter CreateTestFunctionPointerParameter(CFunctionPointerParameter value)
-    {
-        var result = new CTestFunctionPointerParameter
-        {
-            Name = value.Name,
-            TypeName = value.TypeInfo.Name
-        };
-
-        return result;
     }
 
     private static ImmutableDictionary<string, CTestOpaqueType> CreateTestOpaqueTypes(
@@ -358,21 +202,11 @@ public abstract class MergeFfisTest
 
         foreach (var value in ffi.OpaqueTypes.Values)
         {
-            var result = CreateTestOpaqueType(value);
+            var result = new CTestOpaqueType(value);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private static CTestOpaqueType CreateTestOpaqueType(COpaqueType value)
-    {
-        var result = new CTestOpaqueType
-        {
-            Name = value.Name
-        };
-
-        return result;
     }
 
     private static ImmutableDictionary<string, CTestVariable> CreateTestVariables(
@@ -382,21 +216,10 @@ public abstract class MergeFfisTest
 
         foreach (var value in ffi.Variables.Values)
         {
-            var result = CreateTestVariable(value);
+            var result = new CTestVariable(value);
             builder.Add(result.Name, result);
         }
 
         return builder.ToImmutable();
-    }
-
-    private static CTestVariable CreateTestVariable(CVariable value)
-    {
-        var result = new CTestVariable
-        {
-            Name = value.Name,
-            TypeName = value.TypeInfo.Name
-        };
-
-        return result;
     }
 }

@@ -3,7 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -12,20 +12,25 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestFunction
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("calling_convention")]
-    public string CallingConvention { get; set; } = string.Empty;
+    public string CallingConvention { get; }
 
-    [JsonPropertyName("return_type_name")]
-    public string ReturnTypeName { get; set; } = string.Empty;
+    public string ReturnTypeName { get; }
 
-    [JsonPropertyName("parameters")]
-    public ImmutableArray<CTestFunctionParameter> Parameters { get; set; }
+    public ImmutableArray<CTestFunctionParameter> Parameters { get; }
 
-    [JsonPropertyName("comment")]
-    public string? Comment { get; set; }
+    public string? Comment { get; }
+
+    public CTestFunction(CFunction function)
+    {
+        Name = function.Name;
+        CallingConvention = function.CallingConvention.ToString().ToLowerInvariant();
+        ReturnTypeName = function.ReturnTypeInfo.Name;
+        Parameters = function.Parameters
+            .Select(x => new CTestFunctionParameter(x)).ToImmutableArray();
+        Comment = function.Comment;
+    }
 
     public override string ToString()
     {

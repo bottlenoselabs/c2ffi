@@ -3,7 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -12,14 +12,18 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestEnum
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("type_integer")]
-    public string IntegerType { get; set; } = string.Empty;
+    public int SizeOf { get; }
 
-    [JsonPropertyName("values")]
-    public ImmutableArray<CTestEnumValue> Values { get; set; } = ImmutableArray<CTestEnumValue>.Empty;
+    public ImmutableArray<CTestEnumValue> Values { get; }
+
+    public CTestEnum(CEnum @enum)
+    {
+        Name = @enum.Name;
+        SizeOf = @enum.SizeOf;
+        Values = @enum.Values.Select(x => new CTestEnumValue(x)).ToImmutableArray();
+    }
 
     public override string ToString()
     {
