@@ -7,18 +7,18 @@ using FluentAssertions;
 #pragma warning disable CA1308
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_ignored;
+namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_allowed;
 
 public class Test : ExtractFfiTest
 {
-    private const string AllowedMacroObjectName = "MACRO_OBJECT_NOT_IGNORED";
-    private const string NotAllowedMacroObjectName = "MACRO_OBJECT_IGNORED";
+    private const string AllowedMacroObjectName = "MACRO_OBJECT_ALLOWED";
+    private const string NotAllowedMacroObjectName = "MACRO_OBJECT_NOT_ALLOWED";
 
     [Fact]
     public void MacroObjectExists()
     {
         var ffis = GetFfis(
-            $"src/c/tests/macro_objects/macro_object_ignored/config.json");
+            $"src/c/tests/macro_objects/macro_object_allowed/config.json");
         Assert.True(ffis.Length > 0);
 
         foreach (var ffi in ffis)

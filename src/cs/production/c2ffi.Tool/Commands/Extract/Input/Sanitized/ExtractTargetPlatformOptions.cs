@@ -32,6 +32,8 @@ public sealed class ExtractTargetPlatformOptions
 
     public ImmutableHashSet<string> AllowedMacroObjects { get; init; } = ImmutableHashSet<string>.Empty;
 
+    public ImmutableHashSet<string> AllowedVariables { get; init; } = ImmutableHashSet<string>.Empty;
+
     public override string ToString()
     {
         return $"{{ TargetPlatform: {TargetPlatform}, OutputFilePath: {OutputFilePath} }}";

@@ -16,12 +16,12 @@ public sealed class OpaqueTypeExplorer(ILogger<OpaqueTypeExplorer> logger)
 
     protected override ExploreKindTypes ExpectedTypes => ExploreKindTypes.Any;
 
-    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return OpaqueDataType(context, info);
     }
 
-    private static COpaqueType OpaqueDataType(ExploreContext context, ExploreCandidateInfoNode info)
+    private static COpaqueType OpaqueDataType(ExploreContext context, ExploreNodeInfo info)
     {
         var comment = context.Comment(info.Cursor);
         var isSystemCursor = context.IsSystemCursor(info.Cursor);

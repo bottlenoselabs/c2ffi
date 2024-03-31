@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Tests.Library.Models;
+using FluentAssertions;
 using Xunit;
 
 #pragma warning disable CA1707
@@ -23,7 +24,7 @@ public class Test : MergeFfisTest
     private void FfiVariableExists(CTestFfiCrossPlatform ffi)
     {
         var variable = ffi.GetVariable(VariableName);
-        Assert.True(variable.Name == VariableName);
-        Assert.True(variable.TypeName == "int");
+        variable.Name.Should().Be(VariableName);
+        variable.TypeName.Should().Be("int");
     }
 }

@@ -136,6 +136,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
 
         var opaqueTypeNames = SanitizeStrings(input.OpaqueTypeNames).ToImmutableHashSet();
         var allowedMacroObjects = SanitizeStrings(input.AllowedMacroObjects).ToImmutableHashSet();
+        var allowedVariables = SanitizeStrings(input.AllowedVariables).ToImmutableHashSet();
 
         var options = new ExtractTargetPlatformOptions
         {
@@ -150,7 +151,8 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             IsEnabledSystemDeclarations = input.IsEnabledSystemDeclarations ?? false,
             IsEnabledOnlyExternalTopLevelCursors = input.IsEnabledOnlyExternalTopLevelCursors ?? true,
             OpaqueTypeNames = opaqueTypeNames,
-            AllowedMacroObjects = allowedMacroObjects
+            AllowedMacroObjects = allowedMacroObjects,
+            AllowedVariables = allowedVariables
         };
 
         return options;

@@ -123,6 +123,12 @@ public sealed class UnsanitizedExtractInput
     public ImmutableArray<string>? AllowedMacroObjects { get; set; }
 
     /// <summary>
+    ///     Gets or sets the name of variables allowed. Use <c>null</c> to allow all variables.
+    /// </summary>
+    [JsonPropertyName("allowedVariables")]
+    public ImmutableArray<string>? AllowedVariables { get; set; }
+
+    /// <summary>
     ///     Gets or sets the target platform configurations for extracting the FFIs per desktop host
     ///     operating system.
     /// </summary>
