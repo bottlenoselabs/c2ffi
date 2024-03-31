@@ -84,7 +84,7 @@ public abstract partial class NodeExplorer
 
         if (!IsAllowed(context, info))
         {
-            LogExploreNotAllowed(info.NodeKind.ToString(), info.Name, firstLocation);
+            LogNotAllowed(info.NodeKind.ToString(), info.Name, firstLocation);
             return false;
         }
 
@@ -139,6 +139,6 @@ public abstract partial class NodeExplorer
     [LoggerMessage(5, LogLevel.Debug, "- Explored {Kind} '{Name}' ({Location})'")]
     private partial void LogExplored(string kind, string name, CLocation? location);
 
-    [LoggerMessage(6, LogLevel.Debug, "- Not allowed to explore {Kind} '{Name}', skipping")]
-    private partial void LogExploreNotAllowed(string kind, string name);
+    [LoggerMessage(6, LogLevel.Debug, "- Not allowed {Kind} '{Name}', skipping")]
+    private partial void LogNotAllowed(string kind, string name);
 }
