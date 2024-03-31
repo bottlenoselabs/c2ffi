@@ -18,7 +18,7 @@ public class Test : MergeFfisTest
     public void Variable()
     {
         var ffi = GetCrossPlatformFfi(
-            $"src/c/tests/variables/{VariableName}/ffi");
+            "src/c/tests/variables/variable_ignored/ffi");
         FfiVariableExists(ffi);
         FfiVariableDoesNotExist(ffi);
     }
