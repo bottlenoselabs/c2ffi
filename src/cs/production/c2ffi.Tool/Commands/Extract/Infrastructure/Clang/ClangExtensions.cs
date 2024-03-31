@@ -3,7 +3,6 @@
 
 using System.Collections.Immutable;
 using System.Runtime.InteropServices;
-using System.Text;
 using c2ffi.Data;
 using static bottlenoselabs.clang;
 
@@ -117,40 +116,6 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
             };
 
             return location;
-        }
-
-        public static string GetCode(
-            this CXCursor cursor,
-            StringBuilder? stringBuilder = null)
-        {
-            if (stringBuilder == null)
-            {
-                stringBuilder = new StringBuilder();
-            }
-            else
-            {
-                stringBuilder.Clear();
-            }
-
-            var translationUnit = clang_Cursor_getTranslationUnit(cursor);
-            var cursorExtent = clang_getCursorExtent(cursor);
-            unsafe
-            {
-                var tokens = (CXToken*)0;
-                uint tokensCount = 0;
-                clang_tokenize(translationUnit, cursorExtent, &tokens, &tokensCount);
-                for (var i = 0; i < tokensCount; i++)
-                {
-                    var tokenString = clang_getTokenSpelling(translationUnit, tokens[i]).String();
-                    stringBuilder.Append(tokenString);
-                }
-
-                clang_disposeTokens(translationUnit, tokens, tokensCount);
-            }
-
-            var result = stringBuilder.ToString();
-            stringBuilder.Clear();
-            return result;
         }
 
         public static unsafe bool TryParseTranslationUnit(
