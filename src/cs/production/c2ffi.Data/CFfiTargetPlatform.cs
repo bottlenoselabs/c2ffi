@@ -44,60 +44,55 @@ public record CFfiTargetPlatform
     ///     Gets or sets the macro objects.
     /// </summary>
     [JsonPropertyName("macroObjects")]
-    public ImmutableDictionary<string, CMacroObject> MacroObjects { get; set; } =
-        ImmutableDictionary<string, CMacroObject>.Empty;
+    public ImmutableSortedDictionary<string, CMacroObject> MacroObjects { get; set; } =
+        ImmutableSortedDictionary<string, CMacroObject>.Empty;
 
     /// <summary>
     ///     Gets or sets the variables.
     /// </summary>
     [JsonPropertyName("variables")]
-    public ImmutableDictionary<string, CVariable> Variables { get; set; } =
-        ImmutableDictionary<string, CVariable>.Empty;
+    public ImmutableSortedDictionary<string, CVariable> Variables { get; set; } =
+        ImmutableSortedDictionary<string, CVariable>.Empty;
 
     /// <summary>
     ///     Gets or sets the functions.
     /// </summary>
     [JsonPropertyName("functions")]
-    public ImmutableDictionary<string, CFunction> Functions { get; set; } =
-        ImmutableDictionary<string, CFunction>.Empty;
+    public ImmutableSortedDictionary<string, CFunction> Functions { get; set; } =
+        ImmutableSortedDictionary<string, CFunction>.Empty;
 
     /// <summary>
     ///     Gets or sets the records.
     /// </summary>
     [JsonPropertyName("records")]
-    public ImmutableDictionary<string, CRecord> Records { get; set; } = ImmutableDictionary<string, CRecord>.Empty;
+    public ImmutableSortedDictionary<string, CRecord> Records { get; set; } =
+        ImmutableSortedDictionary<string, CRecord>.Empty;
 
     /// <summary>
     ///     Gets or sets the enums.
     /// </summary>
     [JsonPropertyName("enums")]
-    public ImmutableDictionary<string, CEnum> Enums { get; set; } = ImmutableDictionary<string, CEnum>.Empty;
-
-    /// <summary>
-    ///     Gets or sets the enum constants.
-    /// </summary>
-    [JsonPropertyName("enumConstants")]
-    public ImmutableDictionary<string, CEnumConstant> EnumConstants { get; set; } =
-        ImmutableDictionary<string, CEnumConstant>.Empty;
+    public ImmutableSortedDictionary<string, CEnum> Enums { get; set; } =
+        ImmutableSortedDictionary<string, CEnum>.Empty;
 
     /// <summary>
     ///     Gets or sets the type aliases.
     /// </summary>
     [JsonPropertyName("typeAliases")]
-    public ImmutableDictionary<string, CTypeAlias> TypeAliases { get; set; } =
-        ImmutableDictionary<string, CTypeAlias>.Empty;
+    public ImmutableSortedDictionary<string, CTypeAlias> TypeAliases { get; set; } =
+        ImmutableSortedDictionary<string, CTypeAlias>.Empty;
 
     /// <summary>
     ///     Gets or sets the opaque types.
     /// </summary>
     [JsonPropertyName("opaqueTypes")]
-    public ImmutableDictionary<string, COpaqueType> OpaqueTypes { get; set; } =
-        ImmutableDictionary<string, COpaqueType>.Empty;
+    public ImmutableSortedDictionary<string, COpaqueType> OpaqueTypes { get; set; } =
+        ImmutableSortedDictionary<string, COpaqueType>.Empty;
 
     /// <summary>
     ///     Gets or sets the function pointers.
     /// </summary>
     [JsonPropertyName("functionPointers")]
-    public ImmutableDictionary<string, CFunctionPointer> FunctionPointers { get; set; } =
-        ImmutableDictionary<string, CFunctionPointer>.Empty;
+    public ImmutableSortedDictionary<string, CFunctionPointer> FunctionPointers { get; set; } =
+        ImmutableSortedDictionary<string, CFunctionPointer>.Empty;
 }

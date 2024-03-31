@@ -151,11 +151,6 @@ public static class Json
             keyValuePair.Value.Name = keyValuePair.Key;
         }
 
-        foreach (var keyValuePair in ffi.EnumConstants)
-        {
-            keyValuePair.Value.Name = keyValuePair.Key;
-        }
-
         foreach (var keyValuePair in ffi.TypeAliases)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
@@ -195,11 +190,6 @@ public static class Json
         }
 
         foreach (var keyValuePair in ffi.Enums)
-        {
-            keyValuePair.Value.Name = keyValuePair.Key;
-        }
-
-        foreach (var keyValuePair in ffi.EnumConstants)
         {
             keyValuePair.Value.Name = keyValuePair.Key;
         }

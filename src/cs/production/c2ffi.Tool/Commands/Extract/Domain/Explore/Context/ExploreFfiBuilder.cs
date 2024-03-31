@@ -17,7 +17,6 @@ public sealed class ExploreFfiBuilder
     private readonly List<CTypeAlias> _typeAliases = new();
     private readonly List<COpaqueType> _opaqueTypes = new();
     private readonly List<CFunctionPointer> _functionPointers = new();
-    private readonly List<CEnumConstant> _enumConstants = new();
     private readonly List<CMacroObject> _macroObjects = new();
 
     private readonly List<CArray> _arrays = new();
@@ -33,8 +32,7 @@ public sealed class ExploreFfiBuilder
         var typeAliases = CollectTypeAliases();
         var opaqueTypes = CollectOpaqueTypes();
         var functionPointers = CollectFunctionPointers();
-        var enumConstants = CollectEnumConstants();
-        var macroObjects = CollectMacroObjects(context);
+        var macroObjects = CollectMacroObjects();
 
         var result = new CFfiTargetPlatform
         {
@@ -49,7 +47,6 @@ public sealed class ExploreFfiBuilder
             TypeAliases = typeAliases,
             OpaqueTypes = opaqueTypes,
             FunctionPointers = functionPointers,
-            EnumConstants = enumConstants,
             MacroObjects = macroObjects,
         };
 
@@ -142,11 +139,6 @@ public sealed class ExploreFfiBuilder
         _macroObjects.Add(node);
     }
 
-    private void AddEnumConstant(CEnumConstant node)
-    {
-        _enumConstants.Add(node);
-    }
-
     private void AddArray(CArray node)
     {
         _arrays.Add(node);
@@ -162,66 +154,60 @@ public sealed class ExploreFfiBuilder
         _primitives.Add(node);
     }
 
-    private ImmutableDictionary<string, CVariable> CollectVariables()
+    private ImmutableSortedDictionary<string, CVariable> CollectVariables()
     {
-        _variables.Sort();
-        var variables = _variables.ToImmutableDictionary(x => x.Name);
+        var variables = _variables
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
         return variables;
     }
 
-    private ImmutableDictionary<string, CFunction> CollectFunctions()
+    private ImmutableSortedDictionary<string, CFunction> CollectFunctions()
     {
-        _functions.Sort();
-        var functions = _functions.ToImmutableDictionary(x => x.Name);
+        var functions = _functions
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
+
         return functions;
     }
 
-    private ImmutableDictionary<string, CRecord> CollectRecords()
+    private ImmutableSortedDictionary<string, CRecord> CollectRecords()
     {
-        _records.Sort();
-        var records = _records.ToImmutableDictionary(x => x.Name);
+        var records = _records
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
         return records;
     }
 
-    private ImmutableDictionary<string, CEnum> CollectEnums()
+    private ImmutableSortedDictionary<string, CEnum> CollectEnums()
     {
-        _enums.Sort();
-        var enums = _enums.ToImmutableDictionary(x => x.Name);
+        var enums = _enums
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
         return enums;
     }
 
-    private ImmutableDictionary<string, CTypeAlias> CollectTypeAliases()
+    private ImmutableSortedDictionary<string, CTypeAlias> CollectTypeAliases()
     {
-        _typeAliases.Sort();
-        var typeAliases = _typeAliases.ToImmutableDictionary(x => x.Name);
+        var typeAliases = _typeAliases
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
         return typeAliases;
     }
 
-    private ImmutableDictionary<string, COpaqueType> CollectOpaqueTypes()
+    private ImmutableSortedDictionary<string, COpaqueType> CollectOpaqueTypes()
     {
-        _opaqueTypes.Sort();
-        var opaqueTypes = _opaqueTypes.ToImmutableDictionary(x => x.Name);
+        var opaqueTypes = _opaqueTypes
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
         return opaqueTypes;
     }
 
-    private ImmutableDictionary<string, CFunctionPointer> CollectFunctionPointers()
+    private ImmutableSortedDictionary<string, CFunctionPointer> CollectFunctionPointers()
     {
-        _functionPointers.Sort();
-        var functionPointers = _functionPointers.ToImmutableDictionary(x => x.Name);
+        var functionPointers = _functionPointers
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
         return functionPointers;
     }
 
-    private ImmutableDictionary<string, CEnumConstant> CollectEnumConstants()
+    private ImmutableSortedDictionary<string, CMacroObject> CollectMacroObjects()
     {
-        _enumConstants.Sort();
-        var enumConstants = _enumConstants.ToImmutableDictionary(x => x.Name);
-        return enumConstants;
-    }
-
-    private ImmutableDictionary<string, CMacroObject> CollectMacroObjects(ParseContext originalContext)
-    {
-        _macroObjects.Sort();
-        var macroObjects = _macroObjects.ToImmutableDictionary(x => x.Name);
+        var macroObjects = _macroObjects
+            .ToImmutableSortedDictionary(x => x.Name, x => x);
         return macroObjects;
     }
 }

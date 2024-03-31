@@ -59,10 +59,6 @@ namespace c2ffi.Data.Serialization
             {
                 return Create_CEnum(options);
             }
-            if (type == typeof(global::c2ffi.Data.Nodes.CEnumConstant))
-            {
-                return Create_CEnumConstant(options);
-            }
             if (type == typeof(global::c2ffi.Data.Nodes.CEnumValue))
             {
                 return Create_CEnumValue(options);
@@ -127,41 +123,37 @@ namespace c2ffi.Data.Serialization
             {
                 return Create_ImmutableArrayCRecordField(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CEnum>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>))
             {
-                return Create_ImmutableDictionaryStringCEnum(options);
+                return Create_ImmutableSortedDictionaryStringCEnum(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CEnumConstant>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>))
             {
-                return Create_ImmutableDictionaryStringCEnumConstant(options);
+                return Create_ImmutableSortedDictionaryStringCFunction(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CFunction>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>))
             {
-                return Create_ImmutableDictionaryStringCFunction(options);
+                return Create_ImmutableSortedDictionaryStringCFunctionPointer(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>))
             {
-                return Create_ImmutableDictionaryStringCFunctionPointer(options);
+                return Create_ImmutableSortedDictionaryStringCMacroObject(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>))
             {
-                return Create_ImmutableDictionaryStringCMacroObject(options);
+                return Create_ImmutableSortedDictionaryStringCOpaqueType(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>))
             {
-                return Create_ImmutableDictionaryStringCOpaqueType(options);
+                return Create_ImmutableSortedDictionaryStringCRecord(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CRecord>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>))
             {
-                return Create_ImmutableDictionaryStringCRecord(options);
+                return Create_ImmutableSortedDictionaryStringCTypeAlias(options);
             }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>))
+            if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>))
             {
-                return Create_ImmutableDictionaryStringCTypeAlias(options);
-            }
-            if (type == typeof(global::System.Collections.Immutable.ImmutableDictionary<string, global::c2ffi.Data.Nodes.CVariable>))
-            {
-                return Create_ImmutableDictionaryStringCVariable(options);
+                return Create_ImmutableSortedDictionaryStringCVariable(options);
             }
             if (type == typeof(int))
             {

@@ -27,7 +27,6 @@ public sealed partial class MergeFfisTool
     private readonly List<CFunctionPointer> _functionPointers = new();
     private readonly List<CMacroObject> _macroObjects = new();
     private readonly List<CTypeAlias> _typeAliases = new();
-    private readonly List<CEnumConstant> _enumConstants = new();
 
     private sealed class CNodeWithTargetPlatform
     {
@@ -81,7 +80,7 @@ public sealed partial class MergeFfisTool
     {
         var result = new CFfiCrossPlatform();
 
-        foreach (var (key, nodes) in platformNodesByKey)
+        foreach (var (_, nodes) in platformNodesByKey)
         {
             BuildCrossPlatformNodes(platforms, nodes);
         }
@@ -89,15 +88,14 @@ public sealed partial class MergeFfisTool
         result.Platforms = platforms.Sort(
             (a, b) =>
                 string.Compare(a.ClangTargetTriple, b.ClangTargetTriple, StringComparison.Ordinal));
-        result.Enums = _enums.ToImmutableDictionary(x => x.Name);
-        result.Variables = _variables.ToImmutableDictionary(x => x.Name);
-        result.OpaqueTypes = _opaqueTypes.ToImmutableDictionary(x => x.Name);
-        result.Functions = _functions.ToImmutableDictionary(x => x.Name);
-        result.Records = _records.ToImmutableDictionary(x => x.Name);
-        result.FunctionPointers = _functionPointers.ToImmutableDictionary(x => x.Name);
-        result.MacroObjects = _macroObjects.ToImmutableDictionary(x => x.Name);
-        result.TypeAliases = _typeAliases.ToImmutableDictionary(x => x.Name);
-        result.EnumConstants = _enumConstants.ToImmutableDictionary(x => x.Name);
+        result.Enums = _enums.ToImmutableSortedDictionary(x => x.Name, x => x);
+        result.Variables = _variables.ToImmutableSortedDictionary(x => x.Name, x => x);
+        result.OpaqueTypes = _opaqueTypes.ToImmutableSortedDictionary(x => x.Name, x => x);
+        result.Functions = _functions.ToImmutableSortedDictionary(x => x.Name, x => x);
+        result.Records = _records.ToImmutableSortedDictionary(x => x.Name, x => x);
+        result.FunctionPointers = _functionPointers.ToImmutableSortedDictionary(x => x.Name, x => x);
+        result.MacroObjects = _macroObjects.ToImmutableSortedDictionary(x => x.Name, x => x);
+        result.TypeAliases = _typeAliases.ToImmutableSortedDictionary(x => x.Name, x => x);
         return result;
     }
 
@@ -156,10 +154,6 @@ public sealed partial class MergeFfisTool
             case CTypeAlias typeAlias:
                 ClearLocationForTypeInfo(typeAlias.UnderlyingTypeInfo);
                 _typeAliases.Add(typeAlias);
-                break;
-            case CEnumConstant enumConstant:
-                ClearLocationForTypeInfo(enumConstant.TypeInfo);
-                _enumConstants.Add(enumConstant);
                 break;
             default:
                 throw new NotImplementedException($"Unknown node type '{node.GetType()}'");
@@ -253,7 +247,6 @@ public sealed partial class MergeFfisTool
         nodes.AddRange(ffi.Functions.Values);
         nodes.AddRange(ffi.Records.Values);
         nodes.AddRange(ffi.Variables.Values);
-        nodes.AddRange(ffi.EnumConstants.Values);
         nodes.AddRange(ffi.FunctionPointers.Values);
         nodes.AddRange(ffi.MacroObjects.Values);
         nodes.AddRange(ffi.OpaqueTypes.Values);

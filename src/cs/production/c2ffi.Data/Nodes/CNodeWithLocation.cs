@@ -24,9 +24,15 @@ public abstract class CNodeWithLocation : CNode
     /// <inheritdoc />
     protected override int CompareToInternal(CNode? other)
     {
+        var result = base.CompareToInternal(other);
+        if (result != 0)
+        {
+            return result;
+        }
+
         if (other is not CNodeWithLocation other2)
         {
-            return base.CompareToInternal(other);
+            return 0;
         }
 
         if (Location is null && other2.Location is null)
