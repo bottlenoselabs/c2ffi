@@ -269,70 +269,16 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
                 __LogExploredCallback(_logger, kind, name, location, null);
             }
         }
-        /// <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
-        private readonly struct __LogExploreNotAllowedStruct : global::System.Collections.Generic.IReadOnlyList<global::System.Collections.Generic.KeyValuePair<string, object?>>
-        {
-            private readonly global::System.String _kind;
-            private readonly global::System.String _name;
-            private readonly global::c2ffi.Data.CLocation? _location;
-
-            public __LogExploreNotAllowedStruct(global::System.String kind, global::System.String name, global::c2ffi.Data.CLocation? location)
-            {
-                this._kind = kind;
-                this._name = name;
-                this._location = location;
-
-            }
-
-            public override string ToString()
-            {
-                var Kind = this._kind;
-                var Name = this._name;
-
-                return $"- Not allowed to explore {Kind} '{Name}', skipping";
-            }
-
-            public static readonly global::System.Func<__LogExploreNotAllowedStruct, global::System.Exception?, string> Format = (state, ex) => state.ToString();
-
-            public int Count => 4;
-
-            public global::System.Collections.Generic.KeyValuePair<string, object?> this[int index]
-            {
-                get => index switch
-                {
-                    0 => new global::System.Collections.Generic.KeyValuePair<string, object?>("Kind", this._kind),
-                    1 => new global::System.Collections.Generic.KeyValuePair<string, object?>("Name", this._name),
-                    2 => new global::System.Collections.Generic.KeyValuePair<string, object?>("location", this._location),
-                    3 => new global::System.Collections.Generic.KeyValuePair<string, object?>("{OriginalFormat}", "- Not allowed to explore {Kind} '{Name}', skipping"),
-
-                    _ => throw new global::System.IndexOutOfRangeException(nameof(index)),  // return the same exception LoggerMessage.Define returns in this case
-                };
-            }
-
-            public global::System.Collections.Generic.IEnumerator<global::System.Collections.Generic.KeyValuePair<string, object?>> GetEnumerator()
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    yield return this[i];
-                }
-            }
-
-            global::System.Collections.IEnumerator global::System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-        }
+        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.String, global::System.Exception?> __LogNotAllowedCallback =
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(6, nameof(LogNotAllowed)), "- Not allowed {Kind} '{Name}', skipping", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogExploreNotAllowed(global::System.String kind, global::System.String name, global::c2ffi.Data.CLocation? location)
+        private partial void LogNotAllowed(global::System.String kind, global::System.String name)
         {
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
-                _logger.Log(
-                    global::Microsoft.Extensions.Logging.LogLevel.Debug,
-                    new global::Microsoft.Extensions.Logging.EventId(6, nameof(LogExploreNotAllowed)),
-                    new __LogExploreNotAllowedStruct(kind, name, location),
-                    null,
-                    __LogExploreNotAllowedStruct.Format);
+                __LogNotAllowedCallback(_logger, kind, name, null);
             }
         }
     }
