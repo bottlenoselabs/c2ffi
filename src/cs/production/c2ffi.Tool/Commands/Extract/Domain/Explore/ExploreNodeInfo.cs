@@ -6,7 +6,7 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
 
-public sealed class ExploreCandidateInfoNode
+public sealed class ExploreNodeInfo
 {
     public CNodeKind NodeKind { get; init; }
 
@@ -24,9 +24,7 @@ public sealed class ExploreCandidateInfoNode
 
     public int? AlignOf { get; init; }
 
-    public bool IsAnonymous { get; init; }
-
-    public ExploreCandidateInfoNode? Parent { get; init; }
+    public ExploreNodeInfo? Parent { get; init; }
 
     public override string ToString()
     {

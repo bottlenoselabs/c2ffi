@@ -18,12 +18,18 @@ public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     protected override ExploreKindTypes ExpectedTypes => ExploreKindTypes.Any;
 
-    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return Variable(context, info);
     }
 
-    private static CVariable Variable(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
+    {
+        var allowedVariables = context.ParseContext.ExtractOptions.AllowedVariables;
+        return allowedVariables.IsEmpty || allowedVariables.Contains(info.Name);
+    }
+
+    private static CVariable Variable(ExploreContext context, ExploreNodeInfo info)
     {
         var typeInfo = context.VisitType(info.Type, info);
 

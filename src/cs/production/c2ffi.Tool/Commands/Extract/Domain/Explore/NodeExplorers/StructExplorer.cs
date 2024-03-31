@@ -18,12 +18,12 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
     protected override ExploreKindCursors ExpectedCursors { get; } =
         ExploreKindCursors.Is(CXCursorKind.CXCursor_StructDecl);
 
-    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return Struct(context, info);
     }
 
-    private CRecord Struct(ExploreContext context, ExploreCandidateInfoNode info)
+    private CRecord Struct(ExploreContext context, ExploreNodeInfo info)
     {
         var fields = StructFields(context, info);
         var comment = context.Comment(info.Cursor);
@@ -56,7 +56,7 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
 
     private ImmutableArray<CRecordField> StructFields(
         ExploreContext context,
-        ExploreCandidateInfoNode structInfo)
+        ExploreNodeInfo structInfo)
     {
         var builder = ImmutableArray.CreateBuilder<CRecordField>();
         var fieldCursors = FieldCursors(structInfo.Type);
@@ -77,7 +77,7 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
 
     private CRecordField StructField(
         ExploreContext context,
-        ExploreCandidateInfoNode structInfo,
+        ExploreNodeInfo structInfo,
         CXCursor fieldCursor)
     {
         var fieldName = fieldCursor.Spelling();

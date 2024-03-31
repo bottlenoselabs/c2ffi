@@ -17,13 +17,13 @@ public sealed class PointerExplorer(ILogger<PointerExplorer> logger)
 
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Is(CXTypeKind.CXType_Pointer);
 
-    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         var pointer = Pointer(context, info);
         return pointer;
     }
 
-    private static CPointer Pointer(ExploreContext context, ExploreCandidateInfoNode info)
+    private static CPointer Pointer(ExploreContext context, ExploreNodeInfo info)
     {
         var type = clang_getPointeeType(info.Type);
         var typeInfo = context.VisitType(type, info)!;

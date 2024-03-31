@@ -12,117 +12,103 @@ public sealed partial class ExploreFrontier
 {
     private readonly ILogger<ExploreFrontier> _logger;
 
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierMacroObjectCandidates = new();
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierVariableCandidates = new();
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierFunctionsCandidates = new();
-    private readonly ArrayDeque<ExploreCandidateInfoNode> _frontierTypeCandidates = new();
+    private readonly ArrayDeque<ExploreNodeInfo> _frontierMacroObjects = new();
+    private readonly ArrayDeque<ExploreNodeInfo> _frontierVariables = new();
+    private readonly ArrayDeque<ExploreNodeInfo> _frontierFunctions = new();
+    private readonly ArrayDeque<ExploreNodeInfo> _frontierTypes = new();
 
     public ExploreFrontier(ILogger<ExploreFrontier> logger)
     {
         _logger = logger;
     }
 
-    public void EnqueueCandidate(ExploreCandidateInfoNode info)
+    public void EnqueueNode(ExploreNodeInfo info)
     {
-        LogEnqueueCandidate(info.NodeKind, info.Name, info.Location);
+        LogEnqueue(info.NodeKind, info.Name, info.Location);
         var frontier = GetFrontier(info);
         frontier.PushBack(info);
     }
 
     public void Explore(ExploreContext context)
     {
-        ExploreFunctionsCandidates(context);
-        ExploreVariableCandidates(context);
-        ExploreMacroObjectCandidates(context);
-        ExploreTypeCandidates(context);
+        ExploreFunctions(context);
+        ExploreVariables(context);
+        ExploreMacroObjects(context);
+        ExploreTypes(context);
     }
 
-    private void ExploreFunctionsCandidates(ExploreContext context)
+    private void ExploreFunctions(ExploreContext context)
     {
-        var frontier = _frontierFunctionsCandidates;
+        var frontier = _frontierFunctions;
         var totalCount = frontier.Count;
         var functionNameCandidates = string.Join(", ", frontier.Select(x => x.Name));
-        LogFunctionCandidates(totalCount, functionNameCandidates);
-        ExploreCandidates(context, frontier);
+        LogFunctions(totalCount, functionNameCandidates);
+        Explore(context, frontier);
     }
 
-    private void ExploreVariableCandidates(ExploreContext context)
+    private void ExploreVariables(ExploreContext context)
     {
-        var frontier = _frontierVariableCandidates;
+        var frontier = _frontierVariables;
         var totalCount = frontier.Count;
         var names = string.Join(", ", frontier.Select(x => x.Name));
-        LogVariableCandidates(totalCount, names);
-        ExploreCandidates(context, frontier);
+        LogVariables(totalCount, names);
+        Explore(context, frontier);
     }
 
-    private void ExploreMacroObjectCandidates(ExploreContext context)
+    private void ExploreMacroObjects(ExploreContext context)
     {
-        var frontier = _frontierMacroObjectCandidates;
+        var frontier = _frontierMacroObjects;
         var totalCount = frontier.Count;
         var names = string.Join(", ", frontier.Select(x => x.Name));
-        LogMacroObjectCandidates(totalCount, names);
-        ExploreCandidates(context, frontier);
+        LogMacroObjects(totalCount, names);
+        Explore(context, frontier);
     }
 
-    private void ExploreTypeCandidates(ExploreContext context)
+    private void ExploreTypes(ExploreContext context)
     {
-        var frontier = _frontierTypeCandidates;
+        var frontier = _frontierTypes;
         var totalCount = frontier.Count;
         var names = string.Join(", ", frontier.Select(x => x.Name));
-        LogTypeCandidates(totalCount, names);
-        ExploreCandidates(context, frontier);
+        LogTypes(totalCount, names);
+        Explore(context, frontier);
     }
 
-    private ArrayDeque<ExploreCandidateInfoNode> GetFrontier(ExploreCandidateInfoNode info)
+    private ArrayDeque<ExploreNodeInfo> GetFrontier(ExploreNodeInfo info)
     {
         var frontier = info.NodeKind switch
         {
-            CNodeKind.Variable => _frontierVariableCandidates,
-            CNodeKind.Function => _frontierFunctionsCandidates,
-            CNodeKind.MacroObject => _frontierMacroObjectCandidates,
-            _ => _frontierTypeCandidates
+            CNodeKind.Variable => _frontierVariables,
+            CNodeKind.Function => _frontierFunctions,
+            CNodeKind.MacroObject => _frontierMacroObjects,
+            _ => _frontierTypes
         };
         return frontier;
     }
 
-    private void ExploreCandidates(ExploreContext context, ArrayDeque<ExploreCandidateInfoNode> frontier)
+    private void Explore(ExploreContext context, ArrayDeque<ExploreNodeInfo> frontier)
     {
         while (frontier.Count > 0)
         {
             var node = frontier.PopFront()!;
-            ExploreCandidate(context, node);
+            context.TryExplore(node);
         }
     }
 
-    private void ExploreCandidate(ExploreContext context, ExploreCandidateInfoNode info)
-    {
-        var node = context.TryExploreCandidate(info);
-        if (node == null)
-        {
-            return;
-        }
-
-        var location = node is CNodeWithLocation nodeWithLocation ? nodeWithLocation.Location : null;
-        LogExploredNode(node.NodeKind, node.Name, location);
-    }
-
-    [LoggerMessage(0, LogLevel.Information, "- Enqueued {NodeKind} candidate for exploration '{Name}' ({Location})")]
-    private partial void LogEnqueueCandidate(CNodeKind nodeKind,
+    [LoggerMessage(0, LogLevel.Debug, "- Enqueued {NodeKind} for exploration '{Name}' ({Location})")]
+    private partial void LogEnqueue(
+        CNodeKind nodeKind,
         string name,
         CLocation? location);
 
-    [LoggerMessage(1, LogLevel.Information, "- Explored {NodeKind} '{Name}' ({Location})")]
-    private partial void LogExploredNode(CNodeKind nodeKind, string name, CLocation? location);
+    [LoggerMessage(2, LogLevel.Debug, "- Exploring {Count} functions: {Names}")]
+    private partial void LogFunctions(int count, string names);
 
-    [LoggerMessage(2, LogLevel.Information, "- Exploring {Count} function candidates: {Names}")]
-    private partial void LogFunctionCandidates(int count, string names);
+    [LoggerMessage(3, LogLevel.Debug, "- Exploring {Count} variables: {Names}")]
+    private partial void LogVariables(int count, string names);
 
-    [LoggerMessage(3, LogLevel.Information, "- Exploring {Count} variable candidates: {Names}")]
-    private partial void LogVariableCandidates(int count, string names);
+    [LoggerMessage(4, LogLevel.Debug, "- Exploring {Count} macro objects: {Names}")]
+    private partial void LogMacroObjects(int count, string names);
 
-    [LoggerMessage(4, LogLevel.Information, "- Exploring {Count} macro object candidates: {Names}")]
-    private partial void LogMacroObjectCandidates(int count, string names);
-
-    [LoggerMessage(5, LogLevel.Information, "- Exploring {Count} type candidates: {Names}")]
-    private partial void LogTypeCandidates(int count, string names);
+    [LoggerMessage(5, LogLevel.Debug, "- Exploring {Count} types: {Names}")]
+    private partial void LogTypes(int count, string names);
 }

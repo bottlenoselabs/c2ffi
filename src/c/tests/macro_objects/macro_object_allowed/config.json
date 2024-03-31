@@ -7,7 +7,7 @@
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
   "allowedMacroObjects": [
-    "MACRO_OBJECT_NOT_IGNORED"
+    "MACRO_OBJECT_ALLOWED"
   ],
   "targetPlatforms": {
     "windows": {

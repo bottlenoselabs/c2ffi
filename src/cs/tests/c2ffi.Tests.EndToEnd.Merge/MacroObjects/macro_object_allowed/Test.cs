@@ -8,18 +8,18 @@ using Xunit;
 #pragma warning disable CA1308
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.MacroObjects.macro_object_ignored;
+namespace c2ffi.Tests.EndToEnd.Merge.MacroObjects.macro_object_allowed;
 
 public class Test : MergeFfisTest
 {
-    private const string AllowedMacroObjectName = "MACRO_OBJECT_NOT_IGNORED";
-    private const string NotAllowedMacroObjectName = "MACRO_OBJECT_IGNORED";
+    private const string AllowedMacroObjectName = "MACRO_OBJECT_ALLOWED";
+    private const string NotAllowedMacroObjectName = "MACRO_OBJECT_NOT_ALLOWED";
 
     [Fact]
     public void MacroObjectExists()
     {
         var ffi = GetFfi(
-            $"src/c/tests/macro_objects/macro_object_ignored/ffi");
+            "src/c/tests/macro_objects/macro_object_allowed/ffi");
         FfiMacroObjectExists(ffi);
         FfiMacroObjectDoesNotExist(ffi);
     }

@@ -36,18 +36,18 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     protected override ExploreKindTypes ExpectedTypes => ExploreKindTypes.Any;
 
-    protected override CNode? GetNode(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override CNode? GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return MacroObject(context, info);
     }
 
-    protected override bool IsAllowed(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
         var allowedMacroObjects = context.ParseContext.ExtractOptions.AllowedMacroObjects;
         return allowedMacroObjects.IsEmpty || allowedMacroObjects.Contains(info.Name);
     }
 
-    private CMacroObject? MacroObject(ExploreContext context, ExploreCandidateInfoNode info)
+    private CMacroObject? MacroObject(ExploreContext context, ExploreNodeInfo info)
     {
         var macroObjectCandidate = MacroObjectCandidate.Parse(info.Cursor);
         if (macroObjectCandidate == null)

@@ -39,7 +39,7 @@ public abstract partial class NodeExplorer
 
     protected abstract ExploreKindTypes ExpectedTypes { get; }
 
-    internal CNode? ExploreInternal(ExploreContext context, ExploreCandidateInfoNode info)
+    internal CNode? ExploreInternal(ExploreContext context, ExploreNodeInfo info)
     {
         LogExploring(info.NodeKind.ToString(), info.Name, info.Location);
         var result = GetNode(context, info);
@@ -53,7 +53,7 @@ public abstract partial class NodeExplorer
         return result;
     }
 
-    internal bool CanVisitInternal(ExploreContext context, ExploreCandidateInfoNode info)
+    internal bool CanVisitInternal(ExploreContext context, ExploreNodeInfo info)
     {
         if (!IsExpectedCursor(info))
         {
@@ -92,30 +92,30 @@ public abstract partial class NodeExplorer
         return true;
     }
 
-    protected abstract CNode? GetNode(ExploreContext context, ExploreCandidateInfoNode info);
+    protected abstract CNode? GetNode(ExploreContext context, ExploreNodeInfo info);
 
-    protected virtual bool IsAllowed(ExploreContext context, ExploreCandidateInfoNode info)
+    protected virtual bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
         return true;
     }
 
-    private bool IsAlreadyVisited(ExploreCandidateInfoNode info, out CLocation? firstLocation)
+    private bool IsAlreadyVisited(ExploreNodeInfo info, out CLocation? firstLocation)
     {
         var result = _visitedNodeNames.TryGetValue(info.Name, out firstLocation);
         return result;
     }
 
-    private void MarkAsVisited(ExploreCandidateInfoNode info)
+    private void MarkAsVisited(ExploreNodeInfo info)
     {
         _visitedNodeNames.Add(info.Name, info.Location);
     }
 
-    private bool IsExpectedCursor(ExploreCandidateInfoNode info)
+    private bool IsExpectedCursor(ExploreNodeInfo info)
     {
         return ExpectedCursors.Matches(info.Cursor.kind);
     }
 
-    private bool IsExpectedType(ExploreCandidateInfoNode info)
+    private bool IsExpectedType(ExploreNodeInfo info)
     {
         var typeKind = info.Type.kind;
         return ExpectedTypes.Matches(typeKind);
@@ -139,6 +139,6 @@ public abstract partial class NodeExplorer
     [LoggerMessage(5, LogLevel.Debug, "- Explored {Kind} '{Name}' ({Location})'")]
     private partial void LogExplored(string kind, string name, CLocation? location);
 
-    [LoggerMessage(6, LogLevel.Debug, "- Not allowed {Kind} '{Name}', skipping")]
+    [LoggerMessage(6, LogLevel.Debug, "- {Kind} '{Name}' not allowed, skipping")]
     private partial void LogNotAllowed(string kind, string name);
 }

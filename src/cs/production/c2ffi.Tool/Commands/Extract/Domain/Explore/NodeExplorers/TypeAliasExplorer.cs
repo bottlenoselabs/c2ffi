@@ -22,12 +22,12 @@ public class TypeAliasExplorer : NodeExplorer<CTypeAlias>
 
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Is(CXTypeKind.CXType_Typedef);
 
-    protected override CNode GetNode(ExploreContext context, ExploreCandidateInfoNode info)
+    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return TypeAlias(context, info);
     }
 
-    private static CTypeAlias TypeAlias(ExploreContext context, ExploreCandidateInfoNode info)
+    private static CTypeAlias TypeAlias(ExploreContext context, ExploreNodeInfo info)
     {
         var aliasType = clang_getTypedefDeclUnderlyingType(info.Cursor);
         var aliasTypeInfo = context.VisitType(aliasType, info)!;

@@ -6,29 +6,37 @@ using FluentAssertions;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.Variables.variable_int;
+namespace c2ffi.Tests.EndToEnd.Extract.Variables.variable_allowed;
 
 public class Test : ExtractFfiTest
 {
-    private const string VariableName = "variable_int";
+    private const string VariableNameAllowed = "variable_allowed";
+    private const string VariableNameNotAllowed = "variable_not_allowed";
 
     [Fact]
     public void VariableExists()
     {
         var ffis = GetFfis(
-            $"src/c/tests/variables/{VariableName}/config.json");
+            $"src/c/tests/variables/{VariableNameAllowed}/config.json");
         Assert.True(ffis.Length > 0);
 
         foreach (var ffi in ffis)
         {
             FfiVariableExists(ffi);
+            FfiVariableDoesNotExist(ffi);
         }
     }
 
     private void FfiVariableExists(CTestFfiTargetPlatform ffi)
     {
-        var variable = ffi.GetVariable(VariableName);
-        variable.Name.Should().Be(VariableName);
+        var variable = ffi.GetVariable(VariableNameAllowed);
+        variable.Name.Should().Be(VariableNameAllowed);
         variable.TypeName.Should().Be("int");
+    }
+
+    private void FfiVariableDoesNotExist(CTestFfiTargetPlatform ffi)
+    {
+        var variable = ffi.TryGetVariable(VariableNameNotAllowed);
+        variable.Should().Be(null);
     }
 }

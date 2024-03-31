@@ -38,19 +38,18 @@ public sealed class ExploreContext : IDisposable
         return _ffiBuilder.GetFfi(ParseContext);
     }
 
-    public bool TryEnqueueCandidate(ExploreCandidateInfoNode info)
+    public void TryEnqueueNode(ExploreNodeInfo info)
     {
         var handler = GetHandler(info.NodeKind);
         if (!handler.CanVisitInternal(this, info))
         {
-            return false;
+            return;
         }
 
-        _frontier.EnqueueCandidate(info);
-        return true;
+        _frontier.EnqueueNode(info);
     }
 
-    public CNode? TryExploreCandidate(ExploreCandidateInfoNode info)
+    public void TryExplore(ExploreNodeInfo info)
     {
         var handler = GetHandler(info.NodeKind);
         var node = handler.ExploreInternal(this, info);
@@ -58,8 +57,6 @@ public sealed class ExploreContext : IDisposable
         {
             _ffiBuilder.AddNode(node);
         }
-
-        return node;
     }
 
     public bool IsIncludeIgnored(string filePath)
@@ -74,7 +71,7 @@ public sealed class ExploreContext : IDisposable
 
     public CTypeInfo VisitType(
         clang.CXType clangType,
-        ExploreCandidateInfoNode parentInfo,
+        ExploreNodeInfo parentInfo,
         CNodeKind? nodeKind = null)
     {
         var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, parentInfo.NodeKind);
@@ -103,28 +100,28 @@ public sealed class ExploreContext : IDisposable
         return string.IsNullOrEmpty(commentString) ? null : commentString;
     }
 
-    public ExploreCandidateInfoNode CreateCandidateInfoNode(
+    public ExploreNodeInfo CreateNodeInfo(
         CNodeKind nodeKind,
         clang.CXCursor clangCursor)
     {
         var cursorName = clangCursor.Spelling();
         var cursorType = clang.clang_getCursorType(clangCursor);
-        return CreateCandidateInfoNode(nodeKind, cursorName, clangCursor, cursorType, null);
+        return CreateNodeInfo(nodeKind, cursorName, clangCursor, cursorType, null);
     }
 
-    public ExploreCandidateInfoNode CreateCandidateInfoNode(
+    public ExploreNodeInfo CreateNodeInfo(
         CNodeKind kind,
         string name,
         clang.CXCursor cursor,
         clang.CXType type,
-        ExploreCandidateInfoNode? parentInfo)
+        ExploreNodeInfo? parentInfo)
     {
         var location = cursor.Location();
         var typeName = type.Spelling();
         var sizeOf = ParseContext.SizeOf(kind, type);
         var alignOf = ParseContext.AlignOf(kind, type);
 
-        var result = new ExploreCandidateInfoNode
+        var result = new ExploreNodeInfo
         {
             NodeKind = kind,
             Name = name,
@@ -151,7 +148,7 @@ public sealed class ExploreContext : IDisposable
         clang.CXType clangType,
         clang.CXType clangContainerType,
         clang.CXCursor clangCursor,
-        ExploreCandidateInfoNode? rootNode)
+        ExploreNodeInfo? rootNode)
     {
         var isSystemCursor = IsSystemCursor(clangCursor);
         if (isSystemCursor)
@@ -272,8 +269,8 @@ public sealed class ExploreContext : IDisposable
             return typeInfo;
         }
 
-        var info = CreateCandidateInfoNode(typeInfo.NodeKind, typeInfo.Name, clangCursor, clangType, rootNode);
-        TryEnqueueCandidate(info);
+        var info = CreateNodeInfo(typeInfo.NodeKind, typeInfo.Name, clangCursor, clangType, rootNode);
+        TryEnqueueNode(info);
         return typeInfo;
     }
 
