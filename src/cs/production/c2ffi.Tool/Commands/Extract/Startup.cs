@@ -28,7 +28,6 @@ public sealed class Startup : IDependencyInjectionStartup
         services.AddTransient<ExploreFrontier>();
 
         services.AddTransient<ArrayExplorer>();
-        services.AddTransient<EnumConstantExplorer>();
         services.AddTransient<EnumExplorer>();
         services.AddTransient<FunctionExplorer>();
         services.AddTransient<FunctionPointerExplorer>();

@@ -117,6 +117,12 @@ public sealed class UnsanitizedExtractInput
     public ImmutableArray<string>? OpaqueTypeNames { get; set; }
 
     /// <summary>
+    ///     Gets or sets the name of macro objects allowed. Use <c>null</c> to allow all macro objects.
+    /// </summary>
+    [JsonPropertyName("allowedMacroObjects")]
+    public ImmutableArray<string>? AllowedMacroObjects { get; set; }
+
+    /// <summary>
     ///     Gets or sets the target platform configurations for extracting the FFIs per desktop host
     ///     operating system.
     /// </summary>

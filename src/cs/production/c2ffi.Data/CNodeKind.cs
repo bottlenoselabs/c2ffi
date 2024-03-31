@@ -94,10 +94,5 @@ public enum CNodeKind
     /// <summary>
     ///     An object-like macro in C.
     /// </summary>
-    MacroObject,
-
-    /// <summary>
-    ///     A constant of an enumeration in C.
-    /// </summary>
-    EnumConstant
+    MacroObject
 }

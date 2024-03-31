@@ -281,7 +281,6 @@ public sealed class ExploreContext : IDisposable
     {
         var result = new Dictionary<CNodeKind, NodeExplorer>
         {
-            { CNodeKind.EnumConstant, services.GetService<EnumConstantExplorer>()! },
             { CNodeKind.Variable, services.GetService<VariableExplorer>()! },
             { CNodeKind.Function, services.GetService<FunctionExplorer>()! },
             { CNodeKind.Struct, services.GetService<StructExplorer>()! },

@@ -91,7 +91,6 @@ public abstract class CNode : IComparable<CNode>, IEquatable<CNode>
             CPrimitive => CNodeKind.Primitive,
             CPointer => CNodeKind.Pointer,
             CArray => CNodeKind.Array,
-            CEnumConstant => CNodeKind.EnumConstant,
             _ => throw new NotImplementedException($"The mapping of the kind for '{GetType()}' is not implemented.")
         };
     }

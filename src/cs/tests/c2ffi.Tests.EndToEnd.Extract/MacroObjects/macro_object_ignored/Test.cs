@@ -7,30 +7,38 @@ using FluentAssertions;
 #pragma warning disable CA1308
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_int;
+namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_ignored;
 
 public class Test : ExtractFfiTest
 {
-    private const string MacroObjectName = "MACRO_OBJECT_INT";
+    private const string AllowedMacroObjectName = "MACRO_OBJECT_NOT_IGNORED";
+    private const string NotAllowedMacroObjectName = "MACRO_OBJECT_IGNORED";
 
     [Fact]
     public void MacroObjectExists()
     {
         var ffis = GetFfis(
-            $"src/c/tests/macro_objects/{MacroObjectName.ToLowerInvariant()}/config.json");
+            $"src/c/tests/macro_objects/macro_object_ignored/config.json");
         Assert.True(ffis.Length > 0);
 
         foreach (var ffi in ffis)
         {
             FfiMacroObjectExists(ffi);
+            FfiMacroObjectDoesNotExist(ffi);
         }
     }
 
     private void FfiMacroObjectExists(CTestFfiTargetPlatform ffi)
     {
-        var macroObject = ffi.GetMacroObject(MacroObjectName);
-        macroObject.Name.Should().Be(MacroObjectName);
+        var macroObject = ffi.GetMacroObject(AllowedMacroObjectName);
+        macroObject.Name.Should().Be(AllowedMacroObjectName);
         macroObject.TypeName.Should().Be("int");
         macroObject.Value.Should().Be("42");
+    }
+
+    private void FfiMacroObjectDoesNotExist(CTestFfiTargetPlatform ffi)
+    {
+        var macroObject = ffi.TryGetMacroObject(NotAllowedMacroObjectName);
+        macroObject.Should().Be(null);
     }
 }

@@ -135,6 +135,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         var clangArguments = SanitizeStrings(targetPlatformInput.ClangArguments);
 
         var opaqueTypeNames = SanitizeStrings(input.OpaqueTypeNames).ToImmutableHashSet();
+        var allowedMacroObjects = SanitizeStrings(input.AllowedMacroObjects).ToImmutableHashSet();
 
         var options = new ExtractTargetPlatformOptions
         {
@@ -148,7 +149,8 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
             IsEnabledSystemDeclarations = input.IsEnabledSystemDeclarations ?? false,
             IsEnabledOnlyExternalTopLevelCursors = input.IsEnabledOnlyExternalTopLevelCursors ?? true,
-            OpaqueTypeNames = opaqueTypeNames
+            OpaqueTypeNames = opaqueTypeNames,
+            AllowedMacroObjects = allowedMacroObjects
         };
 
         return options;
