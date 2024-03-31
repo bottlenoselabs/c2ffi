@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Tests.Library.Models;
+using FluentAssertions;
 
 #pragma warning disable CA1707
 
@@ -27,21 +28,22 @@ public class Test : ExtractFfiTest
     private static void FfiFunctionExists(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.GetFunction(FunctionName);
-        Assert.True(function.CallingConvention == "cdecl");
-        Assert.True(function.ReturnTypeName == "uint64_t");
+        function.CallingConvention.Should().Be("cdecl");
+        function.ReturnTypeName.Should().Be("uint64_t");
+        function.ReturnTypeSizeOf.Should().Be(8);
 
-        Assert.True(function.Parameters.Length == 3);
+        function.Parameters.Length.Should().Be(3);
 
         var parameter1 = function.Parameters[0];
-        Assert.True(parameter1.Name == "a");
-        Assert.True(parameter1.TypeName == "uint8_t");
+        parameter1.Name.Should().Be("a");
+        parameter1.TypeName.Should().Be("uint8_t");
 
         var parameter2 = function.Parameters[1];
-        Assert.True(parameter2.Name == "b");
-        Assert.True(parameter2.TypeName == "uint16_t");
+        parameter2.Name.Should().Be("b");
+        parameter2.TypeName.Should().Be("uint16_t");
 
         var parameter3 = function.Parameters[2];
-        Assert.True(parameter3.Name == "c");
-        Assert.True(parameter3.TypeName == "uint32_t");
+        parameter3.Name.Should().Be("c");
+        parameter3.TypeName.Should().Be("uint32_t");
     }
 }

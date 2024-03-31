@@ -36,7 +36,7 @@ public sealed partial class ClangTranslationUnitParser
         bool keepGoing = false)
     {
         var systemIncludeDirectories = _systemIncludeDirectoriesProvider.GetSystemIncludeDirectories(
-            extractOptions.TargetPlatform, extractOptions.UserIncludeDirectories, extractOptions.IsEnabledFindSystemHeaders);
+            extractOptions.TargetPlatform, extractOptions.SystemIncludeDirectories, extractOptions.IsEnabledFindSystemHeaders);
         var arguments = _argumentsProvider.GetArguments(
             extractOptions, systemIncludeDirectories, isCPlusPlus, ignoreWarnings);
         var argumentsString = string.Join(" ", arguments);

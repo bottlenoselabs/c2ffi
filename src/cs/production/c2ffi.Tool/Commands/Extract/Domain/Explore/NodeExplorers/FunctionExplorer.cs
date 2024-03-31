@@ -74,7 +74,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         ExploreContext context, ExploreCandidateInfoNode info)
     {
         var resultType = clang_getCursorResultType(info.Cursor);
-        return context.VisitType(resultType, info)!;
+        return context.VisitType(resultType, info);
     }
 
     private ImmutableArray<CFunctionParameter> FunctionParameters(

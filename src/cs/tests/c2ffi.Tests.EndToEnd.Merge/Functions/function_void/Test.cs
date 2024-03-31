@@ -7,11 +7,11 @@ using Xunit;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_int;
+namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_void;
 
 public class Test : MergeFfisTest
 {
-    private const string FunctionName = "function_int";
+    private const string FunctionName = "function_void";
 
     [Fact]
     public void FunctionExists()
@@ -26,8 +26,8 @@ public class Test : MergeFfisTest
     {
         var function = ffi.GetFunction(FunctionName);
         function.CallingConvention.Should().Be("cdecl");
-        function.ReturnTypeName.Should().Be("int");
-        function.ReturnTypeSizeOf.Should().Be(4);
+        function.ReturnTypeName.Should().Be("void");
+        function.ReturnTypeSizeOf.Should().Be(null);
 
         function.Parameters.Should().BeEmpty();
     }
