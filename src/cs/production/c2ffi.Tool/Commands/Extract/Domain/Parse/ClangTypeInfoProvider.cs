@@ -23,25 +23,12 @@ public static class ClangTypeInfoProvider
         {
             var result = default(ClangTypeInfo);
 
-            result.Name = GetName(clangTypeCanonical);
+            result.Name = clangTypeCanonical.Spelling();
             result.NodeKind = nodeKind;
             result.ClangType = clangTypeCanonical;
             result.ClangCursor = clang.clang_getTypeDeclaration(clangTypeCanonical);
 
             return result;
-        }
-
-        private static string GetName(clang.CXType clangType)
-        {
-           var spelling = clangType.Spelling();
-
-           var result = spelling;
-           if (spelling.Contains("struct ", StringComparison.InvariantCulture))
-           {
-               result = result.Replace("struct ", string.Empty, StringComparison.InvariantCulture);
-           }
-
-           return result;
         }
     }
 
@@ -167,16 +154,10 @@ public static class ClangTypeInfoProvider
         clang.CXCursor clangCursor,
         clang.CXType clangCursorType)
     {
-        var clangTypeUnderlying = clang.clang_getTypedefDeclUnderlyingType(clangCursor);
-        var clangTypeUnderlyingInfo = GetTypeInfo(clangTypeUnderlying, parentNodeKind);
+        // var clangTypeUnderlying = clang.clang_getTypedefDeclUnderlyingType(clangCursor);
+        // var clangTypeUnderlyingInfo = GetTypeInfo(clangTypeUnderlying, parentNodeKind);
 
-        var nodeKind = CNodeKind.TypeAlias;
-        if (clangTypeUnderlyingInfo.NodeKind is CNodeKind.OpaqueType)
-        {
-            nodeKind = clangTypeUnderlyingInfo.NodeKind;
-        }
-
-        return ClangTypeInfo.Create(nodeKind, clangCursorType);
+        return ClangTypeInfo.Create(CNodeKind.TypeAlias, clangCursorType);
     }
 
     private static ClangTypeInfo TypeKindFunction(

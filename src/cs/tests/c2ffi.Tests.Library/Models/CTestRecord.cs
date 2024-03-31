@@ -3,7 +3,8 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -12,23 +13,26 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestRecord
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("size_of")]
-    public int SizeOf { get; set; }
+    public int SizeOf { get; }
 
-    [JsonPropertyName("align_of")]
-    public int AlignOf { get; set; }
+    public int AlignOf { get; }
 
-    [JsonPropertyName("is_union")]
-    public bool IsUnion { get; set; }
+    public bool IsUnion { get; }
 
-    [JsonIgnore]
     public bool IsStruct => !IsUnion;
 
-    [JsonPropertyName("fields")]
-    public ImmutableArray<CTestRecordField> Fields { get; set; } = ImmutableArray<CTestRecordField>.Empty;
+    public ImmutableArray<CTestRecordField> Fields { get; }
+
+    public CTestRecord(CRecord record)
+    {
+        Name = record.Name;
+        SizeOf = record.SizeOf;
+        AlignOf = record.AlignOf;
+        IsUnion = record.RecordKind == CRecordKind.Union;
+        Fields = record.Fields.Select(field => new CTestRecordField(field)).ToImmutableArray();
+    }
 
     public override string ToString()
     {

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -11,11 +11,15 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestEnumValue
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
 
-    [JsonPropertyName("value")]
     public long Value { get; set; }
+
+    public CTestEnumValue(CEnumValue enumValue)
+    {
+        Name = enumValue.Name;
+        Value = enumValue.Value;
+    }
 
     public override string ToString()
     {

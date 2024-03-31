@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using c2ffi.Data.Nodes;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tests.Library.Models;
@@ -11,12 +11,16 @@ namespace c2ffi.Tests.Library.Models;
 [ExcludeFromCodeCoverage]
 public class CTestTypeAlias
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    [JsonPropertyName("underlyingName")]
-    public string UnderlyingName { get; set; } = string.Empty;
+    public string UnderlyingName { get; }
 
-    [JsonPropertyName("underlyingKind")]
-    public string UnderlyingKind { get; set; } = string.Empty;
+    public string UnderlyingKind { get; }
+
+    public CTestTypeAlias(CTypeAlias typeAlias)
+    {
+        Name = typeAlias.Name;
+        UnderlyingName = typeAlias.UnderlyingTypeInfo.Name;
+        UnderlyingKind = typeAlias.UnderlyingTypeInfo.NodeKind.ToString();
+    }
 }

@@ -48,9 +48,8 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
 
     private static CTypeInfo IntegerTypeInfo(ExploreContext context, ExploreCandidateInfoNode info)
     {
-        var integerType = clang_getEnumDeclIntegerType(info.Cursor);
-        var typeInfo = context.VisitType(integerType, info)!;
-        return typeInfo;
+        var clangType = clang_getEnumDeclIntegerType(info.Cursor);
+        return context.VisitType(clangType, info);
     }
 
     private ImmutableArray<CEnumValue> EnumValues(CXCursor cursor)

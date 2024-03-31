@@ -22,7 +22,8 @@ public class Test : MergeFfisTest
 
     private void FfiOpaqueTypeExists(CTestFfiCrossPlatform ffi)
     {
-        var variable = ffi.GetOpaqueType(OpaqueTypeName);
-        Assert.True(variable.Name == OpaqueTypeName);
+        const string name = $"struct {OpaqueTypeName}";
+        var variable = ffi.GetOpaqueType(name);
+        Assert.True(variable.Name == name);
     }
 }
