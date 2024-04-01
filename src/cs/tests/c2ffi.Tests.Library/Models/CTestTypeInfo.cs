@@ -7,6 +7,8 @@ namespace c2ffi.Tests.Library.Models;
 
 public class CTestTypeInfo
 {
+    public string NodeKind { get; }
+
     public string Name { get; }
 
     public int? SizeOf { get; }
@@ -17,6 +19,7 @@ public class CTestTypeInfo
 
     public CTestTypeInfo(CTypeInfo typeInfo)
     {
+        NodeKind = typeInfo.NodeKind.ToString().ToLowerInvariant();
         Name = typeInfo.Name;
         SizeOf = typeInfo.SizeOf;
         AlignOf = typeInfo.AlignOf;

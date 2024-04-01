@@ -29,8 +29,12 @@ public class Test : MergeFfisTest
 
         var returnType = function.ReturnType;
         returnType.Name.Should().Be("uint64_t");
+        returnType.NodeKind.Should().Be("typealias");
         returnType.SizeOf.Should().Be(8);
         returnType.AlignOf.Should().Be(8);
+        returnType.InnerType.Should().NotBeNull();
+        returnType.InnerType!.NodeKind.Should().Be("primitive");
+        returnType.InnerType!.InnerType.Should().BeNull();
 
         var returnTypeInner = returnType.InnerType!;
         returnTypeInner.Should().NotBeNull();

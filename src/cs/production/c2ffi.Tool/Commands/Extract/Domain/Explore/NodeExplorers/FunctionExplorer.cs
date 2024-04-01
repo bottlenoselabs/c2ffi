@@ -51,9 +51,9 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         {
             Name = info.Name,
             Location = info.Location,
-            CallingConvention = callingConvention,
             ReturnTypeInfo = returnTypeInfo,
             Parameters = parameters,
+            CallingConvention = callingConvention,
             Comment = comment
         };
 

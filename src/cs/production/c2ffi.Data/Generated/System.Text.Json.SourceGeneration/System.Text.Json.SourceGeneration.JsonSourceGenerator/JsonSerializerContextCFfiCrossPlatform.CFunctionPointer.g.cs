@@ -43,7 +43,7 @@ namespace c2ffi.Data.Serialization
 
         private static global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[] CFunctionPointerPropInit(global::System.Text.Json.JsonSerializerOptions options)
         {
-            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[6];
+            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[7];
 
             var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CTypeInfo>
             {
@@ -102,7 +102,26 @@ namespace c2ffi.Data.Serialization
             
             properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.Nodes.CFunctionPointerParameter>>(options, info2);
 
-            var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CLocation?>
+            var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CFunctionCallingConvention>
+            {
+                IsProperty = true,
+                IsPublic = true,
+                IsVirtual = false,
+                DeclaringType = typeof(global::c2ffi.Data.Nodes.CFunctionPointer),
+                Converter = null,
+                Getter = static obj => ((global::c2ffi.Data.Nodes.CFunctionPointer)obj).CallingConvention,
+                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CFunctionPointer)obj).CallingConvention = value!,
+                IgnoreCondition = null,
+                HasJsonInclude = false,
+                IsExtensionData = false,
+                NumberHandling = null,
+                PropertyName = "CallingConvention",
+                JsonPropertyName = null
+            };
+            
+            properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CFunctionCallingConvention>(options, info3);
+
+            var info4 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CLocation?>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -119,9 +138,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "location"
             };
             
-            properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CLocation?>(options, info3);
+            properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CLocation?>(options, info4);
 
-            var info4 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
+            var info5 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -138,9 +157,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "comment"
             };
             
-            properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info4);
+            properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info5);
 
-            var info5 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
+            var info6 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -157,7 +176,7 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = null
             };
             
-            properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info5);
+            properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info6);
 
             return properties;
         }

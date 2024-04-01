@@ -32,9 +32,10 @@ public class Test : ExtractFfiTest
 
         var returnType = function.ReturnType;
         returnType.Name.Should().Be("int");
+        returnType.NodeKind.Should().Be("primitive");
         returnType.SizeOf.Should().Be(4);
         returnType.AlignOf.Should().Be(4);
-        returnType.InnerType.Should().Be(null);
+        returnType.InnerType.Should().BeNull();
 
         function.Parameters.Length.Should().Be(1);
         var parameter = function.Parameters[0];

@@ -74,7 +74,7 @@ public abstract partial class NodeExplorer
             return false;
         }
 
-        if (info.Location.IsSystem)
+        if (info.Location.IsSystem && info.NodeKind != CNodeKind.FunctionPointer)
         {
             return false;
         }

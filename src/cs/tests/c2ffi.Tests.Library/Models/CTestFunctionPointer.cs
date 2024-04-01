@@ -16,15 +16,15 @@ public class CTestFunctionPointer
 
     public string CallingConvention { get; }
 
-    public string ReturnTypeName { get; }
+    public CTestTypeInfo ReturnType { get; }
 
     public ImmutableArray<CTestFunctionPointerParameter> Parameters { get; set; }
 
     public CTestFunctionPointer(CFunctionPointer functionPointer)
     {
         Name = functionPointer.Name;
-        CallingConvention = "todo";
-        ReturnTypeName = functionPointer.ReturnTypeInfo.Name;
+        CallingConvention = functionPointer.CallingConvention.ToString().ToLowerInvariant();
+        ReturnType = new CTestTypeInfo(functionPointer.ReturnTypeInfo);
         Parameters = functionPointer.Parameters
             .Select(x => new CTestFunctionPointerParameter(x)).ToImmutableArray();
     }

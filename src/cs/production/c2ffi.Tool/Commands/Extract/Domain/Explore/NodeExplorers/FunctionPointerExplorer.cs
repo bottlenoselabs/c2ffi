@@ -42,12 +42,14 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
         var typeInfo = context.VisitType(info.Type, info, nodeKind: CNodeKind.FunctionPointer);
         var returnTypeInfo = FunctionPointerReturnType(context, info);
         var parameters = FunctionPointerParameters(context, info);
+        var callingConvention = FunctionPointerCallingConvention(info.Type);
         var comment = context.Comment(info.Cursor);
 
         var result = new CFunctionPointer
         {
             Name = info.Name,
             Location = info.Location,
+            CallingConvention = callingConvention,
             TypeInfo = typeInfo,
             ReturnTypeInfo = returnTypeInfo,
             Parameters = parameters,
@@ -94,6 +96,20 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
             Name = string.Empty,
             TypeInfo = parameterTypeInfo
         };
+        return result;
+    }
+
+    private static CFunctionCallingConvention FunctionPointerCallingConvention(CXType type)
+    {
+        var callingConvention = clang_getFunctionTypeCallingConv(type);
+        var result = callingConvention switch
+        {
+            CXCallingConv.CXCallingConv_C => CFunctionCallingConvention.Cdecl,
+            CXCallingConv.CXCallingConv_X86StdCall => CFunctionCallingConvention.StdCall,
+            CXCallingConv.CXCallingConv_X86FastCall => CFunctionCallingConvention.FastCall,
+            _ => CFunctionCallingConvention.Unknown
+        };
+
         return result;
     }
 }
