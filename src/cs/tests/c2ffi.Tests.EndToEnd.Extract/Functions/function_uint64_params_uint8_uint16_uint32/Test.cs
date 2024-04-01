@@ -32,13 +32,10 @@ public class Test : ExtractFfiTest
 
         var returnType = function.ReturnType;
         returnType.Name.Should().Be("uint64_t");
+        returnType.NodeKind.Should().Be("typealias");
         returnType.SizeOf.Should().Be(8);
         returnType.AlignOf.Should().Be(8);
-
-        var returnTypeInner = returnType.InnerType!;
-        returnTypeInner.Should().NotBeNull();
-        returnTypeInner.SizeOf.Should().Be(returnType.SizeOf);
-        returnTypeInner.AlignOf.Should().Be(returnType.AlignOf);
+        returnType.InnerType.Should().NotBeNull();
 
         function.Parameters.Length.Should().Be(3);
 

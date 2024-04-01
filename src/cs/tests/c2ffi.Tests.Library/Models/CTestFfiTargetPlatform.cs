@@ -260,7 +260,7 @@ public sealed class CTestFfiTargetPlatform
             field.OffsetOf >= 0,
             $"C {recordKindName} '{record.Name}' field '{field.Name}' does not have an offset of which is positive or zero.");
         Assert.True(
-            field.SizeOf > 0,
+            field.Type.SizeOf > 0,
             $"C {recordKindName} '{record.Name}' field '{field.Name}' does not have a size of which is positive.");
 
         if (record.IsUnion)
@@ -269,7 +269,7 @@ public sealed class CTestFfiTargetPlatform
                 field.OffsetOf == 0,
                 $"C union '{record.Name}' field '{field.Name}' does not have an offset of zero.");
             Assert.True(
-                field.SizeOf == record.SizeOf,
+                field.Type.SizeOf == record.SizeOf,
                 $"C union '{record.Name}' field '{field.Name}' does not have a size that matches the union.");
         }
     }

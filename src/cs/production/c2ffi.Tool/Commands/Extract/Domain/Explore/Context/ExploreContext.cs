@@ -247,7 +247,7 @@ public sealed class ExploreContext : IDisposable
             return typeInfo;
         }
 
-        if (location.IsSystem)
+        if (location.IsSystem && nodeKind != CNodeKind.FunctionPointer)
         {
             return typeInfo;
         }

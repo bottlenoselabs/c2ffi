@@ -13,18 +13,15 @@ public class CTestRecordField
 {
     public string Name { get; }
 
-    public string TypeName { get; }
-
     public int OffsetOf { get; }
 
-    public int SizeOf { get; }
+    public CTestTypeInfo Type { get; }
 
     public CTestRecordField(CRecordField field)
     {
         Name = field.Name;
-        TypeName = field.TypeInfo.Name;
         OffsetOf = field.OffsetOf;
-        SizeOf = field.TypeInfo.SizeOf!.Value;
+        Type = new CTestTypeInfo(field.TypeInfo);
     }
 
     public override string ToString()

@@ -32,6 +32,7 @@ public class Test : ExtractFfiTest
 
         var returnType = function.ReturnType;
         returnType.Name.Should().Be("void");
+        returnType.NodeKind.Should().Be("primitive");
         returnType.SizeOf.Should().BeNull();
         returnType.AlignOf.Should().BeNull();
         returnType.InnerType.Should().BeNull();

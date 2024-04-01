@@ -20,7 +20,7 @@ public class CFunction : CNodeWithLocation
     ///     Gets or sets the function's calling convention.
     /// </summary>
     [JsonPropertyName("calling_convention")]
-    public CFunctionCallingConvention CallingConvention { get; set; } = CFunctionCallingConvention.Cdecl;
+    public CFunctionCallingConvention CallingConvention { get; set; }
 
     /// <summary>
     ///     Gets or sets the function's return type information.

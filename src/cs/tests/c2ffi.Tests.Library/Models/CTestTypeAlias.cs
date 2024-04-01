@@ -13,14 +13,11 @@ public class CTestTypeAlias
 {
     public string Name { get; }
 
-    public string UnderlyingName { get; }
-
-    public string UnderlyingKind { get; }
+    public CTestTypeInfo UnderlyingType { get; }
 
     public CTestTypeAlias(CTypeAlias typeAlias)
     {
         Name = typeAlias.Name;
-        UnderlyingName = typeAlias.UnderlyingTypeInfo.Name;
-        UnderlyingKind = typeAlias.UnderlyingTypeInfo.NodeKind.ToString();
+        UnderlyingType = new CTestTypeInfo(typeAlias.UnderlyingTypeInfo);
     }
 }

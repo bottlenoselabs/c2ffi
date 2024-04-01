@@ -35,6 +35,11 @@ public class CFunctionPointer : CNodeWithLocation
     public ImmutableArray<CFunctionPointerParameter> Parameters { get; set; } =
         ImmutableArray<CFunctionPointerParameter>.Empty;
 
+    /// <summary>
+    ///     Gets or sets the function pointer's calling convention.
+    /// </summary>
+    public CFunctionCallingConvention CallingConvention { get; set; }
+
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public override string ToString()
