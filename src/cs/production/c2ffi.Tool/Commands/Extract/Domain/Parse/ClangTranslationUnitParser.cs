@@ -33,7 +33,8 @@ public sealed partial class ClangTranslationUnitParser
         bool isCPlusPlus = false,
         bool ignoreWarnings = false,
         bool logClangDiagnostics = false,
-        bool keepGoing = false)
+        bool keepGoing = false,
+        bool skipFunctionBodies = true)
     {
         var systemIncludeDirectories = _systemIncludeDirectoriesProvider.GetSystemIncludeDirectories(
             extractOptions.TargetPlatform, extractOptions.SystemIncludeDirectories, extractOptions.IsEnabledFindSystemHeaders);
@@ -41,7 +42,7 @@ public sealed partial class ClangTranslationUnitParser
             extractOptions, systemIncludeDirectories, isCPlusPlus, ignoreWarnings);
         var argumentsString = string.Join(" ", arguments);
 
-        if (!ClangExtensions.TryParseTranslationUnit(filePath, arguments, out var translationUnit, true, keepGoing))
+        if (!TryParseTranslationUnit(filePath, arguments, out var translationUnit, skipFunctionBodies, keepGoing))
         {
             var up = new ClangException($"Failed to parse the file as translation unit: {filePath}");
             LogFailureInvalidArguments(filePath, argumentsString, up);
@@ -59,6 +60,54 @@ public sealed partial class ClangTranslationUnitParser
             extractOptions,
             arguments,
             systemIncludeDirectories);
+        return result;
+    }
+
+    private static unsafe bool TryParseTranslationUnit(
+        string filePath,
+        ImmutableArray<string> commandLineArgs,
+        out CXTranslationUnit translationUnit,
+        bool skipFunctionBodies = true,
+        bool keepGoing = false)
+    {
+        // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
+        uint options = 0x0 |
+                       0x1 | // CXTranslationUnit_DetailedPreprocessingRecord
+                       0x80 | // IncludeBriefCommentsInCodeCompletion
+                       0x1000 | // CXTranslationUnit_IncludeAttributedTypes
+                       0x2000 | // CXTranslationUnit_VisitImplicitAttributes
+                       0x4000 | // CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles
+                       0x0;
+
+        if (skipFunctionBodies)
+        {
+            options |= 0x40; // CXTranslationUnit_SkipFunctionBodies
+        }
+
+        if (keepGoing)
+        {
+            options |= 0x200; // CXTranslationUnit_KeepGoing
+        }
+
+        var index = clang_createIndex(0, 0);
+        var cSourceFilePath = CString.FromString(filePath);
+        var cCommandLineArgs = CStrings.CStringArray(commandLineArgs.AsSpan());
+
+        CXErrorCode errorCode;
+        fixed (CXTranslationUnit* translationUnitPointer = &translationUnit)
+        {
+            errorCode = clang_parseTranslationUnit2(
+                index,
+                cSourceFilePath,
+                cCommandLineArgs,
+                commandLineArgs.Length,
+                (CXUnsavedFile*)IntPtr.Zero,
+                0,
+                options,
+                translationUnitPointer);
+        }
+
+        var result = errorCode == CXErrorCode.CXError_Success;
         return result;
     }
 

@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Runtime.InteropServices;
+using System.Text;
 using c2ffi.Data;
 using static bottlenoselabs.clang;
 
@@ -88,54 +89,6 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
                 CXTypeKind.CXType_LongLong => true,
                 _ => false
             };
-        }
-
-        public static unsafe bool TryParseTranslationUnit(
-            string filePath,
-            ImmutableArray<string> commandLineArgs,
-            out CXTranslationUnit translationUnit,
-            bool skipFunctionBodies = true,
-            bool keepGoing = false)
-        {
-            // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
-            uint options = 0x0 |
-                           0x1 | // CXTranslationUnit_DetailedPreprocessingRecord
-                           0x80 | // IncludeBriefCommentsInCodeCompletion
-                           0x1000 | // CXTranslationUnit_IncludeAttributedTypes
-                           0x2000 | // CXTranslationUnit_VisitImplicitAttributes
-                           0x4000 | // CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles
-                           0x0;
-
-            if (skipFunctionBodies)
-            {
-                options |= 0x40; // CXTranslationUnit_SkipFunctionBodies
-            }
-
-            if (keepGoing)
-            {
-                options |= 0x200; // CXTranslationUnit_KeepGoing
-            }
-
-            var index = clang_createIndex(0, 0);
-            var cSourceFilePath = CString.FromString(filePath);
-            var cCommandLineArgs = CStrings.CStringArray(commandLineArgs.AsSpan());
-
-            CXErrorCode errorCode;
-            fixed (CXTranslationUnit* translationUnitPointer = &translationUnit)
-            {
-                errorCode = clang_parseTranslationUnit2(
-                    index,
-                    cSourceFilePath,
-                    cCommandLineArgs,
-                    commandLineArgs.Length,
-                    (CXUnsavedFile*)IntPtr.Zero,
-                    0,
-                    options,
-                    translationUnitPointer);
-            }
-
-            var result = errorCode == CXErrorCode.CXError_Success;
-            return result;
         }
 
         public static ImmutableArray<CXCursor> GetDescendents(

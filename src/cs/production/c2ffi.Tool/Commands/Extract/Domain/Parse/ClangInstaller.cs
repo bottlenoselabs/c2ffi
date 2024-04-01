@@ -141,8 +141,8 @@ public sealed partial class ClangInstaller
             // ReSharper disable StringLiteralTypo
             _path.Combine(Environment.CurrentDirectory, "libclang.dylib"),
             _path.Combine(AppContext.BaseDirectory, "libclang.dylib"),
+            "/Library/Developer/CommandLineTools/usr/lib/libclang.dylib", // xcode-select --install
             "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib", // XCode
-            "/Library/Developer/CommandLineTools/usr/lib/libclang.dylib" // xcode-select --install
             // ReSharper restore StringLiteralTypo
         };
 

@@ -137,7 +137,7 @@ public abstract partial class NodeExplorer
     [LoggerMessage(2, LogLevel.Error, "- Failed to explore {Kind} '{Name}' ({Location})'")]
     private partial void LogFailureExplore(Exception e, string kind, string name, CLocation? location);
 
-    [LoggerMessage(3, LogLevel.Information, "- Already visited {Kind} '{Name}' ({Location})")]
+    [LoggerMessage(3, LogLevel.Debug, "- Already visited {Kind} '{Name}' ({Location})")]
     private partial void LogAlreadyVisited(string kind, string name, CLocation? location);
 
     [LoggerMessage(4, LogLevel.Debug, "- Exploring {Kind} '{Name}' ({Location})'")]
