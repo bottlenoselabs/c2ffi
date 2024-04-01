@@ -49,7 +49,7 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     private CMacroObject MacroObject(ExploreContext context, ExploreNodeInfo info)
     {
-        var macroObjectCandidate = MacroObjectCandidate.Parse(info.Cursor, context.ParseContext.SystemIncludeDirectories);
+        var macroObjectCandidate = MacroObjectCandidate.Parse(context.ParseContext, info.Cursor);
         if (macroObjectCandidate == null)
         {
             throw new InvalidOperationException($"Failed to parse macro object '{info.Name}'.");
@@ -147,18 +147,18 @@ int main(void)
         var variableName = variable.Spelling();
         var macroName =
             variableName.Replace("variable_", string.Empty, StringComparison.InvariantCultureIgnoreCase);
-        var cursor = variable.GetDescendents().FirstOrDefault();
+        var clangCursor = variable.GetDescendents().FirstOrDefault();
 
-        var type = clang.clang_getCursorType(cursor);
+        var type = clang.clang_getCursorType(clangCursor);
 
-        var value = EvaluateMacroValue(cursor, type);
+        var value = EvaluateMacroValue(clangCursor, type);
         if (value == null)
         {
             return null;
         }
 
         using var streamReader = new StreamReader(filePath);
-        var location = MacroLocation(cursor, originalParseContext.SystemIncludeDirectories, streamReader, ref readerLineNumber);
+        var location = MacroLocation(originalParseContext, clangCursor, streamReader, ref readerLineNumber);
 
         var nodeKind = MacroTypeNodeKind(type);
         var typeName = type.Spelling();
@@ -232,12 +232,12 @@ int main(void)
     }
 
     private CLocation MacroLocation(
-        clang.CXCursor cursor,
-        ImmutableArray<string> systemIncludeDirectories,
+        ParseContext parseContext,
+        clang.CXCursor clangCursor,
         StreamReader reader,
         ref int readerLineNumber)
     {
-        var location = cursor.Location(systemIncludeDirectories);
+        var location = parseContext.Location(clangCursor);
         var locationCommentLineNumber = location.LineNumber - 1;
 
         if (readerLineNumber > locationCommentLineNumber)
@@ -312,11 +312,11 @@ int main(void)
         public ImmutableArray<string> Tokens { get; init; } = ImmutableArray<string>.Empty;
 
         public static MacroObjectCandidate? Parse(
-            clang.CXCursor clangCursor,
-            ImmutableArray<string> systemIncludeDirectories)
+            ParseContext parseContext,
+            clang.CXCursor clangCursor)
         {
             var name = clangCursor.Spelling();
-            var location = clangCursor.Location(systemIncludeDirectories);
+            var location = parseContext.Location(clangCursor);
 
             // clang doesn't have a thing where we can easily get a value of a macro
             // we need to:
