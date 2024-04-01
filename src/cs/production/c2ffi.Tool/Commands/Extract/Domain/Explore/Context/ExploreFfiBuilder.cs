@@ -39,6 +39,7 @@ public sealed class ExploreFfiBuilder
             FileName = context.FilePath,
             PlatformRequested = context.TargetPlatformRequested,
             PlatformActual = context.TargetPlatformActual,
+            ClangArguments = context.Arguments,
             SystemIncludeDirectories = context.SystemIncludeDirectories,
             UserIncludeDirectories = context.ExtractOptions.UserIncludeDirectories,
             PointerSize = context.PointerSize,

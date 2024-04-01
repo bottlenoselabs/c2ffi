@@ -216,6 +216,6 @@ public sealed partial class Explorer
     [LoggerMessage(6, LogLevel.Information, "- Found {FoundCount} functions: {Names}")]
     private partial void LogFoundFunctions(int foundCount, string names);
 
-    [LoggerMessage(7, LogLevel.Information, "- Ignored include file header: {FilePath}")]
+    [LoggerMessage(7, LogLevel.Debug, "- Ignored include file header: {FilePath}")]
     private partial void LogIgnoreInclude(string filePath);
 }
