@@ -206,12 +206,14 @@ enum MY_ENUM
 };
 ```
 
-However there is a work-around by using constants with the same name naming convention as enums. The following will be intepreted by `c2ffi` as if it were an enum where the type is the smallest standard signed integer type that can hold all of the values.
-
-Acceptable
+Good
 ```c
-const int64_t MY_ENUM_LARGE_VALUE_1 = 0x1000000000000000L;
-const int64_t MY_ENUM_LARGE_VALUE_2 = 0x2000000000000000L;
+enum MY_ENUM
+{  
+    VALUE_1 = 0x1,
+    VALUE_2 = 0x2,
+    VALUE_MAX = 0x7FFFFFFF
+};
 ```
 
 <sup>3</sup>: Do not use bit fields in C. This is because bit fields may have [different bit layouts across different
