@@ -90,54 +90,6 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
             };
         }
 
-        public static CLocation Location(this CXCursor clangCursor, ImmutableArray<string> systemIncludeDirectories)
-        {
-            var locationSource = clang_getCursorLocation(clangCursor);
-            CXFile file;
-            uint lineNumber;
-            uint columnNumber;
-            unsafe
-            {
-                uint offset;
-                clang_getFileLocation(locationSource, &file, &lineNumber, &columnNumber, &offset);
-            }
-
-            var fileNamePath = clang_getFileName(file).String();
-            var fileName = Path.GetFileName(fileNamePath);
-            var fullFilePath = string.IsNullOrEmpty(fileNamePath) ? string.Empty : Path.GetFullPath(fileNamePath);
-
-            var isSystem = false;
-            if (string.IsNullOrEmpty(fullFilePath))
-            {
-                isSystem = true;
-            }
-            else
-            {
-                foreach (var directoryPath in systemIncludeDirectories)
-                {
-                    if (!fullFilePath.StartsWith(directoryPath, StringComparison.InvariantCulture))
-                    {
-                        continue;
-                    }
-
-                    isSystem = true;
-                    break;
-                }
-            }
-
-            var location = new CLocation
-            {
-                FileName = fileName,
-                FilePath = fullFilePath,
-                FullFilePath = fullFilePath,
-                LineNumber = (int)lineNumber,
-                LineColumn = (int)columnNumber,
-                IsSystem = isSystem
-            };
-
-            return location;
-        }
-
         public static unsafe bool TryParseTranslationUnit(
             string filePath,
             ImmutableArray<string> commandLineArgs,

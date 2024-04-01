@@ -41,6 +41,54 @@ public sealed class ParseContext : IDisposable
         PointerSize = targetInfo.PointerSizeBytes;
     }
 
+    public CLocation Location(clang.CXCursor clangCursor)
+    {
+        var locationSource = clang.clang_getCursorLocation(clangCursor);
+        clang.CXFile file;
+        uint lineNumber;
+        uint columnNumber;
+        unsafe
+        {
+            uint offset;
+            clang.clang_getFileLocation(locationSource, &file, &lineNumber, &columnNumber, &offset);
+        }
+
+        var fileNamePath = clang.clang_getFileName(file).String();
+        var fileName = Path.GetFileName(fileNamePath);
+        var fullFilePath = string.IsNullOrEmpty(fileNamePath) ? string.Empty : Path.GetFullPath(fileNamePath);
+
+        var isSystem = false;
+        if (string.IsNullOrEmpty(fullFilePath))
+        {
+            isSystem = true;
+        }
+        else
+        {
+            foreach (var systemDirectoryPath in SystemIncludeDirectories)
+            {
+                if (!fullFilePath.StartsWith(systemDirectoryPath, StringComparison.InvariantCulture))
+                {
+                    continue;
+                }
+
+                isSystem = true;
+                break;
+            }
+        }
+
+        var location = new CLocation
+        {
+            FileName = fileName,
+            FilePath = fullFilePath,
+            FullFilePath = fullFilePath,
+            LineNumber = (int)lineNumber,
+            LineColumn = (int)columnNumber,
+            IsSystem = isSystem
+        };
+
+        return location;
+    }
+
     public int? SizeOf(CNodeKind nodeKind, clang.CXType clangType)
     {
         switch (nodeKind)
@@ -90,31 +138,6 @@ public sealed class ParseContext : IDisposable
         return alignOf;
     }
 
-    public bool IsPrimitiveType(clang.CXType type)
-    {
-        return type.kind switch
-        {
-            clang.CXTypeKind.CXType_Void => true,
-            clang.CXTypeKind.CXType_Bool => true,
-            clang.CXTypeKind.CXType_Char_S => true,
-            clang.CXTypeKind.CXType_SChar => true,
-            clang.CXTypeKind.CXType_Char_U => true,
-            clang.CXTypeKind.CXType_UChar => true,
-            clang.CXTypeKind.CXType_UShort => true,
-            clang.CXTypeKind.CXType_UInt => true,
-            clang.CXTypeKind.CXType_ULong => true,
-            clang.CXTypeKind.CXType_ULongLong => true,
-            clang.CXTypeKind.CXType_Short => true,
-            clang.CXTypeKind.CXType_Int => true,
-            clang.CXTypeKind.CXType_Long => true,
-            clang.CXTypeKind.CXType_LongLong => true,
-            clang.CXTypeKind.CXType_Float => true,
-            clang.CXTypeKind.CXType_Double => true,
-            clang.CXTypeKind.CXType_LongDouble => true,
-            _ => false
-        };
-    }
-
     public ImmutableArray<clang.CXCursor> GetIncludes()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
@@ -155,7 +178,7 @@ public sealed class ParseContext : IDisposable
                 return false;
             }
 
-            var location = clangCursor.Location(SystemIncludeDirectories);
+            var location = Location(clangCursor);
             return !location.IsSystem;
         }
     }

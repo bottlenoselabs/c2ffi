@@ -101,22 +101,22 @@ public sealed class ExploreContext : IDisposable
     public ExploreNodeInfo CreateNodeInfo(
         CNodeKind kind,
         string name,
-        clang.CXCursor cursor,
-        clang.CXType type,
+        clang.CXCursor clangCursor,
+        clang.CXType clangType,
         ExploreNodeInfo? parentInfo)
     {
-        var location = cursor.Location(ParseContext.SystemIncludeDirectories);
-        var typeName = type.Spelling();
-        var sizeOf = ParseContext.SizeOf(kind, type);
-        var alignOf = ParseContext.AlignOf(kind, type);
+        var location = ParseContext.Location(clangCursor);
+        var typeName = clangType.Spelling();
+        var sizeOf = ParseContext.SizeOf(kind, clangType);
+        var alignOf = ParseContext.AlignOf(kind, clangType);
 
         var result = new ExploreNodeInfo
         {
             NodeKind = kind,
             Name = name,
             TypeName = typeName,
-            Type = type,
-            Cursor = cursor,
+            Type = clangType,
+            Cursor = clangCursor,
             Location = location,
             Parent = parentInfo,
             SizeOf = sizeOf,
@@ -140,7 +140,7 @@ public sealed class ExploreContext : IDisposable
         ExploreNodeInfo? rootNode)
     {
         var clangCursorLocation = clang.clang_getTypeDeclaration(clangType);
-        var location = clangCursorLocation.Location(ParseContext.SystemIncludeDirectories);
+        var location = ParseContext.Location(clangCursorLocation);
 
         int? sizeOf;
         int? alignOf;

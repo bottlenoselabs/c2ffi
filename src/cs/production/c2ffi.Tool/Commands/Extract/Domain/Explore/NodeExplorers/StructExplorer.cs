@@ -70,7 +70,7 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
     {
         var fieldName = fieldCursor.Spelling();
         var type = clang_getCursorType(fieldCursor);
-        var location = fieldCursor.Location(context.ParseContext.SystemIncludeDirectories);
+        var location = context.ParseContext.Location(fieldCursor);
         var typeInfo = context.VisitType(type, structInfo);
         var offsetOf = (int)clang_Cursor_getOffsetOfField(fieldCursor) / 8;
         var comment = context.Comment(fieldCursor);

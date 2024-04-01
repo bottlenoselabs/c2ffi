@@ -63,14 +63,14 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
 
     private CRecordField UnionField(
         ExploreContext context,
-        CXCursor cursor,
+        CXCursor clangCursor,
         ExploreNodeInfo parentInfo)
     {
-        var name = cursor.Spelling();
-        var type = clang_getCursorType(cursor);
-        var location = cursor.Location(context.ParseContext.SystemIncludeDirectories);
-        var typeInfo = context.VisitType(type, parentInfo)!;
-        var comment = context.Comment(cursor);
+        var name = clangCursor.Spelling();
+        var type = clang_getCursorType(clangCursor);
+        var location = context.ParseContext.Location(clangCursor);
+        var typeInfo = context.VisitType(type, parentInfo);
+        var comment = context.Comment(clangCursor);
 
         var result = new CRecordField
         {
