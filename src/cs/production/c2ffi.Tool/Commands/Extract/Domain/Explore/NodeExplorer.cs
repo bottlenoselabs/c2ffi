@@ -42,7 +42,7 @@ public abstract partial class NodeExplorer
     internal CNode? ExploreInternal(ExploreContext context, ExploreNodeInfo info)
     {
         LogExploring(info.NodeKind.ToString(), info.Name, info.Location);
-        CNode result;
+        CNode? result;
 
         try
         {
@@ -99,7 +99,7 @@ public abstract partial class NodeExplorer
         return true;
     }
 
-    protected abstract CNode GetNode(ExploreContext context, ExploreNodeInfo info);
+    protected abstract CNode? GetNode(ExploreContext context, ExploreNodeInfo info);
 
     protected virtual bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {

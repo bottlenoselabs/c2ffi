@@ -44,17 +44,17 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
         return ignoredMacroObjects.IsEmpty || !ignoredMacroObjects.Contains(info.Name);
     }
 
-    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
+    protected override CNode? GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return MacroObject(context, info);
     }
 
-    private CMacroObject MacroObject(ExploreContext context, ExploreNodeInfo info)
+    private CMacroObject? MacroObject(ExploreContext context, ExploreNodeInfo info)
     {
         var macroObjectCandidate = MacroObjectCandidate.Parse(context.ParseContext, info.Cursor);
         if (macroObjectCandidate == null)
         {
-            throw new InvalidOperationException($"Failed to parse macro object '{info.Name}'.");
+            return null;
         }
 
         var filePath = WriteMacroObjectsFile(macroObjectCandidate);
@@ -69,11 +69,6 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
             {
                 _fileSystem.File.Delete(filePath);
             }
-        }
-
-        if (macroObject == null)
-        {
-            throw new InvalidOperationException($"Failed to parse macro object '{info.Name}'.");
         }
 
         return macroObject;
@@ -161,8 +156,18 @@ int main(void)
         var variableName = variable.Spelling();
         var macroName =
             variableName.Replace("variable_", string.Empty, StringComparison.InvariantCultureIgnoreCase);
-        var clangCursor = variable.GetDescendents().FirstOrDefault();
+        var variableDescendents = variable.GetDescendents();
+        if (variableDescendents.IsDefaultOrEmpty)
+        {
+            return null;
+        }
+
+        var clangCursor = variableDescendents.FirstOrDefault();
         var clangType = clang.clang_getCursorType(clangCursor);
+        if (clangType.kind == clang.CXTypeKind.CXType_Invalid)
+        {
+            return null;
+        }
 
         var value = EvaluateMacroValue(clangCursor, clangType);
         if (value == null)

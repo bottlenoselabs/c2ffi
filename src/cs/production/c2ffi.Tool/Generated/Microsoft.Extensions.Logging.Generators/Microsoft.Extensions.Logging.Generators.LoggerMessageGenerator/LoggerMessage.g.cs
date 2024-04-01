@@ -211,12 +211,12 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.String, global::c2ffi.Data.CLocation?, global::System.Exception?> __LogAlreadyVisitedCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String, global::c2ffi.Data.CLocation?>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogAlreadyVisited)), "- Already visited {Kind} '{Name}' ({Location})", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String, global::c2ffi.Data.CLocation?>(global::Microsoft.Extensions.Logging.LogLevel.Debug, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogAlreadyVisited)), "- Already visited {Kind} '{Name}' ({Location})", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
         private partial void LogAlreadyVisited(global::System.String kind, global::System.String name, global::c2ffi.Data.CLocation? location)
         {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
+            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Debug))
             {
                 __LogAlreadyVisitedCallback(_logger, kind, name, location, null);
             }
