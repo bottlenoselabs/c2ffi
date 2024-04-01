@@ -23,16 +23,22 @@ public record CFfiTargetPlatform
     public string FileName { get; set; } = string.Empty;
 
     /// <summary>
-    ///     Gets or sets the target platform requested.
+    ///     Gets or sets the target platform requested to be used by Clang.
     /// </summary>
     [JsonPropertyName("platformRequested")]
     public TargetPlatform PlatformRequested { get; set; } = TargetPlatform.Unknown;
 
     /// <summary>
-    ///     Gets or sets the target platform used.
+    ///     Gets or sets the target platform used by Clang.
     /// </summary>
     [JsonPropertyName("platformActual")]
     public TargetPlatform PlatformActual { get; set; } = TargetPlatform.Unknown;
+
+    /// <summary>
+    ///     Gets or sets the arguments passed to Clang.
+    /// </summary>
+    [JsonPropertyName("clangArguments")]
+    public ImmutableArray<string> ClangArguments;
 
     /// <summary>
     ///     Gets or sets the system include directories used.

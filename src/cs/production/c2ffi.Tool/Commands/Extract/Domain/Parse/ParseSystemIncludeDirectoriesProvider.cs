@@ -111,6 +111,12 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         TargetPlatform targetPlatform,
         ImmutableArray<string>.Builder directories)
     {
+        var clangVersionDirectory = GetHighestVersionDirectoryPathFrom("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang");
+        if (!string.IsNullOrEmpty(clangVersionDirectory))
+        {
+            directories.Add($"{clangVersionDirectory}/include");
+        }
+
         switch (targetPlatform.OperatingSystem)
         {
             case NativeOperatingSystem.macOS:
@@ -231,7 +237,10 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         directories.Add("/usr/include");
 
         var clangVersionDirectory = GetHighestVersionDirectoryPathFrom("/usr/include/clang");
-        directories.Add($"{clangVersionDirectory}/include");
+        if (!string.IsNullOrEmpty(clangVersionDirectory))
+        {
+            directories.Add($"{clangVersionDirectory}/include");
+        }
 
         // Cross platform headers are in: /usr/[ARCH]-linux-gnu/include
         //  For Ubuntu, cross platform toolchain (includes headers) are installed via packages:

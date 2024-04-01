@@ -43,7 +43,7 @@ namespace c2ffi.Data.Serialization
 
         private static global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[] CFfiTargetPlatformPropInit(global::System.Text.Json.JsonSerializerOptions options)
         {
-            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[14];
+            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[15];
 
             var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
@@ -310,6 +310,25 @@ namespace c2ffi.Data.Serialization
             };
             
             properties[13] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>>(options, info13);
+
+            var info14 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableArray<string>>
+            {
+                IsProperty = false,
+                IsPublic = true,
+                IsVirtual = false,
+                DeclaringType = typeof(global::c2ffi.Data.CFfiTargetPlatform),
+                Converter = null,
+                Getter = static obj => ((global::c2ffi.Data.CFfiTargetPlatform)obj).ClangArguments,
+                Setter = static (obj, value) => ((global::c2ffi.Data.CFfiTargetPlatform)obj).ClangArguments = value!,
+                IgnoreCondition = null,
+                HasJsonInclude = false,
+                IsExtensionData = false,
+                NumberHandling = null,
+                PropertyName = "ClangArguments",
+                JsonPropertyName = "clangArguments"
+            };
+            
+            properties[14] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableArray<string>>(options, info14);
 
             return properties;
         }

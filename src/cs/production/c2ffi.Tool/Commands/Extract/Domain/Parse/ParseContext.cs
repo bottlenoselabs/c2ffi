@@ -21,6 +21,8 @@ public sealed class ParseContext : IDisposable
 
     private clang.CXTranslationUnit _translationUnit;
 
+    public clang.CXTranslationUnit TranslationUnit => _translationUnit;
+
     public ParseContext(
         clang.CXTranslationUnit translationUnit,
         string filePath,
@@ -58,21 +60,29 @@ public sealed class ParseContext : IDisposable
         var fullFilePath = string.IsNullOrEmpty(fileNamePath) ? string.Empty : Path.GetFullPath(fileNamePath);
 
         var isSystem = false;
-        if (string.IsNullOrEmpty(fullFilePath))
+        var isFromSystemHeader = clang.clang_Location_isInSystemHeader(locationSource) > 0;
+        if (isFromSystemHeader)
         {
             isSystem = true;
         }
         else
         {
-            foreach (var systemDirectoryPath in SystemIncludeDirectories)
+            if (string.IsNullOrEmpty(fullFilePath))
             {
-                if (!fullFilePath.StartsWith(systemDirectoryPath, StringComparison.InvariantCulture))
-                {
-                    continue;
-                }
-
                 isSystem = true;
-                break;
+            }
+            else
+            {
+                foreach (var systemDirectoryPath in SystemIncludeDirectories)
+                {
+                    if (!fullFilePath.StartsWith(systemDirectoryPath, StringComparison.InvariantCulture))
+                    {
+                        continue;
+                    }
+
+                    isSystem = true;
+                    break;
+                }
             }
         }
 

@@ -241,11 +241,6 @@ public sealed class ExploreContext : IDisposable
             InnerTypeInfo = innerType
         };
 
-        if (typeInfo.Name == "uint64_t" && typeInfo.AlignOf == 4)
-        {
-            Console.WriteLine();
-        }
-
         if (typeInfo.NodeKind == CNodeKind.TypeAlias && typeInfo.InnerTypeInfo != null &&
             typeInfo.Name == typeInfo.InnerTypeInfo.Name)
         {

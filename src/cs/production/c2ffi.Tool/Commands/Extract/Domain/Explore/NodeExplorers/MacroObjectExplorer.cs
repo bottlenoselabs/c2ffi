@@ -21,6 +21,7 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 {
     private readonly IFileSystem _fileSystem;
+    private readonly ClangTranslationUnitParser _clangTranslationUnitParser;
 
     public MacroObjectExplorer(
         ILogger<MacroObjectExplorer> logger,
@@ -29,6 +30,7 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
         : base(logger, false)
     {
         _fileSystem = fileSystem;
+        _clangTranslationUnitParser = clangTranslationUnitParser;
     }
 
     protected override ExploreKindCursors ExpectedCursors =>
@@ -42,24 +44,31 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
         return ignoredMacroObjects.IsEmpty || !ignoredMacroObjects.Contains(info.Name);
     }
 
-    protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)
+    protected override CNode? GetNode(ExploreContext context, ExploreNodeInfo info)
     {
         return MacroObject(context, info);
     }
 
-    private CMacroObject MacroObject(ExploreContext context, ExploreNodeInfo info)
+    private CMacroObject? MacroObject(ExploreContext context, ExploreNodeInfo info)
     {
         var macroObjectCandidate = MacroObjectCandidate.Parse(context.ParseContext, info.Cursor);
         if (macroObjectCandidate == null)
         {
-            throw new InvalidOperationException($"Failed to parse macro object '{info.Name}'.");
+            return null;
         }
 
         var filePath = WriteMacroObjectsFile(macroObjectCandidate);
-        var macroObject = GetMacroObjectFromParsingFile(filePath, context.ParseContext);
-        if (macroObject == null)
+        CMacroObject? macroObject;
+        try
         {
-            throw new InvalidOperationException($"Failed to parse macro object '{info.Name}'.");
+            macroObject = GetMacroObjectFromParsingFile(filePath, context.ParseContext);
+        }
+        finally
+        {
+            if (_fileSystem.File.Exists(filePath))
+            {
+                _fileSystem.File.Delete(filePath);
+            }
         }
 
         return macroObject;
@@ -67,7 +76,7 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     private string WriteMacroObjectsFile(MacroObjectCandidate macroObjectCandidate)
     {
-        var tempFilePath = _fileSystem.Path.GetTempFileName();
+        var tempFilePath = _fileSystem.Path.ChangeExtension(_fileSystem.Path.GetTempFileName(), ".txt");
         using var fileStream = _fileSystem.File.OpenWrite(tempFilePath);
         using var writer = new StreamWriter(fileStream);
 
@@ -105,16 +114,16 @@ int main(void)
     private CMacroObject? GetMacroObjectFromParsingFile(
         string filePath, ParseContext originalParseContext)
     {
-        if (!ClangExtensions.TryParseTranslationUnit(
-                filePath,
-                originalParseContext.Arguments,
-                out var translationUnit,
-                false))
-        {
-            return null;
-        }
+        using var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(
+            filePath,
+            originalParseContext.ExtractOptions,
+            isCPlusPlus: true,
+            ignoreWarnings: true,
+            logClangDiagnostics: false,
+            keepGoing: true,
+            skipFunctionBodies: false);
 
-        var translationUnitCursor = clang.clang_getTranslationUnitCursor(translationUnit);
+        var translationUnitCursor = clang.clang_getTranslationUnitCursor(parseContext.TranslationUnit);
         var functionCursor = translationUnitCursor
             .GetDescendents(static (cursor, _) =>
             {
@@ -130,7 +139,7 @@ int main(void)
         if (functionCursor.kind == 0)
         {
             throw new ToolException(
-                @"Failed to parse C++ file to determine types of macro objects. Please ensure your libclang version is up-to-date.");
+                "Failed to parse C++ file to determine types of macro objects. Please ensure your libclang version is up-to-date.");
         }
 
         var compoundStatement = functionCursor.GetDescendents(static (cursor, _) =>
@@ -147,11 +156,20 @@ int main(void)
         var variableName = variable.Spelling();
         var macroName =
             variableName.Replace("variable_", string.Empty, StringComparison.InvariantCultureIgnoreCase);
-        var clangCursor = variable.GetDescendents().FirstOrDefault();
+        var variableDescendents = variable.GetDescendents();
+        if (variableDescendents.IsDefaultOrEmpty)
+        {
+            return null;
+        }
 
-        var type = clang.clang_getCursorType(clangCursor);
+        var clangCursor = variableDescendents.FirstOrDefault();
+        var clangType = clang.clang_getCursorType(clangCursor);
+        if (clangType.kind == clang.CXTypeKind.CXType_Invalid)
+        {
+            return null;
+        }
 
-        var value = EvaluateMacroValue(clangCursor, type);
+        var value = EvaluateMacroValue(clangCursor, clangType);
         if (value == null)
         {
             return null;
@@ -160,9 +178,9 @@ int main(void)
         using var streamReader = new StreamReader(filePath);
         var location = MacroLocation(originalParseContext, clangCursor, streamReader, ref readerLineNumber);
 
-        var nodeKind = MacroTypeNodeKind(type);
-        var typeName = type.Spelling();
-        var sizeOf = (int)clang.clang_Type_getSizeOf(type);
+        var nodeKind = MacroTypeNodeKind(clangType);
+        var typeName = clangType.Spelling();
+        var sizeOf = (int)clang.clang_Type_getSizeOf(clangType);
         var typeInfo = new CTypeInfo
         {
             Name = typeName,

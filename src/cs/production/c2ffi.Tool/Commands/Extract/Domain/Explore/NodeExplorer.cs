@@ -42,7 +42,7 @@ public abstract partial class NodeExplorer
     internal CNode? ExploreInternal(ExploreContext context, ExploreNodeInfo info)
     {
         LogExploring(info.NodeKind.ToString(), info.Name, info.Location);
-        CNode result;
+        CNode? result;
 
         try
         {
@@ -99,7 +99,7 @@ public abstract partial class NodeExplorer
         return true;
     }
 
-    protected abstract CNode GetNode(ExploreContext context, ExploreNodeInfo info);
+    protected abstract CNode? GetNode(ExploreContext context, ExploreNodeInfo info);
 
     protected virtual bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
@@ -137,7 +137,7 @@ public abstract partial class NodeExplorer
     [LoggerMessage(2, LogLevel.Error, "- Failed to explore {Kind} '{Name}' ({Location})'")]
     private partial void LogFailureExplore(Exception e, string kind, string name, CLocation? location);
 
-    [LoggerMessage(3, LogLevel.Information, "- Already visited {Kind} '{Name}' ({Location})")]
+    [LoggerMessage(3, LogLevel.Debug, "- Already visited {Kind} '{Name}' ({Location})")]
     private partial void LogAlreadyVisited(string kind, string name, CLocation? location);
 
     [LoggerMessage(4, LogLevel.Debug, "- Exploring {Kind} '{Name}' ({Location})'")]
