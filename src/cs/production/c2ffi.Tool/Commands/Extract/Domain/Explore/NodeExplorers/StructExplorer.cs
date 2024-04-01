@@ -28,30 +28,18 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
         var fields = StructFields(context, info);
         var comment = context.Comment(info.Cursor);
 
-        var cursorLocation = clang_getCursorLocation(info.Cursor);
-        var isSystemCursor = clang_Location_isInSystemHeader(cursorLocation) > 0;
-
-        try
+        var record = new CRecord
         {
-            var record = new CRecord
-            {
-                RecordKind = CRecordKind.Struct,
-                Location = info.Location,
-                Name = info.Name,
-                Fields = fields,
-                SizeOf = info.SizeOf!.Value,
-                AlignOf = info.AlignOf!.Value,
-                Comment = comment,
-                IsSystem = isSystemCursor
-            };
+            RecordKind = CRecordKind.Struct,
+            Location = info.Location,
+            Name = info.Name,
+            Fields = fields,
+            SizeOf = info.SizeOf!.Value,
+            AlignOf = info.AlignOf!.Value,
+            Comment = comment
+        };
 
-            return record;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        return record;
     }
 
     private ImmutableArray<CRecordField> StructFields(
@@ -82,8 +70,8 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
     {
         var fieldName = fieldCursor.Spelling();
         var type = clang_getCursorType(fieldCursor);
-        var location = fieldCursor.Location();
-        var typeInfo = context.VisitType(type, structInfo)!;
+        var location = fieldCursor.Location(context.ParseContext.SystemIncludeDirectories);
+        var typeInfo = context.VisitType(type, structInfo);
         var offsetOf = (int)clang_Cursor_getOffsetOfField(fieldCursor) / 8;
         var comment = context.Comment(fieldCursor);
 

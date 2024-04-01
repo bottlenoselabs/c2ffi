@@ -26,16 +26,14 @@ public sealed class PointerExplorer(ILogger<PointerExplorer> logger)
     private static CPointer Pointer(ExploreContext context, ExploreNodeInfo info)
     {
         var type = clang_getPointeeType(info.Type);
-        var typeInfo = context.VisitType(type, info)!;
+        var typeInfo = context.VisitType(type, info);
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new CPointer
         {
             Name = info.Name,
             TypeInfo = typeInfo,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
 
         return result;

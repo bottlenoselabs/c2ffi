@@ -46,16 +46,14 @@ public sealed class PrimitiveExplorer(ILogger<PrimitiveExplorer> logger)
 
     private static CPrimitive Primitive(ExploreContext context, ExploreNodeInfo info)
     {
-        var typeInfo = context.VisitType(info.Type, info)!;
+        var typeInfo = context.VisitType(info.Type, info);
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new CPrimitive
         {
             Name = info.Name,
             TypeInfo = typeInfo,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
         return result;
     }

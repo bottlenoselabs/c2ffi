@@ -31,7 +31,6 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
         var integerTypeInfo = IntegerTypeInfo(context, info);
         var enumValues = EnumValues(info.Cursor);
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new CEnum
         {
@@ -39,8 +38,7 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
             Location = info.Location,
             SizeOf = integerTypeInfo.SizeOf!.Value,
             Values = enumValues,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
 
         return result;

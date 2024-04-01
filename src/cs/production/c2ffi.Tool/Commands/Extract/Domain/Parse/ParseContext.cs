@@ -41,13 +41,6 @@ public sealed class ParseContext : IDisposable
         PointerSize = targetInfo.PointerSizeBytes;
     }
 
-    public bool IsSystemCursor(clang.CXCursor clangCursor)
-    {
-        var cursorLocation = clang.clang_getCursorLocation(clangCursor);
-        var isSystemCursor = clang.clang_Location_isInSystemHeader(cursorLocation) > 0;
-        return isSystemCursor;
-    }
-
     public int? SizeOf(CNodeKind nodeKind, clang.CXType clangType)
     {
         switch (nodeKind)
@@ -84,6 +77,16 @@ public sealed class ParseContext : IDisposable
 
         var alignOfValue = (int)clang.clang_Type_getAlignOf(clangType);
         int? alignOf = alignOfValue >= 0 ? alignOfValue : null;
+
+        // NOTE: `uin64_t` and `double` are 32-bit aligned on 32-bit systems even if they take 8 bytes of storage
+        //  see: https://github.com/rust-lang/rust/issues/43899
+        // NOTE: for purposes of FFI and bindgen, override the value to be 8 bytes
+        if (nodeKind == CNodeKind.Primitive)
+        {
+            var sizeOf = SizeOf(nodeKind, clangType);
+            return sizeOf;
+        }
+
         return alignOf;
     }
 
@@ -152,7 +155,8 @@ public sealed class ParseContext : IDisposable
                 return false;
             }
 
-            return !IsSystemCursor(clangCursor);
+            var location = clangCursor.Location(SystemIncludeDirectories);
+            return !location.IsSystem;
         }
     }
 

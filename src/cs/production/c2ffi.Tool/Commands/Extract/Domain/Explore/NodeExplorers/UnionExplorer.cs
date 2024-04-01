@@ -28,9 +28,6 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
         var fields = UnionFields(context, info.Type, info);
         var comment = context.Comment(info.Cursor);
 
-        var cursorLocation = clang_getCursorLocation(info.Cursor);
-        var isSystemCursor = clang_Location_isInSystemHeader(cursorLocation) > 0;
-
         var result = new CRecord
         {
             RecordKind = CRecordKind.Union,
@@ -39,8 +36,7 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
             Fields = fields,
             SizeOf = info.SizeOf!.Value,
             AlignOf = info.AlignOf!.Value,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
 
         return result;
@@ -57,7 +53,7 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
         for (var i = 0; i < fieldCursors.Length; i++)
         {
             var fieldCursor = fieldCursors[i];
-            var nextRecordField = UnionField(context, fieldCursor, parentInfo, i);
+            var nextRecordField = UnionField(context, fieldCursor, parentInfo);
             builder.Add(nextRecordField);
         }
 
@@ -68,12 +64,11 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
     private CRecordField UnionField(
         ExploreContext context,
         CXCursor cursor,
-        ExploreNodeInfo parentInfo,
-        int fieldIndex)
+        ExploreNodeInfo parentInfo)
     {
         var name = cursor.Spelling();
         var type = clang_getCursorType(cursor);
-        var location = cursor.Location();
+        var location = cursor.Location(context.ParseContext.SystemIncludeDirectories);
         var typeInfo = context.VisitType(type, parentInfo)!;
         var comment = context.Comment(cursor);
 

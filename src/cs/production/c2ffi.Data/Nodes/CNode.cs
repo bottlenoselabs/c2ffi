@@ -21,12 +21,6 @@ public abstract class CNode : IComparable<CNode>, IEquatable<CNode>
     public string? Comment { get; set; }
 
     /// <summary>
-    ///     Gets or sets a value indicating whether the C node originates from a system header.
-    /// </summary>
-    [JsonPropertyName("is_system")]
-    public bool IsSystem { get; set; }
-
-    /// <summary>
     ///     Gets or sets the name of the C node.
     /// </summary>
     [JsonIgnore]

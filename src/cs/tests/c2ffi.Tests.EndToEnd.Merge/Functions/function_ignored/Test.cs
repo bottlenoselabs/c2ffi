@@ -28,8 +28,10 @@ public class Test : MergeFfisTest
     {
         var function = ffi.GetFunction(FunctionName);
         function.CallingConvention.Should().Be("cdecl");
-        function.ReturnTypeName.Should().Be("void");
-        function.ReturnTypeSizeOf.Should().Be(null);
+
+        function.ReturnType.Name.Should().Be("void");
+        function.ReturnType.SizeOf.Should().Be(null);
+        function.ReturnType.AlignOf.Should().Be(null);
 
         function.Parameters.Should().BeEmpty();
     }

@@ -43,7 +43,7 @@ namespace c2ffi.Data.Serialization
 
         private static global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[] CFfiTargetPlatformPropInit(global::System.Text.Json.JsonSerializerOptions options)
         {
-            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[12];
+            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[14];
 
             var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
@@ -102,7 +102,45 @@ namespace c2ffi.Data.Serialization
             
             properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.TargetPlatform>(options, info2);
 
-            var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<int>
+            var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableArray<string>>
+            {
+                IsProperty = true,
+                IsPublic = true,
+                IsVirtual = false,
+                DeclaringType = typeof(global::c2ffi.Data.CFfiTargetPlatform),
+                Converter = null,
+                Getter = static obj => ((global::c2ffi.Data.CFfiTargetPlatform)obj).SystemIncludeDirectories,
+                Setter = static (obj, value) => ((global::c2ffi.Data.CFfiTargetPlatform)obj).SystemIncludeDirectories = value!,
+                IgnoreCondition = null,
+                HasJsonInclude = false,
+                IsExtensionData = false,
+                NumberHandling = null,
+                PropertyName = "SystemIncludeDirectories",
+                JsonPropertyName = null
+            };
+            
+            properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableArray<string>>(options, info3);
+
+            var info4 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableArray<string>>
+            {
+                IsProperty = true,
+                IsPublic = true,
+                IsVirtual = false,
+                DeclaringType = typeof(global::c2ffi.Data.CFfiTargetPlatform),
+                Converter = null,
+                Getter = static obj => ((global::c2ffi.Data.CFfiTargetPlatform)obj).UserIncludeDirectories,
+                Setter = static (obj, value) => ((global::c2ffi.Data.CFfiTargetPlatform)obj).UserIncludeDirectories = value!,
+                IgnoreCondition = null,
+                HasJsonInclude = false,
+                IsExtensionData = false,
+                NumberHandling = null,
+                PropertyName = "UserIncludeDirectories",
+                JsonPropertyName = null
+            };
+            
+            properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableArray<string>>(options, info4);
+
+            var info5 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<int>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -119,9 +157,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "pointerSize"
             };
             
-            properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info3);
+            properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info5);
 
-            var info4 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>>
+            var info6 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -138,9 +176,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "macroObjects"
             };
             
-            properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>>(options, info4);
+            properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>>(options, info6);
 
-            var info5 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>>
+            var info7 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -157,9 +195,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "variables"
             };
             
-            properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>>(options, info5);
+            properties[7] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>>(options, info7);
 
-            var info6 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>>
+            var info8 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -176,9 +214,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "functions"
             };
             
-            properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>>(options, info6);
+            properties[8] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>>(options, info8);
 
-            var info7 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>>
+            var info9 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -195,9 +233,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "records"
             };
             
-            properties[7] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>>(options, info7);
+            properties[9] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>>(options, info9);
 
-            var info8 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>>
+            var info10 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -214,9 +252,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "enums"
             };
             
-            properties[8] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>>(options, info8);
+            properties[10] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>>(options, info10);
 
-            var info9 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>>
+            var info11 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -233,9 +271,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "typeAliases"
             };
             
-            properties[9] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>>(options, info9);
+            properties[11] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>>(options, info11);
 
-            var info10 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>>
+            var info12 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -252,9 +290,9 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "opaqueTypes"
             };
             
-            properties[10] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>>(options, info10);
+            properties[12] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>>(options, info12);
 
-            var info11 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>>
+            var info13 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -271,7 +309,7 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "functionPointers"
             };
             
-            properties[11] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>>(options, info11);
+            properties[13] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>>(options, info13);
 
             return properties;
         }

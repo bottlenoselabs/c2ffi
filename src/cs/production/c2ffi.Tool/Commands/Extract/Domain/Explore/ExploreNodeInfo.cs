@@ -18,7 +18,7 @@ public sealed class ExploreNodeInfo
 
     public CXType Type { get; init; }
 
-    public CLocation? Location { get; init; }
+    public CLocation Location { get; init; }
 
     public int? SizeOf { get; init; }
 

@@ -201,6 +201,8 @@ public sealed partial class MergeFfisTool
             var nodesAreEqual = node.Equals(firstNode);
             if (!nodesAreEqual)
             {
+                var x = node.Equals(firstNode);
+
                 if (node is CMacroObject nodeMacroObject && firstNode is CMacroObject firstNodeMacroObject)
                 {
                     if (nodeMacroObject.EqualsWithoutValue(firstNodeMacroObject))

@@ -46,7 +46,6 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         var parameters = FunctionParameters(context, info);
         var callingConvention = FunctionCallingConvention(info.Type);
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new CFunction
         {
@@ -55,8 +54,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
             CallingConvention = callingConvention,
             ReturnTypeInfo = returnTypeInfo,
             Parameters = parameters,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
 
         return result;
@@ -77,10 +75,10 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     }
 
     private static CTypeInfo FunctionReturnType(
-        ExploreContext context, ExploreNodeInfo info)
+        ExploreContext context, ExploreNodeInfo parentInfo)
     {
-        var resultType = clang_getCursorResultType(info.Cursor);
-        return context.VisitType(resultType, info);
+        var resultType = clang_getCursorResultType(parentInfo.Cursor);
+        return context.VisitType(resultType, parentInfo);
     }
 
     private ImmutableArray<CFunctionParameter> FunctionParameters(

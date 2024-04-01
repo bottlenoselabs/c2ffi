@@ -74,7 +74,7 @@ public abstract partial class NodeExplorer
             return false;
         }
 
-        if (context.IsSystemCursor(info.Cursor))
+        if (info.Location.IsSystem)
         {
             return false;
         }

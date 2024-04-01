@@ -24,14 +24,12 @@ public sealed class OpaqueTypeExplorer(ILogger<OpaqueTypeExplorer> logger)
     private static COpaqueType OpaqueDataType(ExploreContext context, ExploreNodeInfo info)
     {
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new COpaqueType
         {
             Name = info.Name,
             Location = info.Location,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
 
         return result;

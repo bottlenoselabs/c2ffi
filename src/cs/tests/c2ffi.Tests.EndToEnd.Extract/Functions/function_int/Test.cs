@@ -29,7 +29,12 @@ public class Test : ExtractFfiTest
     {
         var function = ffi.GetFunction(FunctionName);
         function.CallingConvention.Should().Be("cdecl");
-        function.ReturnTypeName.Should().Be("int");
+
+        var returnType = function.ReturnType;
+        returnType.Name.Should().Be("int");
+        returnType.SizeOf.Should().Be(4);
+        returnType.AlignOf.Should().Be(4);
+        returnType.InnerType.Should().Be(null);
 
         function.Parameters.Should().BeEmpty();
     }

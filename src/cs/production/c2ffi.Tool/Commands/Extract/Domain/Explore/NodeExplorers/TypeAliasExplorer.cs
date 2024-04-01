@@ -30,17 +30,15 @@ public class TypeAliasExplorer : NodeExplorer<CTypeAlias>
     private static CTypeAlias TypeAlias(ExploreContext context, ExploreNodeInfo info)
     {
         var aliasType = clang_getTypedefDeclUnderlyingType(info.Cursor);
-        var aliasTypeInfo = context.VisitType(aliasType, info)!;
+        var aliasTypeInfo = context.VisitType(aliasType, info);
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var typedef = new CTypeAlias
         {
             Name = info.Name,
             Location = info.Location,
             UnderlyingTypeInfo = aliasTypeInfo,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
         return typedef;
     }

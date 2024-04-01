@@ -64,11 +64,6 @@ public sealed class ExploreContext : IDisposable
         return _ignoredIncludeFiles.Contains(filePath);
     }
 
-    public bool IsSystemCursor(clang.CXCursor cursor)
-    {
-        return ParseContext.IsSystemCursor(cursor);
-    }
-
     public CTypeInfo VisitType(
         clang.CXType clangType,
         ExploreNodeInfo parentInfo,
@@ -77,19 +72,13 @@ public sealed class ExploreContext : IDisposable
         var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, parentInfo.NodeKind);
         var nodeKindUsed = nodeKind ?? clangTypeInfo.NodeKind;
 
-        var rootInfo = parentInfo;
-        while (rootInfo is { Location: null })
-        {
-            rootInfo = rootInfo.Parent;
-        }
-
         var typeInfo = VisitTypeInternal(
             nodeKindUsed,
             clangTypeInfo.Name,
             clangTypeInfo.ClangType,
             clangType,
             clangTypeInfo.ClangCursor,
-            rootInfo);
+            parentInfo);
         return typeInfo;
     }
 
@@ -116,7 +105,7 @@ public sealed class ExploreContext : IDisposable
         clang.CXType type,
         ExploreNodeInfo? parentInfo)
     {
-        var location = cursor.Location();
+        var location = cursor.Location(ParseContext.SystemIncludeDirectories);
         var typeName = type.Spelling();
         var sizeOf = ParseContext.SizeOf(kind, type);
         var alignOf = ParseContext.AlignOf(kind, type);
@@ -143,34 +132,23 @@ public sealed class ExploreContext : IDisposable
     }
 
     private CTypeInfo VisitTypeInternal(
-        CNodeKind kind,
+        CNodeKind nodeKind,
         string typeName,
         clang.CXType clangType,
         clang.CXType clangContainerType,
         clang.CXCursor clangCursor,
         ExploreNodeInfo? rootNode)
     {
-        var isSystemCursor = IsSystemCursor(clangCursor);
-        if (isSystemCursor)
-        {
-            return new CTypeInfo
-            {
-                Name = typeName,
-                SizeOf = ParseContext.SizeOf(kind, clangType),
-                Location = clangCursor.Location()
-            };
-        }
-
         var clangCursorLocation = clang.clang_getTypeDeclaration(clangType);
-        var location = clangCursorLocation.Location();
+        var location = clangCursorLocation.Location(ParseContext.SystemIncludeDirectories);
 
         int? sizeOf;
         int? alignOf;
         CTypeInfo? innerType = null;
-        if (kind is CNodeKind.Pointer)
+        if (nodeKind is CNodeKind.Pointer)
         {
             var pointeeTypeCandidate = clang.clang_getPointeeType(clangType);
-            var pointeeTypeInfo = ClangTypeInfoProvider.GetTypeInfo(pointeeTypeCandidate, kind);
+            var pointeeTypeInfo = ClangTypeInfoProvider.GetTypeInfo(pointeeTypeCandidate, nodeKind);
 
             innerType = VisitTypeInternal(
                 pointeeTypeInfo.NodeKind,
@@ -182,10 +160,10 @@ public sealed class ExploreContext : IDisposable
             sizeOf = ParseContext.PointerSize;
             alignOf = ParseContext.PointerSize;
         }
-        else if (kind is CNodeKind.Array)
+        else if (nodeKind is CNodeKind.Array)
         {
             var elementTypeCandidate = clang.clang_getArrayElementType(clangType);
-            var elementTypeInfo = ClangTypeInfoProvider.GetTypeInfo(elementTypeCandidate, kind);
+            var elementTypeInfo = ClangTypeInfoProvider.GetTypeInfo(elementTypeCandidate, nodeKind);
 
             innerType = VisitTypeInternal(
                 elementTypeInfo.NodeKind,
@@ -197,10 +175,10 @@ public sealed class ExploreContext : IDisposable
             sizeOf = ParseContext.PointerSize;
             alignOf = ParseContext.PointerSize;
         }
-        else if (kind is CNodeKind.TypeAlias)
+        else if (nodeKind is CNodeKind.TypeAlias)
         {
             var aliasTypeCandidate = clang.clang_getTypedefDeclUnderlyingType(clangCursor);
-            var aliasTypeInfo = ClangTypeInfoProvider.GetTypeInfo(aliasTypeCandidate, kind);
+            var aliasTypeInfo = ClangTypeInfoProvider.GetTypeInfo(aliasTypeCandidate, nodeKind);
 
             innerType = VisitTypeInternal(
                 aliasTypeInfo.NodeKind,
@@ -221,23 +199,23 @@ public sealed class ExploreContext : IDisposable
             }
             else
             {
-                sizeOf = ParseContext.SizeOf(kind, aliasTypeInfo.ClangType);
-                alignOf = ParseContext.AlignOf(kind, aliasTypeInfo.ClangType);
+                sizeOf = ParseContext.SizeOf(nodeKind, aliasTypeInfo.ClangType);
+                alignOf = ParseContext.AlignOf(nodeKind, aliasTypeInfo.ClangType);
             }
         }
         else
         {
-            sizeOf = ParseContext.SizeOf(kind, clangContainerType);
-            alignOf = ParseContext.AlignOf(kind, clangContainerType);
+            sizeOf = ParseContext.SizeOf(nodeKind, clangContainerType);
+            alignOf = ParseContext.AlignOf(nodeKind, clangContainerType);
         }
 
         var arraySizeValue = (int)clang.clang_getArraySize(clangContainerType);
         int? arraySize = arraySizeValue >= 0 ? arraySizeValue : null;
 
         int? elementSize = null;
-        if (kind == CNodeKind.Array)
+        if (nodeKind == CNodeKind.Array)
         {
-            var arrayTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, kind);
+            var arrayTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, nodeKind);
             var elementType = clang.clang_getElementType(arrayTypeInfo.ClangType);
             elementSize = ParseContext.SizeOf(arrayTypeInfo.NodeKind, elementType);
 
@@ -252,7 +230,7 @@ public sealed class ExploreContext : IDisposable
         var typeInfo = new CTypeInfo
         {
             Name = typeName,
-            NodeKind = kind,
+            NodeKind = nodeKind,
             SizeOf = sizeOf,
             AlignOf = alignOf,
             ElementSize = elementSize,
@@ -263,8 +241,18 @@ public sealed class ExploreContext : IDisposable
             InnerTypeInfo = innerType
         };
 
+        if (typeInfo.Name == "uint64_t" && typeInfo.AlignOf == 4)
+        {
+            Console.WriteLine();
+        }
+
         if (typeInfo.NodeKind == CNodeKind.TypeAlias && typeInfo.InnerTypeInfo != null &&
             typeInfo.Name == typeInfo.InnerTypeInfo.Name)
+        {
+            return typeInfo;
+        }
+
+        if (location.IsSystem)
         {
             return typeInfo;
         }
