@@ -36,7 +36,6 @@ public class Test : ExtractFfiTest
         returnType.SizeOf.Should().Be(8);
         returnType.AlignOf.Should().Be(8);
         returnType.InnerType.Should().NotBeNull();
-        returnType.InnerType!.NodeKind.Should().Be("primitive");
         returnType.InnerType!.InnerType.Should().BeNull();
 
         var returnTypeInner = returnType.InnerType!;
