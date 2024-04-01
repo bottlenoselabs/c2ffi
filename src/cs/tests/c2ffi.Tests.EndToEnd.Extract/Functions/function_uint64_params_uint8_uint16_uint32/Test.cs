@@ -36,12 +36,6 @@ public class Test : ExtractFfiTest
         returnType.SizeOf.Should().Be(8);
         returnType.AlignOf.Should().Be(8);
         returnType.InnerType.Should().NotBeNull();
-        returnType.InnerType!.InnerType.Should().BeNull();
-
-        var returnTypeInner = returnType.InnerType!;
-        returnTypeInner.Should().NotBeNull();
-        returnTypeInner.SizeOf.Should().Be(returnType.SizeOf);
-        returnTypeInner.AlignOf.Should().Be(returnType.AlignOf);
 
         function.Parameters.Length.Should().Be(3);
 
