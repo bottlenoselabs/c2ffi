@@ -35,6 +35,16 @@ public record CFfiTargetPlatform
     public TargetPlatform PlatformActual { get; set; } = TargetPlatform.Unknown;
 
     /// <summary>
+    ///     Gets or sets the system include directories used.
+    /// </summary>
+    public ImmutableArray<string> SystemIncludeDirectories { get; set; } = ImmutableArray<string>.Empty;
+
+    /// <summary>
+    ///     Gets or sets the user include directories used.
+    /// </summary>
+    public ImmutableArray<string> UserIncludeDirectories { get; set; } = ImmutableArray<string>.Empty;
+
+    /// <summary>
     ///     Gets or sets the pointer size in bytes.
     /// </summary>
     [JsonPropertyName("pointerSize")]

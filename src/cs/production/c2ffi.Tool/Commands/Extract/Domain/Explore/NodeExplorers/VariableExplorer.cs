@@ -32,17 +32,14 @@ public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
     private static CVariable Variable(ExploreContext context, ExploreNodeInfo info)
     {
         var typeInfo = context.VisitType(info.Type, info);
-
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new CVariable
         {
             Location = info.Location,
             Name = info.Name,
             TypeInfo = typeInfo,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
         return result;
     }

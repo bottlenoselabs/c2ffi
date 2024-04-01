@@ -26,8 +26,16 @@ public class Test : MergeFfisTest
     {
         var function = ffi.GetFunction(FunctionName);
         function.CallingConvention.Should().Be("cdecl");
-        function.ReturnTypeName.Should().Be("uint64_t");
-        function.ReturnTypeSizeOf.Should().Be(8);
+
+        var returnType = function.ReturnType;
+        returnType.Name.Should().Be("uint64_t");
+        returnType.SizeOf.Should().Be(8);
+        returnType.AlignOf.Should().Be(8);
+
+        var returnTypeInner = returnType.InnerType!;
+        returnTypeInner.Should().NotBeNull();
+        returnTypeInner.SizeOf.Should().Be(returnType.SizeOf);
+        returnTypeInner.AlignOf.Should().Be(returnType.AlignOf);
 
         function.Parameters.Length.Should().Be(3);
 

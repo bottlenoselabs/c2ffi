@@ -30,14 +30,12 @@ public sealed class ArrayExplorer : NodeExplorer<CArray>
     private static CArray Array(ExploreContext context, ExploreNodeInfo info)
     {
         var type = clang_getElementType(info.Type);
-        var typeInfo = context.VisitType(type, info)!;
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
+        var typeInfo = context.VisitType(type, info);
 
         var result = new CArray
         {
             Name = info.Name,
-            TypeInfo = typeInfo,
-            IsSystem = isSystemCursor
+            TypeInfo = typeInfo
         };
 
         return result;

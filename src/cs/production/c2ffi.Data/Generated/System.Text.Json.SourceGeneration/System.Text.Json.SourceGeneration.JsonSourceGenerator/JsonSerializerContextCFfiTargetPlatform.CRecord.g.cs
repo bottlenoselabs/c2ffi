@@ -43,7 +43,7 @@ namespace c2ffi.Data.Serialization
 
         private static global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[] CRecordPropInit(global::System.Text.Json.JsonSerializerOptions options)
         {
-            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[8];
+            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[7];
 
             var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CRecordKind>
             {
@@ -159,26 +159,7 @@ namespace c2ffi.Data.Serialization
             
             properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info5);
 
-            var info6 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<bool>
-            {
-                IsProperty = true,
-                IsPublic = true,
-                IsVirtual = false,
-                DeclaringType = typeof(global::c2ffi.Data.Nodes.CNode),
-                Converter = null,
-                Getter = static obj => ((global::c2ffi.Data.Nodes.CNode)obj).IsSystem,
-                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CNode)obj).IsSystem = value!,
-                IgnoreCondition = null,
-                HasJsonInclude = false,
-                IsExtensionData = false,
-                NumberHandling = null,
-                PropertyName = "IsSystem",
-                JsonPropertyName = "is_system"
-            };
-            
-            properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool>(options, info6);
-
-            var info7 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
+            var info6 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -195,7 +176,7 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = null
             };
             
-            properties[7] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info7);
+            properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info6);
 
             return properties;
         }

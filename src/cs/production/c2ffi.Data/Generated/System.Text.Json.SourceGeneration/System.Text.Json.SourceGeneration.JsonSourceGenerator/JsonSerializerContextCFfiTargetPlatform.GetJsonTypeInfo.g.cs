@@ -123,6 +123,10 @@ namespace c2ffi.Data.Serialization
             {
                 return Create_ImmutableArrayCRecordField(options);
             }
+            if (type == typeof(global::System.Collections.Immutable.ImmutableArray<string>))
+            {
+                return Create_ImmutableArrayString(options);
+            }
             if (type == typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>))
             {
                 return Create_ImmutableSortedDictionaryStringCEnum(options);

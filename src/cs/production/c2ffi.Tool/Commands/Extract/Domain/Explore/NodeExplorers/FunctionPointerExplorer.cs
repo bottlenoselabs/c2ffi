@@ -39,11 +39,10 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
 
     private static CFunctionPointer FunctionPointer(ExploreContext context, ExploreNodeInfo info)
     {
-        var typeInfo = context.VisitType(info.Type, info, nodeKind: CNodeKind.FunctionPointer)!;
+        var typeInfo = context.VisitType(info.Type, info, nodeKind: CNodeKind.FunctionPointer);
         var returnTypeInfo = FunctionPointerReturnType(context, info);
         var parameters = FunctionPointerParameters(context, info);
         var comment = context.Comment(info.Cursor);
-        var isSystemCursor = context.IsSystemCursor(info.Cursor);
 
         var result = new CFunctionPointer
         {
@@ -52,8 +51,7 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
             TypeInfo = typeInfo,
             ReturnTypeInfo = returnTypeInfo,
             Parameters = parameters,
-            Comment = comment,
-            IsSystem = isSystemCursor
+            Comment = comment
         };
 
         return result;

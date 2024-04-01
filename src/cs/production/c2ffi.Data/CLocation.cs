@@ -45,6 +45,12 @@ public record struct CLocation : IComparable<CLocation>
     public int LineColumn { get; set; }
 
     /// <summary>
+    ///     Gets or sets a value indicating whether the location originates from a system header.
+    /// </summary>
+    [JsonPropertyName("isSystem")]
+    public bool IsSystem { get; set; }
+
+    /// <summary>
     ///     Compares the file appearance of this <see cref="CLocation" /> instance with another <see cref="CLocation" />
     ///     instance.
     /// </summary>

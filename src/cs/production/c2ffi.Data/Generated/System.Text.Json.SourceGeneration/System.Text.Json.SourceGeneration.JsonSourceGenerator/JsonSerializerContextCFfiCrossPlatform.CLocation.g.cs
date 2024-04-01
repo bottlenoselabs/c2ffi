@@ -43,7 +43,7 @@ namespace c2ffi.Data.Serialization
 
         private static global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[] CLocationPropInit(global::System.Text.Json.JsonSerializerOptions options)
         {
-            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[5];
+            var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[6];
 
             var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
@@ -139,6 +139,25 @@ namespace c2ffi.Data.Serialization
             };
             
             properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info4);
+
+            var info5 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<bool>
+            {
+                IsProperty = true,
+                IsPublic = true,
+                IsVirtual = false,
+                DeclaringType = typeof(global::c2ffi.Data.CLocation),
+                Converter = null,
+                Getter = static obj => ((global::c2ffi.Data.CLocation)obj).IsSystem,
+                Setter = static (obj, value) => global::System.Runtime.CompilerServices.Unsafe.Unbox<global::c2ffi.Data.CLocation>(obj).IsSystem = value!,
+                IgnoreCondition = null,
+                HasJsonInclude = false,
+                IsExtensionData = false,
+                NumberHandling = null,
+                PropertyName = "IsSystem",
+                JsonPropertyName = "isSystem"
+            };
+            
+            properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool>(options, info5);
 
             return properties;
         }

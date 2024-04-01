@@ -31,8 +31,11 @@ public class Test : ExtractFfiTest
     {
         var function = ffi.GetFunction(FunctionName);
         function.CallingConvention.Should().Be("cdecl");
-        function.ReturnTypeName.Should().Be("void");
-        function.ReturnTypeSizeOf.Should().Be(null);
+
+        var returnType = function.ReturnType;
+        returnType.Name.Should().Be("void");
+        returnType.SizeOf.Should().Be(null);
+        returnType.AlignOf.Should().Be(null);
 
         function.Parameters.Should().BeEmpty();
     }
