@@ -116,7 +116,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "SystemIncludeDirectories",
-                JsonPropertyName = null
+                JsonPropertyName = "systemIncludeDirectories"
             };
             
             properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableArray<string>>(options, info3);
@@ -135,7 +135,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "UserIncludeDirectories",
-                JsonPropertyName = null
+                JsonPropertyName = "userIncludeDirectories"
             };
             
             properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableArray<string>>(options, info4);

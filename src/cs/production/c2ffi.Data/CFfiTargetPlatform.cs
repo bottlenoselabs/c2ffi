@@ -37,11 +37,13 @@ public record CFfiTargetPlatform
     /// <summary>
     ///     Gets or sets the system include directories used.
     /// </summary>
+    [JsonPropertyName("systemIncludeDirectories")]
     public ImmutableArray<string> SystemIncludeDirectories { get; set; } = ImmutableArray<string>.Empty;
 
     /// <summary>
     ///     Gets or sets the user include directories used.
     /// </summary>
+    [JsonPropertyName("userIncludeDirectories")]
     public ImmutableArray<string> UserIncludeDirectories { get; set; } = ImmutableArray<string>.Empty;
 
     /// <summary>
