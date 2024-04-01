@@ -124,7 +124,7 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         }
     }
 
-    private static void FindSystemIncludeDirectoriesHostLinux(
+    private void FindSystemIncludeDirectoriesHostLinux(
         TargetPlatform targetPlatform,
         NativeArchitecture hostArchitecture,
         ImmutableArray<string>.Builder directories)
