@@ -223,11 +223,16 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         directories.Add($"{sdkPath}/usr/include");
     }
 
-    private static void FindSystemIncludeDirectoriesTargetLinux(
+    private void FindSystemIncludeDirectoriesTargetLinux(
         NativeArchitecture hostArchitecture,
         NativeArchitecture targetArchitecture,
         ImmutableArray<string>.Builder directories)
     {
+        directories.Add("/usr/include");
+
+        var clangVersionDirectory = GetHighestVersionDirectoryPathFrom("/usr/include/clang");
+        directories.Add($"{clangVersionDirectory}/include");
+
         // Cross platform headers are in: /usr/[ARCH]-linux-gnu/include
         //  For Ubuntu, cross platform toolchain (includes headers) are installed via packages:
         //  - gcc-x86-64-linux-gnu (ARCH = x86_64)
@@ -267,16 +272,16 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         }
     }
 
-    private string GetHighestVersionDirectoryPathFrom(string sdkDirectoryPath)
+    private string GetHighestVersionDirectoryPathFrom(string directoryPath)
     {
-        var versionDirectoryPaths = _fileSystem.Directory.EnumerateDirectories(sdkDirectoryPath);
+        var versionDirectoryPaths = _fileSystem.Directory.EnumerateDirectories(directoryPath);
         var result = string.Empty;
         var highestVersion = Version.Parse("0.0.0");
 
-        foreach (var directoryPath in versionDirectoryPaths)
+        foreach (var versionDirectoryPath in versionDirectoryPaths)
         {
-            var versionStringIndex = directoryPath.LastIndexOf(_fileSystem.Path.DirectorySeparatorChar);
-            var versionString = directoryPath[(versionStringIndex + 1)..];
+            var versionStringIndex = versionDirectoryPath.LastIndexOf(_fileSystem.Path.DirectorySeparatorChar);
+            var versionString = versionDirectoryPath[(versionStringIndex + 1)..];
             if (!Version.TryParse(versionString, out var version))
             {
                 continue;
@@ -288,7 +293,7 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
             }
 
             highestVersion = version;
-            result = directoryPath;
+            result = versionDirectoryPath;
         }
 
         return result;
