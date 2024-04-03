@@ -61,7 +61,7 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
         CMacroObject? macroObject;
         try
         {
-            macroObject = GetMacroObjectFromParsingFile(filePath, context.ParseContext);
+            macroObject = GetMacroObjectFromParsingFile(filePath, context, info);
         }
         finally
         {
@@ -111,12 +111,11 @@ int main(void)
         return tempFilePath;
     }
 
-    private CMacroObject? GetMacroObjectFromParsingFile(
-        string filePath, ParseContext originalParseContext)
+    private CMacroObject? GetMacroObjectFromParsingFile(string filePath, ExploreContext context, ExploreNodeInfo info)
     {
         using var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(
             filePath,
-            originalParseContext.ExtractOptions,
+            context.ParseContext.ExtractOptions,
             isCPlusPlus: true,
             ignoreWarnings: true,
             logClangDiagnostics: false,
@@ -148,7 +147,6 @@ int main(void)
         var declarationStatement =
             compoundStatement.GetDescendents(static (cursor, _) =>
                 cursor.kind == clang.CXCursorKind.CXCursor_DeclStmt).FirstOrDefault();
-        var readerLineNumber = 0;
 
         var variable = declarationStatement.GetDescendents(static (cursor, _) =>
                 cursor.kind == clang.CXCursorKind.CXCursor_VarDecl)
@@ -175,25 +173,13 @@ int main(void)
             return null;
         }
 
-        using var streamReader = new StreamReader(filePath);
-        var location = MacroLocation(originalParseContext, clangCursor, streamReader, ref readerLineNumber);
-
-        var nodeKind = MacroTypeNodeKind(clangType);
-        var typeName = clangType.Spelling();
-        var sizeOf = (int)clang.clang_Type_getSizeOf(clangType);
-        var typeInfo = new CTypeInfo
-        {
-            Name = typeName,
-            NodeKind = nodeKind,
-            SizeOf = sizeOf
-        };
-
+        var typeInfo = context.VisitType(clangType, info);
         var macroObject = new CMacroObject
         {
             Name = macroName,
             Value = value,
             TypeInfo = typeInfo,
-            Location = location
+            Location = info.Location
         };
 
         return macroObject;
@@ -247,78 +233,6 @@ int main(void)
 
         clang.clang_EvalResult_dispose(evaluateResult);
         return value;
-    }
-
-    private CLocation MacroLocation(
-        ParseContext parseContext,
-        clang.CXCursor clangCursor,
-        StreamReader reader,
-        ref int readerLineNumber)
-    {
-        var location = parseContext.Location(clangCursor);
-        var locationCommentLineNumber = location.LineNumber - 1;
-
-        if (readerLineNumber > locationCommentLineNumber)
-        {
-            reader.BaseStream.Seek(0, SeekOrigin.Begin);
-            readerLineNumber = 0;
-        }
-
-        var line = string.Empty;
-        while (readerLineNumber != locationCommentLineNumber)
-        {
-            line = reader.ReadLine() ?? string.Empty;
-            readerLineNumber++;
-        }
-
-        var locationString = line.Trim().TrimStart('/').Trim();
-        var lineIndex = locationString.IndexOf(':', StringComparison.InvariantCulture);
-        var columnIndex = locationString.IndexOf(':', lineIndex + 1);
-        var filePathIndex = locationString.IndexOf('(', StringComparison.InvariantCulture);
-
-        int columnIndexEnd;
-        if (filePathIndex == -1)
-        {
-            columnIndexEnd = locationString.Length;
-        }
-        else
-        {
-            columnIndexEnd = filePathIndex - 1;
-        }
-
-        var lineString = locationString[(lineIndex + 1).. columnIndex];
-        var columnString = locationString[(columnIndex + 1).. columnIndexEnd];
-        var fileNameString = locationString[..lineIndex];
-
-        var filePathString = filePathIndex == -1 ? fileNameString : locationString[(filePathIndex + 1)..^1];
-        var lineNumber = int.Parse(lineString, CultureInfo.InvariantCulture);
-        var lineColumn = int.Parse(columnString, CultureInfo.InvariantCulture);
-
-        var actualLocation = new CLocation
-        {
-            FileName = fileNameString,
-            FilePath = filePathString,
-            LineNumber = lineNumber,
-            LineColumn = lineColumn
-        };
-        return actualLocation;
-    }
-
-    private static CNodeKind MacroTypeNodeKind(clang.CXType type)
-    {
-        if (type.IsPrimitive())
-        {
-            return CNodeKind.Primitive;
-        }
-
-        return type.kind switch
-        {
-            clang.CXTypeKind.CXType_Typedef => CNodeKind.TypeAlias,
-            clang.CXTypeKind.CXType_Enum => CNodeKind.Enum,
-            clang.CXTypeKind.CXType_Pointer => CNodeKind.Pointer,
-            clang.CXTypeKind.CXType_ConstantArray => CNodeKind.Array,
-            _ => CNodeKind.Unknown
-        };
     }
 
     private sealed class MacroObjectCandidate

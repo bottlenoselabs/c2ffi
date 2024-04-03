@@ -66,10 +66,10 @@ public sealed class ExploreContext : IDisposable
 
     public CTypeInfo VisitType(
         clang.CXType clangType,
-        ExploreNodeInfo parentInfo,
+        ExploreNodeInfo? parentInfo,
         CNodeKind? nodeKind = null)
     {
-        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, parentInfo.NodeKind);
+        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, parentInfo?.NodeKind);
         var nodeKindUsed = nodeKind ?? clangTypeInfo.NodeKind;
 
         var typeInfo = VisitTypeInternal(
