@@ -8,35 +8,26 @@ using Xunit;
 #pragma warning disable CA1308
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.MacroObjects.macro_object_ignored;
+namespace c2ffi.Tests.EndToEnd.Merge.MacroObjects.macro_object_uint64;
 
 public class Test : MergeFfisTest
 {
-    private const string MacroObjectName = "MACRO_OBJECT_ALLOWED";
-    private const string IgnoredMacroObjectName = "MACRO_OBJECT_NOT_ALLOWED";
+    private const string MacroObjectName = "MACRO_OBJECT_UINT64";
 
     [Fact]
     public void MacroObject()
     {
         var ffi = GetCrossPlatformFfi(
-            "src/c/tests/macro_objects/macro_object_ignored/ffi");
+            $"src/c/tests/macro_objects/{MacroObjectName.ToLowerInvariant()}/ffi");
         FfiMacroObjectExists(ffi);
-        FfiMacroObjectDoesNotExist(ffi);
     }
 
     private void FfiMacroObjectExists(CTestFfiCrossPlatform ffi)
     {
         var macroObject = ffi.GetMacroObject(MacroObjectName);
         macroObject.Name.Should().Be(MacroObjectName);
-        macroObject.Name.Should().Be(MacroObjectName);
         macroObject.Value.Should().Be("42");
-        macroObject.Type.Name.Should().Be("int");
-        macroObject.Type.InnerType.Should().BeNull();
-    }
-
-    private void FfiMacroObjectDoesNotExist(CTestFfiCrossPlatform ffi)
-    {
-        var macroObject = ffi.TryGetMacroObject(IgnoredMacroObjectName);
-        macroObject.Should().Be(null);
+        macroObject.Type.Name.Should().Be("uint64_t");
+        macroObject.Type.InnerType.Should().NotBeNull();
     }
 }

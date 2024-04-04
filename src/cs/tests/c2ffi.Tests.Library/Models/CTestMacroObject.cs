@@ -13,14 +13,14 @@ public class CTestMacroObject
 {
     public string Name { get; }
 
-    public string TypeName { get; }
+    public CTestTypeInfo Type { get; }
 
     public string Value { get; }
 
     public CTestMacroObject(CMacroObject macroObject)
     {
         Name = macroObject.Name;
-        TypeName = macroObject.TypeInfo.Name;
+        Type = new CTestTypeInfo(macroObject.TypeInfo);
         Value = macroObject.Value;
     }
 }

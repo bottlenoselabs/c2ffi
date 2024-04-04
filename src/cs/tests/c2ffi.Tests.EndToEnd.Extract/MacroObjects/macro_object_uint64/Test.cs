@@ -7,11 +7,11 @@ using FluentAssertions;
 #pragma warning disable CA1308
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_string;
+namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_uint64;
 
 public class Test : ExtractFfiTest
 {
-    private const string MacroObjectName = "MACRO_OBJECT_STRING";
+    private const string MacroObjectName = "MACRO_OBJECT_UINT64";
 
     [Fact]
     public void MacroObject()
@@ -30,10 +30,8 @@ public class Test : ExtractFfiTest
     {
         var macroObject = ffi.GetMacroObject(MacroObjectName);
         macroObject.Name.Should().Be(MacroObjectName);
-        macroObject.Value.Should().Be("\"42\"");
-        macroObject.Type.Name.Should().Be("const char *");
+        macroObject.Value.Should().Be("42");
+        macroObject.Type.Name.Should().Be("uint64_t");
         macroObject.Type.InnerType.Should().NotBeNull();
-        macroObject.Type.InnerType!.Name.Should().Be("const char");
-        macroObject.Type.InnerType!.InnerType.Should().BeNull();
     }
 }
