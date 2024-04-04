@@ -26,7 +26,8 @@ public class Test : MergeFfisTest
     {
         var macroObject = ffi.GetMacroObject(MacroObjectName);
         macroObject.Name.Should().Be(MacroObjectName);
-        macroObject.TypeName.Should().Be("const char *");
         macroObject.Value.Should().Be("\"42\"");
+        macroObject.Type.Name.Should().Be("const char *");
+        macroObject.Type.InnerType.Should().BeNull();
     }
 }

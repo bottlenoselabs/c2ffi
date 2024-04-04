@@ -30,7 +30,8 @@ public class Test : ExtractFfiTest
     {
         var macroObject = ffi.GetMacroObject(MacroObjectName);
         macroObject.Name.Should().Be(MacroObjectName);
-        macroObject.TypeName.Should().Be("int");
         macroObject.Value.Should().Be("42");
+        macroObject.Type.Name.Should().Be("int");
+        macroObject.Type.InnerType.Should().BeNull();
     }
 }
