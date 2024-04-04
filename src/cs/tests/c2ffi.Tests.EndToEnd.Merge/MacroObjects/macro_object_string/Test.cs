@@ -28,6 +28,8 @@ public class Test : MergeFfisTest
         macroObject.Name.Should().Be(MacroObjectName);
         macroObject.Value.Should().Be("\"42\"");
         macroObject.Type.Name.Should().Be("const char *");
-        macroObject.Type.InnerType.Should().BeNull();
+        macroObject.Type.InnerType.Should().NotBeNull();
+        macroObject.Type.InnerType!.Name.Should().Be("const char");
+        macroObject.Type.InnerType!.InnerType.Should().BeNull();
     }
 }
