@@ -2,6 +2,8 @@
 
 #pragma once
 
+#define FFI_COMPILER_CLANG          __clang__
+
 #if defined(__APPLE__) && __has_include("TargetConditionals.h")
     #include <TargetConditionals.h>
 
@@ -103,9 +105,13 @@
 #endif
 
 #if FFI_TARGET_OS_WINDOWS
-    #define FFI_API_DECL __declspec(dllexport)
+    #if FFI_COMPILER_CLANG
+        #define FFI_API_DECL __declspec(dllexport) __attribute__ ((visibility("default")))
+    #else
+        #define FFI_API_DECL __declspec(dllexport)
+    #endif
 #else
-    #define FFI_API_DECL extern
+    #define FFI_API_DECL extern __attribute__ ((visibility("default")))
 #endif
 
 // Returns the current platform name.
