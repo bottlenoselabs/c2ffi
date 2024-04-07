@@ -2,6 +2,8 @@
 
 #pragma once
 
+#define FFI_COMPILER_CLANG          __clang__
+
 #if defined(__APPLE__) && __has_include("TargetConditionals.h")
     #include <TargetConditionals.h>
 
@@ -103,7 +105,7 @@
 #endif
 
 #if FFI_TARGET_OS_WINDOWS
-    #if __clang__
+    #if FFI_COMPILER_CLANG
         #define FFI_API_DECL __declspec(dllexport) __attribute__ ((visibility("default")))
     #else
         #define FFI_API_DECL __declspec(dllexport)
