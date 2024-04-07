@@ -8,7 +8,7 @@
 
 namespace c2ffi.Data.Serialization
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.Json.SourceGeneration", "8.0.9.3103")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.Json.SourceGeneration", "8.0.9.8001")]
     public partial class JsonSerializerContextCFfiTargetPlatform
     {
         private readonly static global::System.Text.Json.JsonSerializerOptions s_defaultOptions = new()

@@ -84,7 +84,7 @@ public sealed partial class Explorer
 
     private void VisitFunction(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var info = context.CreateNodeInfo(CNodeKind.Function, clangCursor);
+        var info = context.CreateTopLevelNodeInfo(CNodeKind.Function, clangCursor);
         context.TryEnqueueNode(info);
     }
 
@@ -99,7 +99,7 @@ public sealed partial class Explorer
 
     private void VisitVariable(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var info = context.CreateNodeInfo(CNodeKind.Variable, clangCursor);
+        var info = context.CreateTopLevelNodeInfo(CNodeKind.Variable, clangCursor);
         context.TryEnqueueNode(info);
     }
 
@@ -114,7 +114,7 @@ public sealed partial class Explorer
 
     private void VisitMacroObject(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var info = context.CreateNodeInfo(CNodeKind.MacroObject, clangCursor);
+        var info = context.CreateTopLevelNodeInfo(CNodeKind.MacroObject, clangCursor);
         context.TryEnqueueNode(info);
     }
 

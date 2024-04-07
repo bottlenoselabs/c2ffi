@@ -41,14 +41,14 @@ public class Test : ExtractFfiTest
 
         var parameter1 = function.Parameters[0];
         parameter1.Name.Should().Be("a");
-        parameter1.TypeName.Should().Be("uint8_t");
+        parameter1.Type.Name.Should().Be("uint8_t");
 
         var parameter2 = function.Parameters[1];
         parameter2.Name.Should().Be("b");
-        parameter2.TypeName.Should().Be("uint16_t");
+        parameter2.Type.Name.Should().Be("uint16_t");
 
         var parameter3 = function.Parameters[2];
         parameter3.Name.Should().Be("c");
-        parameter3.TypeName.Should().Be("uint32_t");
+        parameter3.Type.Name.Should().Be("uint32_t");
     }
 }

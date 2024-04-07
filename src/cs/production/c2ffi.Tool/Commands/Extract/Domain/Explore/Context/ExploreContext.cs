@@ -89,41 +89,20 @@ public sealed class ExploreContext : IDisposable
         return string.IsNullOrEmpty(commentString) ? null : commentString;
     }
 
-    public ExploreNodeInfo CreateNodeInfo(
+    public ExploreNodeInfo CreateTopLevelNodeInfo(
         CNodeKind nodeKind,
         clang.CXCursor clangCursor)
     {
-        var cursorName = clangCursor.Spelling();
-        var cursorType = clang.clang_getCursorType(clangCursor);
-        return CreateNodeInfo(nodeKind, cursorName, clangCursor, cursorType, null);
-    }
+        var clangCursorName = clangCursor.Spelling();
+        var clangCursorType = clang.clang_getCursorType(clangCursor);
 
-    public ExploreNodeInfo CreateNodeInfo(
-        CNodeKind kind,
-        string name,
-        clang.CXCursor clangCursor,
-        clang.CXType clangType,
-        ExploreNodeInfo? parentInfo)
-    {
-        var location = ParseContext.Location(clangCursor);
-        var typeName = clangType.Spelling();
-        var sizeOf = ParseContext.SizeOf(kind, clangType);
-        var alignOf = ParseContext.AlignOf(kind, clangType);
-
-        var result = new ExploreNodeInfo
+        var clangCursorTypeCanonical = clangCursorType;
+        if (clangCursorType.kind == clang.CXTypeKind.CXType_Attributed)
         {
-            NodeKind = kind,
-            Name = name,
-            TypeName = typeName,
-            Type = clangType,
-            Cursor = clangCursor,
-            Location = location,
-            Parent = parentInfo,
-            SizeOf = sizeOf,
-            AlignOf = alignOf
-        };
+            clangCursorTypeCanonical = clang.clang_Type_getModifiedType(clangCursorType);
+        }
 
-        return result;
+        return CreateNodeInfo(nodeKind, clangCursorName, clangCursor, clangCursorTypeCanonical, null);
     }
 
     public void Dispose()
@@ -255,6 +234,34 @@ public sealed class ExploreContext : IDisposable
         var info = CreateNodeInfo(typeInfo.NodeKind, typeInfo.Name, clangCursor, clangType, rootNode);
         TryEnqueueNode(info);
         return typeInfo;
+    }
+
+    private ExploreNodeInfo CreateNodeInfo(
+        CNodeKind kind,
+        string name,
+        clang.CXCursor clangCursor,
+        clang.CXType clangType,
+        ExploreNodeInfo? parentInfo)
+    {
+        var location = ParseContext.Location(clangCursor);
+        var typeName = clangType.Spelling();
+        var sizeOf = ParseContext.SizeOf(kind, clangType);
+        var alignOf = ParseContext.AlignOf(kind, clangType);
+
+        var result = new ExploreNodeInfo
+        {
+            NodeKind = kind,
+            Name = name,
+            TypeName = typeName,
+            Type = clangType,
+            Cursor = clangCursor,
+            Location = location,
+            Parent = parentInfo,
+            SizeOf = sizeOf,
+            AlignOf = alignOf
+        };
+
+        return result;
     }
 
     private static ImmutableDictionary<CNodeKind, NodeExplorer> GetNodeHandlers(IServiceProvider services)
