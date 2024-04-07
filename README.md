@@ -170,18 +170,54 @@ Note that the internals of the C library is irrelevant and to which this list do
 
 |Supported|Description|
 |:-:|-|
-|✅|Variable externs <sup>2, 6</sup>|
-|✅|Function externs <sup>2, 6</sup>|
-|✅|Function prototypes (a.k.a., function pointers.) <sup>2, 6</sup>|
-|✅|Enums <sup>2</sup>|
-|✅|Structs <sup>1, 3, 6</sup>|
-|✅|Unions <sup>1, 3, 6</sup>|
-|✅|Opaque types. <sup>1, 6</sup>|
-|✅|Typedefs (a.k.a, type aliases) <sup>1, 6</sup>|
-|❌|Function-like macros <sup>4</sup>|
-|✅|Object-like macros <sup>1, 5, 6</sup>|
+|✅|Variable externs <sup>1, 3, 7</sup>|
+|✅|Function externs <sup>1, 3, 7</sup>|
+|✅|Function prototypes (a.k.a., function pointers.) <sup>3, 7</sup>|
+|✅|Enums <sup>3</sup>|
+|✅|Structs <sup>2, 4, 7</sup>|
+|✅|Unions <sup>2, 4, 7</sup>|
+|✅|Opaque types. <sup>2, 7</sup>|
+|✅|Typedefs (a.k.a, type aliases) <sup>2, 7</sup>|
+|❌|Function-like macros <sup>5</sup>|
+|✅|Object-like macros <sup>2, 6, 7</sup>|
 
-<sup>1</sup>: Do use standard integer types from `stdint.h` such as `int32_t`, `uint64_t`, etc which are portable. Do not use C's primitive integer types directly such as `unsigned long` as they are not garanteed to be portable due to possibly having different bitwidths for target platforms.
+src/c/production/ffi_helper/include/ffi_helper.h
+
+<sup>1</sup>: When declaring your external functions or variables, do set the default visibility explictly. This is necessary because `c2ffi` is configured to have the visbiity set to hidden so that only the strict subset of functions and variables intended for FFI are extracted. Most C libraries will have an `API_DECL` macro object defined which can be redefined to also set the visibility.
+
+Bad
+```c
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+    #define MY_API_DECL __declspec(dllexport) // no visibility explictly set when using Clang, thus visibility is 'hidden'
+#else
+    #define MY_API_DECL extern // no visibility explictly set, thus visibility is 'hidden'
+#endif
+...
+MY_API_DECL const char* my_api_print_hello_world() // won't be extracted as part of FFI because the visibility is 'hidden'
+{
+    printf("Hello world!");
+}
+```
+
+Good
+```c
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+    #if defined(__clang__)
+        #define MY_API_DECL __declspec(dllexport) __attribute__ ((visibility("default")))
+    #else
+        #define MY_API_DECL __declspec(dllexport)
+    #endif
+#else
+    #define MY_API_DECL extern __attribute__ ((visibility("default")))
+#endif
+...
+MY_API_DECL const char* my_api_print_hello_world() // visibility is explicitly set, will be extracted as part of FFI
+{
+    printf("Hello world!");
+}
+```
+
+<sup>2</sup>: Do use standard integer types from `stdint.h` such as `int32_t`, `uint64_t`, etc which are portable. Do not use C's primitive integer types directly such as `unsigned long` as they are not garanteed to be portable due to possibly having different bitwidths for target platforms.
 
 Bad
 ```c
@@ -195,14 +231,14 @@ Good
 uint32_t value; // 4 bytes
 ```
 
-<sup>2</sup>: Do not use 64-bit enums due to compiler determinism in C; [in C enums are only well defined for 32-bit in size or less](https://stackoverflow.com/questions/41836658/enum-constants-behaving-differently-in-c-and-c#:~:text=The%20expression%20that%20deﬁnes%20the,value%20representable%20as%20an%20int%20.). 
+<sup>3</sup>: Do not use 64-bit enums due to compiler determinism in C; [in C enums are only well defined for 32-bit in size or less](https://stackoverflow.com/questions/41836658/enum-constants-behaving-differently-in-c-and-c#:~:text=The%20expression%20that%20deﬁnes%20the,value%20representable%20as%20an%20int%20.). 
 
 Bad
 ```c
 enum MY_ENUM
 {  
-    LARGE_VALUE_1 = 0x1000000000000000,
-    LARGE_VALUE_2 = 0x2000000000000000,
+    MY_ENUM_LARGE_VALUE_1 = 0x1000000000000000,
+    MY_ENUM_LARGE_VALUE_2 = 0x2000000000000000,
 };
 ```
 
@@ -210,13 +246,13 @@ Good
 ```c
 enum MY_ENUM
 {  
-    VALUE_1 = 0x1,
-    VALUE_2 = 0x2,
-    VALUE_MAX = 0x7FFFFFFF
+    MY_ENUM_VALUE_1 = 0x1,
+    MY_ENUM_VALUE_2 = 0x2,
+    MY_ENUM_VALUE_MAX = 0x7FFFFFFF
 };
 ```
 
-<sup>3</sup>: Do not use bit fields in C. This is because bit fields may have [different bit layouts across different
+<sup>4</sup>: Do not use bit fields in C. This is because bit fields may have [different bit layouts across different
 compilers (e.g. GCC vs MSCV) which may break portability](https://stackoverflow.com/a/25345750).
 Instead use bitmasks to get or set the bits of an integer yourself. 
 
@@ -229,21 +265,21 @@ struct dob {  // What is the sequential order of the struct's fields?
 };  
 ```
 
-<sup>4</sup>: Function-like macros are only possible if the parameters' types can be inferred 100% of the time during preprocessor; otherwise, not possible. **Not yet implemented**.
+<sup>5</sup>: Function-like macros are only possible if the parameters' types can be inferred 100% of the time during preprocessor; otherwise, not possible. **Not yet implemented**.
 
 Bad
 ```c
 #define SUM(a,b,c) a + b + c // What is the type of a?
 ```
 
-<sup>5</sup>: Object-like macros have full support. The value type is determined by evaluating the value of the macro as an C++ expression using `auto`.
+<sup>6</sup>: Object-like macros have full support. The value type is determined by evaluating the value of the macro as an C++ expression using `auto`.
 
 Acceptable
 ```c
 #define BUFFER_SIZE 1024 // Type is int16_t
 ```
 
-<sup>6</sup>: Types must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the FFI. If this is not the case, then the type is not used in the FFI and will not be extracted.
+<sup>7</sup>: Types must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the FFI. If this is not the case, then the type is not used in the FFI and will not be extracted.
 
 ### Platforms
 
