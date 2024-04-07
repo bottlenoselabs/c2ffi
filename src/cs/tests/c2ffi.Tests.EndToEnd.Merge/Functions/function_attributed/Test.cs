@@ -7,18 +7,17 @@ using Xunit;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_int_params_int;
+namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_attributed;
 
 public class Test : MergeFfisTest
 {
-    private const string FunctionName = "function_int_params_int";
+    private const string FunctionName = "function_attributed";
 
     [Fact]
     public void Function()
     {
         var ffi = GetCrossPlatformFfi(
             $"src/c/tests/functions/{FunctionName}/ffi");
-
         FfiFunctionExists(ffi);
     }
 
@@ -28,15 +27,18 @@ public class Test : MergeFfisTest
         function.CallingConvention.Should().Be("cdecl");
 
         var returnType = function.ReturnType;
-        returnType.Name.Should().Be("int");
-        returnType.NodeKind.Should().Be("primitive");
-        returnType.SizeOf.Should().Be(4);
-        returnType.AlignOf.Should().Be(4);
-        returnType.InnerType.Should().BeNull();
+        returnType.Name.Should().Be("void *");
+        returnType.NodeKind.Should().Be("pointer");
+        returnType.InnerType.Should().NotBeNull();
+        returnType.InnerType!.Name.Should().Be("void");
+        returnType.InnerType!.NodeKind.Should().Be("primitive");
+        returnType.InnerType.InnerType.Should().BeNull();
 
+        function.Parameters.Should().NotBeEmpty();
         function.Parameters.Length.Should().Be(1);
         var parameter = function.Parameters[0];
-        parameter.Name.Should().Be("a");
-        parameter.Type.Name.Should().Be("int");
+        parameter.Name.Should().Be("size");
+        parameter.Type.Name.Should().Be("size_t");
+        parameter.Type.InnerType.Should().NotBeNull();
     }
 }
