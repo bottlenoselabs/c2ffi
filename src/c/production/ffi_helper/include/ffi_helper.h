@@ -103,7 +103,11 @@
 #endif
 
 #if FFI_TARGET_OS_WINDOWS
-    #define FFI_API_DECL __declspec(dllexport)
+    #if __clang__
+        #define FFI_API_DECL __declspec(dllexport) __attribute__ ((visibility("default")))
+    #else
+        #define FFI_API_DECL __declspec(dllexport)
+    #endif
 #else
     #define FFI_API_DECL extern __attribute__ ((visibility("default")))
 #endif
