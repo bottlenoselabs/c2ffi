@@ -71,9 +71,19 @@ public sealed class ParseArgumentsProvider
     {
         args.Add("--language=c");
         args.Add(platform.OperatingSystem == NativeOperatingSystem.Linux ? "--std=gnu11" : "--std=c11");
+
+        // Enable support for Apple's Blocks extension
         args.Add("-fblocks");
+
+        // Turn off warning if `#pragma once` is used in source file
         args.Add("-Wno-pragma-once-outside-header");
+
+        // Enable all comments as documentation comments so that they get added to the AST
         args.Add("-fparse-all-comments");
+
+        // Change the default visibility of symbols (functions, variables, etc.) from default to hidden
+        //  This makes it so we don't extract symbols that are not explicitly set to default
+        args.Add("-fvisibility=hidden");
     }
 
     private void AddIgnoreWarnings(ImmutableArray<string>.Builder args)

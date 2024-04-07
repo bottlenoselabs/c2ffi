@@ -105,7 +105,7 @@
 #if FFI_TARGET_OS_WINDOWS
     #define FFI_API_DECL __declspec(dllexport)
 #else
-    #define FFI_API_DECL extern
+    #define FFI_API_DECL extern __attribute__ ((visibility("default")))
 #endif
 
 // Returns the current platform name.
