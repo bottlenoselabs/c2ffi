@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.IO.Abstractions;
+using System.Text.RegularExpressions;
 using bottlenoselabs.Common.Tools;
 using c2ffi.Data;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
@@ -128,9 +129,9 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             IsEnabledSystemDeclarations = input.IsEnabledSystemDeclarations ?? false,
             IsEnabledOnlyExternalTopLevelCursors = input.IsEnabledOnlyExternalTopLevelCursors ?? true,
             OpaqueTypeNames = OpaqueTypeNames(input),
-            IgnoredMacroObjects = IgnoredMacroObjects(input),
-            IgnoredVariables = IgnoredVariables(input),
-            IgnoredFunctions = IgnoredFunctions(input)
+            IgnoredMacroObjectsRegexes = IgnoredMacroObjects(input),
+            IgnoredVariableRegexes = IgnoredVariables(input),
+            IgnoredFunctionRegexes = IgnoredFunctions(input)
         };
 
         return options;
@@ -186,19 +187,19 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         return SanitizeStrings(input.OpaqueTypeNames).ToImmutableHashSet();
     }
 
-    private ImmutableHashSet<string> IgnoredMacroObjects(UnsanitizedExtractInput input)
+    private ImmutableArray<Regex> IgnoredMacroObjects(UnsanitizedExtractInput input)
     {
-        return SanitizeStrings(input.IgnoredMacroObjects).ToImmutableHashSet();
+        return SanitizeRegexes(input.IgnoredMacroObjects);
     }
 
-    private ImmutableHashSet<string> IgnoredVariables(UnsanitizedExtractInput input)
+    private ImmutableArray<Regex> IgnoredVariables(UnsanitizedExtractInput input)
     {
-        return SanitizeStrings(input.IgnoredVariables).ToImmutableHashSet();
+        return SanitizeRegexes(input.IgnoredVariables);
     }
 
-    private ImmutableHashSet<string> IgnoredFunctions(UnsanitizedExtractInput input)
+    private ImmutableArray<Regex> IgnoredFunctions(UnsanitizedExtractInput input)
     {
-        return SanitizeStrings(input.IgnoredFunctions).ToImmutableHashSet();
+        return SanitizeRegexes(input.IgnoredFunctions);
     }
 
     private string SanitizeOutputDirectoryPath(

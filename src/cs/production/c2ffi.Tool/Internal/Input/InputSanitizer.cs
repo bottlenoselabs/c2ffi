@@ -4,6 +4,7 @@
 using System.Collections.Immutable;
 using System.IO.Abstractions;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace c2ffi.Tool.Internal.Input;
 
@@ -127,5 +128,14 @@ public abstract class InputSanitizer<TUnsanitizedInput, TSanitizedInput>
         }
 
         return builder.ToImmutable();
+    }
+
+    protected ImmutableArray<Regex> SanitizeRegexes(ImmutableArray<string>? unsanitizedStringPatterns)
+    {
+        var stringPatterns = SanitizeStrings(unsanitizedStringPatterns);
+        var regexes = stringPatterns
+            .Select(stringPattern => new Regex(stringPattern))
+            .ToImmutableArray();
+        return regexes;
     }
 }

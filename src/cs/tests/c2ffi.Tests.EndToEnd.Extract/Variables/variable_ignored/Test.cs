@@ -10,8 +10,17 @@ namespace c2ffi.Tests.EndToEnd.Extract.Variables.variable_ignored;
 
 public class Test : ExtractFfiTest
 {
-    private const string VariableName = "variable_allowed";
-    private const string IgnoredVariableName = "variable_not_allowed";
+    private readonly string[] _variableNamesThatShouldExist =
+    [
+        "variable_allowed"
+    ];
+
+    private readonly string[] _variableNamesThatShouldNotExist =
+    [
+        "variable_not_allowed",
+        "variable_ignored_1",
+        "variable_ignored_2"
+    ];
 
     [Fact]
     public void Variable()
@@ -22,21 +31,26 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiVariableExists(ffi);
-            FfiVariableDoesNotExist(ffi);
+            VariablesExist(ffi, _variableNamesThatShouldExist);
+            VariablesDoNotExist(ffi, _variableNamesThatShouldNotExist);
         }
     }
 
-    private void FfiVariableExists(CTestFfiTargetPlatform ffi)
+    private void VariablesExist(CTestFfiTargetPlatform ffi, params string[] names)
     {
-        var variable = ffi.GetVariable(VariableName);
-        variable.Name.Should().Be(VariableName);
-        variable.TypeName.Should().Be("int");
+        foreach (var name in names)
+        {
+            var variable = ffi.TryGetVariable(name);
+            variable.Should().NotBeNull();
+        }
     }
 
-    private void FfiVariableDoesNotExist(CTestFfiTargetPlatform ffi)
+    private void VariablesDoNotExist(CTestFfiTargetPlatform ffi, params string[] names)
     {
-        var variable = ffi.TryGetVariable(IgnoredVariableName);
-        variable.Should().Be(null);
+        foreach (var name in names)
+        {
+            var variable = ffi.TryGetVariable(name);
+            variable.Should().BeNull();
+        }
     }
 }

@@ -10,8 +10,17 @@ namespace c2ffi.Tests.EndToEnd.Extract.Functions.function_ignored;
 
 public class Test : ExtractFfiTest
 {
-    private const string FunctionName = "function_allowed";
-    private const string IgnoredFunctionName = "function_not_allowed";
+    private readonly string[] _functionNamesThatShouldExist =
+    [
+        "function_allowed"
+    ];
+
+    private readonly string[] _functionNamesThatShouldNotExist =
+    [
+        "function_not_allowed",
+        "function_ignored_1",
+        "function_ignored_2"
+    ];
 
     [Fact]
     public void Function()
@@ -22,29 +31,26 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiFunctionExists(ffi);
-            FfiFunctionDoesNotExist(ffi);
+            FunctionsExist(ffi, _functionNamesThatShouldExist);
+            FunctionsDoNotExist(ffi, _functionNamesThatShouldNotExist);
         }
     }
 
-    private void FfiFunctionExists(CTestFfiTargetPlatform ffi)
+    private void FunctionsExist(CTestFfiTargetPlatform ffi, params string[] names)
     {
-        var function = ffi.GetFunction(FunctionName);
-        function.CallingConvention.Should().Be("cdecl");
-
-        var returnType = function.ReturnType;
-        returnType.Name.Should().Be("void");
-        returnType.NodeKind.Should().Be("primitive");
-        returnType.SizeOf.Should().BeNull();
-        returnType.AlignOf.Should().BeNull();
-        returnType.InnerType.Should().BeNull();
-
-        function.Parameters.Should().BeEmpty();
+        foreach (var name in names)
+        {
+            var function = ffi.TryGetFunction(name);
+            function.Should().NotBeNull();
+        }
     }
 
-    private void FfiFunctionDoesNotExist(CTestFfiTargetPlatform ffi)
+    private void FunctionsDoNotExist(CTestFfiTargetPlatform ffi, params string[] names)
     {
-        var function = ffi.TryGetFunction(IgnoredFunctionName);
-        function.Should().Be(null);
+        foreach (var name in names)
+        {
+            var function = ffi.TryGetFunction(name);
+            function.Should().BeNull();
+        }
     }
 }

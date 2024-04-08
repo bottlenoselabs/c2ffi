@@ -40,8 +40,16 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
-        var ignoredMacroObjects = context.ParseContext.ExtractOptions.IgnoredMacroObjects;
-        return ignoredMacroObjects.IsEmpty || !ignoredMacroObjects.Contains(info.Name);
+        var ignoredMacroObjectRegexes = context.ParseContext.ExtractOptions.IgnoredMacroObjectsRegexes;
+        foreach (var regex in ignoredMacroObjectRegexes)
+        {
+            if (regex.IsMatch(info.Name))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected override CNode? GetNode(ExploreContext context, ExploreNodeInfo info)
