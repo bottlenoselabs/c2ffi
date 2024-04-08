@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 using c2ffi.Data;
 
 namespace c2ffi.Tool.Commands.Extract.Input.Sanitized;
@@ -30,11 +31,11 @@ public sealed class ExtractTargetPlatformOptions
 
     public ImmutableHashSet<string> OpaqueTypeNames { get; init; } = ImmutableHashSet<string>.Empty;
 
-    public ImmutableHashSet<string> IgnoredMacroObjects { get; init; } = ImmutableHashSet<string>.Empty;
+    public ImmutableArray<Regex> IgnoredMacroObjectsRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
-    public ImmutableHashSet<string> IgnoredVariables { get; init; } = ImmutableHashSet<string>.Empty;
+    public ImmutableArray<Regex> IgnoredVariableRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
-    public ImmutableHashSet<string> IgnoredFunctions { get; init; } = ImmutableHashSet<string>.Empty;
+    public ImmutableArray<Regex> IgnoredFunctionRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
     public override string ToString()
     {

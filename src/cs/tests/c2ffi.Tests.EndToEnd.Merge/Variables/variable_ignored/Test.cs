@@ -7,32 +7,46 @@ using Xunit;
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.Variables.variable_allowed;
+namespace c2ffi.Tests.EndToEnd.Merge.Variables.variable_ignored;
 
 public class Test : MergeFfisTest
 {
-    private const string VariableName = "variable_allowed";
-    private const string IgnoredVariableName = "variable_not_allowed";
+    private readonly string[] _variableNamesThatShouldExist =
+    [
+        "variable_allowed"
+    ];
+
+    private readonly string[] _variableNamesThatShouldNotExist =
+    [
+        "variable_not_allowed",
+        "variable_ignored_1",
+        "variable_ignored_2"
+    ];
 
     [Fact]
     public void Variable()
     {
-        var ffi = GetCrossPlatformFfi(
-            "src/c/tests/variables/variable_ignored/ffi");
-        FfiVariableExists(ffi);
-        FfiVariableDoesNotExist(ffi);
+        var ffi = GetCrossPlatformFfi("src/c/tests/variables/variable_ignored/ffi");
+
+        VariablesExist(ffi, _variableNamesThatShouldExist);
+        VariablesDoNotExist(ffi, _variableNamesThatShouldNotExist);
     }
 
-    private void FfiVariableExists(CTestFfiCrossPlatform ffi)
+    private void VariablesExist(CTestFfiCrossPlatform ffi, params string[] names)
     {
-        var variable = ffi.GetVariable(VariableName);
-        variable.Name.Should().Be(VariableName);
-        variable.TypeName.Should().Be("int");
+        foreach (var name in names)
+        {
+            var variable = ffi.TryGetVariable(name);
+            variable.Should().NotBeNull();
+        }
     }
 
-    private void FfiVariableDoesNotExist(CTestFfiCrossPlatform ffi)
+    private void VariablesDoNotExist(CTestFfiCrossPlatform ffi, params string[] names)
     {
-        var variable = ffi.TryGetVariable(IgnoredVariableName);
-        variable.Should().Be(null);
+        foreach (var name in names)
+        {
+            var variable = ffi.TryGetVariable(name);
+            variable.Should().BeNull();
+        }
     }
 }

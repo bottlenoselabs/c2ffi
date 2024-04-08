@@ -20,8 +20,16 @@ public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
-        var ignoredVariables = context.ParseContext.ExtractOptions.IgnoredVariables;
-        return ignoredVariables.IsEmpty || !ignoredVariables.Contains(info.Name);
+        var regexes = context.ParseContext.ExtractOptions.IgnoredVariableRegexes;
+        foreach (var regex in regexes)
+        {
+            if (regex.IsMatch(info.Name))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)

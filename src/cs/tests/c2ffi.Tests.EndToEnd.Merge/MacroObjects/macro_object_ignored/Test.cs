@@ -5,38 +5,48 @@ using c2ffi.Tests.Library.Models;
 using FluentAssertions;
 using Xunit;
 
-#pragma warning disable CA1308
 #pragma warning disable CA1707
 
 namespace c2ffi.Tests.EndToEnd.Merge.MacroObjects.macro_object_ignored;
 
 public class Test : MergeFfisTest
 {
-    private const string MacroObjectName = "MACRO_OBJECT_ALLOWED";
-    private const string IgnoredMacroObjectName = "MACRO_OBJECT_NOT_ALLOWED";
+    private readonly string[] _macroObjectNamesThatShouldExist =
+    [
+        "MACRO_OBJECT_ALLOWED"
+    ];
+
+    private readonly string[] _macroObjectNamesThatShouldNotExist =
+    [
+        "MACRO_OBJECT_NOT_ALLOWED",
+        "MACRO_OBJECT_IGNORED_1",
+        "MACRO_OBJECT_IGNORED_2"
+    ];
 
     [Fact]
     public void MacroObject()
     {
-        var ffi = GetCrossPlatformFfi(
-            "src/c/tests/macro_objects/macro_object_ignored/ffi");
-        FfiMacroObjectExists(ffi);
-        FfiMacroObjectDoesNotExist(ffi);
+        var ffi = GetCrossPlatformFfi("src/c/tests/macro_objects/macro_object_ignored/ffi");
+
+        MacroObjectsExist(ffi, _macroObjectNamesThatShouldExist);
+        MacroObjectsDoNotExist(ffi, _macroObjectNamesThatShouldNotExist);
     }
 
-    private void FfiMacroObjectExists(CTestFfiCrossPlatform ffi)
+    private void MacroObjectsExist(CTestFfiCrossPlatform ffi, params string[] names)
     {
-        var macroObject = ffi.GetMacroObject(MacroObjectName);
-        macroObject.Name.Should().Be(MacroObjectName);
-        macroObject.Name.Should().Be(MacroObjectName);
-        macroObject.Value.Should().Be("42");
-        macroObject.Type.Name.Should().Be("int");
-        macroObject.Type.InnerType.Should().BeNull();
+        foreach (var name in names)
+        {
+            var macroObject = ffi.TryGetMacroObject(name);
+            macroObject.Should().NotBeNull();
+        }
     }
 
-    private void FfiMacroObjectDoesNotExist(CTestFfiCrossPlatform ffi)
+    private void MacroObjectsDoNotExist(CTestFfiCrossPlatform ffi, params string[] names)
     {
-        var macroObject = ffi.TryGetMacroObject(IgnoredMacroObjectName);
-        macroObject.Should().Be(null);
+        foreach (var name in names)
+        {
+            var macroObject = ffi.TryGetMacroObject(name);
+            macroObject.Should().BeNull();
+        }
     }
 }

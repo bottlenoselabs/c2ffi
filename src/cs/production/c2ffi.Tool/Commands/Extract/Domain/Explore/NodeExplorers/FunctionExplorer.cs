@@ -30,8 +30,16 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
 
     protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
-        var ignoredFunctions = context.ParseContext.ExtractOptions.IgnoredFunctions;
-        return ignoredFunctions.IsEmpty || !ignoredFunctions.Contains(info.Name);
+        var regexes = context.ParseContext.ExtractOptions.IgnoredFunctionRegexes;
+        foreach (var regex in regexes)
+        {
+            if (regex.IsMatch(info.Name))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected override CNode GetNode(ExploreContext context, ExploreNodeInfo info)

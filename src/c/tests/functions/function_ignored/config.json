@@ -7,7 +7,8 @@
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
   "ignoredFunctions": [
-    "function_not_allowed"
+    "function_not_allowed",
+    "function_ignored*"
   ],
   "targetPlatforms": {
     "windows": {
