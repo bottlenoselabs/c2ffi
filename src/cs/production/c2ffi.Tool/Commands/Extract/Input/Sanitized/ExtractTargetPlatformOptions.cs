@@ -18,7 +18,7 @@ public sealed class ExtractTargetPlatformOptions
 
     public ImmutableArray<string> IgnoredIncludeFiles { get; init; } = ImmutableArray<string>.Empty;
 
-    public ImmutableArray<string> MacroObjectDefines { get; init; } = ImmutableArray<string>.Empty;
+    public ImmutableDictionary<string, string> MacroObjectDefines { get; init; } = ImmutableDictionary<string, string>.Empty;
 
     public ImmutableArray<string> AdditionalArguments { get; init; } = ImmutableArray<string>.Empty;
 

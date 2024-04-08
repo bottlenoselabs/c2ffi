@@ -122,7 +122,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             SystemIncludeDirectories = SystemIncludeDirectories(input, targetPlatformInput),
             UserIncludeDirectories = UserIncludeDirectories(input, targetPlatformInput, inputFilePath),
             IgnoredIncludeFiles = IgnoredIncludeFiles(input, targetPlatformInput),
-            MacroObjectDefines = ClangDefines(targetPlatformInput),
+            MacroObjectDefines = ClangDefines(input, targetPlatformInput),
             AdditionalArguments = ClangArguments(targetPlatformInput),
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
             IsEnabledSystemDeclarations = input.IsEnabledSystemDeclarations ?? false,
@@ -169,9 +169,11 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             input.IgnoredIncludeFiles, targetPlatformInput.IgnoredIncludeDirectories);
     }
 
-    private ImmutableArray<string> ClangDefines(UnsanitizedExtractInputTargetPlatform targetPlatformInput)
+    private ImmutableDictionary<string, string> ClangDefines(
+        UnsanitizedExtractInput input,
+        UnsanitizedExtractInputTargetPlatform targetPlatformInput)
     {
-        return SanitizeStrings(targetPlatformInput.Defines);
+        return SanitizeStringsAndCombine(input.Defines, targetPlatformInput.Defines);
     }
 
     private ImmutableArray<string> ClangArguments(UnsanitizedExtractInputTargetPlatform targetPlatformInput)

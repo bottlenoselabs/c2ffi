@@ -33,7 +33,7 @@ public sealed class UnsanitizedExtractInputTargetPlatform
     ///     Gets or sets the object-like macros to use when parsing C code.
     /// </summary>
     [JsonPropertyName("defines")]
-    public ImmutableArray<string>? Defines { get; set; }
+    public ImmutableDictionary<string, string>? Defines { get; set; }
 
     /// <summary>
     ///     Gets or sets the additional Clang arguments to use when parsing C code.

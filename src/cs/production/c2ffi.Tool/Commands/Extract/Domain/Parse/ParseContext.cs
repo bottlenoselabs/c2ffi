@@ -158,15 +158,25 @@ public sealed class ParseContext : IDisposable
     public ImmutableArray<clang.CXCursor> GetExternalFunctions()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        return translationUnitCursor.GetDescendents(
-            static (child, _) => IsExternal(child) && child.kind == clang.CXCursorKind.CXCursor_FunctionDecl);
+        var result = translationUnitCursor.GetDescendents(IsExternalFunction);
+        return result;
+
+        static bool IsExternalFunction(clang.CXCursor child, clang.CXCursor parent)
+        {
+            return child.kind == clang.CXCursorKind.CXCursor_FunctionDecl && IsExternal(child);
+        }
     }
 
     public ImmutableArray<clang.CXCursor> GetExternalVariables()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        return translationUnitCursor.GetDescendents(
-            static (child, _) => IsExternal(child) && child.kind == clang.CXCursorKind.CXCursor_VarDecl);
+        var result = translationUnitCursor.GetDescendents(IsExternalVariable);
+        return result;
+
+        static bool IsExternalVariable(clang.CXCursor child, clang.CXCursor parent)
+        {
+            return child.kind == clang.CXCursorKind.CXCursor_VarDecl && IsExternal(child);
+        }
     }
 
     public ImmutableArray<clang.CXCursor> GetMacroObjects()
@@ -232,10 +242,26 @@ public sealed class ParseContext : IDisposable
 
     private static bool IsExternal(clang.CXCursor cursor)
     {
+        var spelling = cursor.Spelling();
+        if (spelling == "SDL_malloc")
+        {
+            Console.WriteLine();
+        }
+
         var linkage = clang.clang_getCursorLinkage(cursor);
+        if (linkage == clang.CXLinkageKind.CXLinkage_Invalid)
+        {
+            return false;
+        }
+
         var visibility = clang.clang_getCursorVisibility(cursor);
-        var isExternal = linkage == clang.CXLinkageKind.CXLinkage_External &&
-                         visibility == clang.CXVisibilityKind.CXVisibility_Default;
-        return isExternal;
+        if (visibility == clang.CXVisibilityKind.CXVisibility_Invalid)
+        {
+            return false;
+        }
+
+        var isExternalLinkage = linkage == clang.CXLinkageKind.CXLinkage_External;
+        var isVisible = visibility == clang.CXVisibilityKind.CXVisibility_Default;
+        return isExternalLinkage && isVisible;
     }
 }
