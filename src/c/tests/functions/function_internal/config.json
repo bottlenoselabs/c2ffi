@@ -3,6 +3,10 @@
   "userIncludeDirectories": [
     "../../../production/ffi_helper/include"
   ],
+  "defines": {
+    "BAD_CUSTOM_API_DECL": "extern",
+    "GOOD_CUSTOM_API_DECL": "extern __attribute__ ((visibility(\"default\")))"
+  },
   "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
