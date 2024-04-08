@@ -198,6 +198,12 @@ public sealed class ParseContext : IDisposable
                 return false;
             }
 
+            var isMacroFunctionLike = clang.clang_Cursor_isMacroFunctionLike(clangCursor) > 0;
+            if (isMacroFunctionLike)
+            {
+                return false;
+            }
+
             var location = Location(clangCursor);
             return !location.IsSystem;
         }
