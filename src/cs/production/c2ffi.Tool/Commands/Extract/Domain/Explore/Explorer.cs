@@ -9,6 +9,7 @@ using c2ffi.Tool.Commands.Extract.Domain.Parse;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
 using c2ffi.Tool.Internal;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
@@ -129,8 +130,14 @@ public sealed partial class Explorer
 
     private void VisitInclude(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var file = clang.clang_getIncludedFile(clangCursor);
-        var filePath = Path.GetFullPath(clang.clang_getFileName(file).String());
+        var clangFile = clang.clang_getIncludedFile(clangCursor);
+        var stringFile = clang.clang_getFileName(clangFile).String();
+        if (string.IsNullOrEmpty(stringFile))
+        {
+            return;
+        }
+
+        var filePath = Path.GetFullPath(stringFile);
         foreach (var systemIncludeDirectory in context.ParseContext.SystemIncludeDirectories)
         {
             if (filePath.Contains(systemIncludeDirectory, StringComparison.InvariantCulture))

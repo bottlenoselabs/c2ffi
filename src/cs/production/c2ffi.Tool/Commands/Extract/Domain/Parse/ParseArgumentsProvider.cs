@@ -106,16 +106,16 @@ public sealed class ParseArgumentsProvider
         }
     }
 
-    private void AddDefines(ImmutableArray<string>.Builder args, ImmutableArray<string> defines)
+    private void AddDefines(ImmutableArray<string>.Builder args, ImmutableDictionary<string, string> defines)
     {
-        if (defines.IsDefaultOrEmpty)
+        if (defines.IsEmpty)
         {
             return;
         }
 
-        foreach (var defineMacro in defines)
+        foreach (var (key, value) in defines)
         {
-            var commandLineArg = "--define-macro=" + defineMacro;
+            var commandLineArg = $"-D{key}={value}";
             args.Add(commandLineArg);
         }
     }

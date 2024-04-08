@@ -42,6 +42,12 @@ public sealed class UnsanitizedExtractInput
     public ImmutableArray<string>? SystemIncludeDirectories { get; set; }
 
     /// <summary>
+    ///     Gets or sets the object-like macros to use when parsing C code.
+    /// </summary>
+    [JsonPropertyName("defines")]
+    public ImmutableDictionary<string, string>? Defines { get; set; }
+
+    /// <summary>
     ///     Gets or sets the directories to ignore header files.
     /// </summary>
     [JsonPropertyName("ignoredIncludeFiles")]

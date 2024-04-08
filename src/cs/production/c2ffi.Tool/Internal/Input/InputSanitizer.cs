@@ -82,6 +82,27 @@ public abstract class InputSanitizer<TUnsanitizedInput, TSanitizedInput>
         return result;
     }
 
+    protected ImmutableDictionary<string, string> SanitizeStrings(ImmutableDictionary<string, string>? strings)
+    {
+        if (strings == null || strings.IsEmpty)
+        {
+            return ImmutableDictionary<string, string>.Empty;
+        }
+
+        var result = strings.Where(x => !string.IsNullOrEmpty(x.Key) && !string.IsNullOrEmpty(x.Value)).ToImmutableDictionary();
+        return result;
+    }
+
+    protected ImmutableDictionary<string, string> SanitizeStringsAndCombine(
+        ImmutableDictionary<string, string>? strings1,
+        ImmutableDictionary<string, string>? strings2)
+    {
+        var sanitizedStrings1 = SanitizeStrings(strings1);
+        var sanitizedStrings2 = SanitizeStrings(strings2);
+        var result = sanitizedStrings1.AddRange(sanitizedStrings2);
+        return result;
+    }
+
     protected ImmutableArray<string> SanitizeDirectoryPaths(
         ImmutableArray<string>? directoryPaths1,
         ImmutableArray<string>? directoryPaths2 = null)
