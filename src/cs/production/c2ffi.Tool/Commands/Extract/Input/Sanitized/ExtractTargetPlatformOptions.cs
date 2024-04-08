@@ -25,12 +25,6 @@ public sealed class ExtractTargetPlatformOptions
 
     public bool IsEnabledFindSystemHeaders { get; init; }
 
-    public bool IsEnabledSystemDeclarations { get; init; }
-
-    public bool IsEnabledOnlyExternalTopLevelCursors { get; init; }
-
-    public ImmutableHashSet<string> OpaqueTypeNames { get; init; } = ImmutableHashSet<string>.Empty;
-
     public ImmutableArray<Regex> IgnoredMacroObjectsRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
     public ImmutableArray<Regex> IgnoredVariableRegexes { get; init; } = ImmutableArray<Regex>.Empty;
