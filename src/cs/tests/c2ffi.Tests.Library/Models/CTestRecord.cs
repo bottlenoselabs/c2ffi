@@ -33,7 +33,7 @@ public class CTestRecord
         SizeOf = record.SizeOf;
         AlignOf = record.AlignOf;
         IsUnion = record.RecordKind == CRecordKind.Union;
-        IsAnonymous = record.IsAnonymous ?? false;
+        IsAnonymous = record.IsAnonymous;
         Fields = record.Fields.Select(field => new CTestRecordField(field)).ToImmutableArray();
     }
 

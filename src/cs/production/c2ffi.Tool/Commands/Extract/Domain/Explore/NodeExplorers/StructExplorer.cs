@@ -28,7 +28,7 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
     {
         var fields = StructFields(context, info);
         var comment = context.Comment(info.ClangCursor);
-        var isAnonymous = clang_Cursor_isAnonymousRecordDecl(info.ClangCursor) > 0;
+        var isAnonymous = clang_Cursor_isAnonymous(info.ClangCursor) > 0;
 
         var record = new CRecord
         {

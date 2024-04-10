@@ -252,10 +252,13 @@ public sealed class CTestFfiTargetPlatform
     {
         var recordKindName = record.IsUnion ? "union" : "struct";
 
-        Assert.False(
-            namesLookup.Contains(field.Name),
-            $"C {recordKindName} '{record.Name}' already has a field named `{field.Name}`.");
-        namesLookup.Add(field.Name);
+        if (!field.Type.IsAnonymous)
+        {
+            Assert.False(
+                namesLookup.Contains(field.Name),
+                $"C {recordKindName} '{record.Name}' already has a field named `{field.Name}`.");
+            namesLookup.Add(field.Name);
+        }
 
         Assert.True(
             field.OffsetOf >= 0,

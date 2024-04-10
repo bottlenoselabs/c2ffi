@@ -1,31 +1,23 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2ffi.Tests.Library.Models;
-using FluentAssertions;
-
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.Unions.union_int_int;
+namespace c2ffi.Tests.EndToEnd.Merge.Unions.union_int_int;
 
-public class Test : ExtractFfiTest
+public class Test : MergeFfisTest
 {
     private const string UnionName = "union_int_int";
 
     [Fact]
     public void Union()
     {
-        var ffis = GetTargetPlatformFfis(
-            $"src/c/tests/unions/{UnionName}/config.json");
-        Assert.True(ffis.Length > 0);
-
-        foreach (var ffi in ffis)
-        {
-            UnionExists(ffi);
-        }
+        var ffi = GetCrossPlatformFfi(
+            $"src/c/tests/unions/{UnionName}/ffi");
+        UnionExists(ffi);
     }
 
-    private void UnionExists(CTestFfiTargetPlatform ffi)
+    private void UnionExists(CTestFfiCrossPlatform ffi)
     {
         const string name = $"union {UnionName}";
         var record = ffi.GetRecord(name);

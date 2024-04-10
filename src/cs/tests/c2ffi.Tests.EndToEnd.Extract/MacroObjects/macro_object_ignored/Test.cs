@@ -23,7 +23,7 @@ public class Test : ExtractFfiTest
     ];
 
     [Fact]
-    public void Function()
+    public void MacroObject()
     {
         var ffis = GetTargetPlatformFfis(
             $"src/c/tests/macro_objects/macro_object_ignored/config.json");

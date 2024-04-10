@@ -3,26 +3,22 @@
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.Unions.union_anonymous_char_int;
+namespace c2ffi.Tests.EndToEnd.Merge.Unions.union_anonymous_char_int;
 
-public class Test : ExtractFfiTest
+public class Test : MergeFfisTest
 {
     private const string StructName = "union_anonymous_char_int";
 
     [Fact]
     public void Union()
     {
-        var ffis = GetTargetPlatformFfis(
-            $"src/c/tests/unions/{StructName}/config.json");
-        Assert.True(ffis.Length > 0);
+        var ffi = GetCrossPlatformFfi(
+            $"src/c/tests/unions/{StructName}/ffi");
 
-        foreach (var ffi in ffis)
-        {
-            UnionExists(ffi);
-        }
+        UnionExists(ffi);
     }
 
-    private void UnionExists(CTestFfiTargetPlatform ffi)
+    private void UnionExists(CTestFfiCrossPlatform ffi)
     {
         const string name = $"union {StructName}";
         var union = ffi.GetRecord(name);

@@ -98,13 +98,26 @@ public sealed class ExploreContext : IDisposable
         var clangCursorName = clangCursor.Spelling();
         var clangCursorType = clang.clang_getCursorType(clangCursor);
 
-        var clangCursorTypeCanonical = clangCursorType;
-        if (clangCursorType.kind == clang.CXTypeKind.CXType_Attributed)
+        if (nodeKind == CNodeKind.MacroObject)
         {
-            clangCursorTypeCanonical = clang.clang_Type_getModifiedType(clangCursorType);
+            return CreateNodeInfo(
+                nodeKind,
+                clangCursorName,
+                clangCursorType.Spelling(),
+                clangCursor,
+                clangCursorType,
+                null);
         }
 
-        return CreateNodeInfo(nodeKind, clangCursorName, clangCursor, clangCursorTypeCanonical, null);
+        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangCursorType);
+
+        return CreateNodeInfo(
+            nodeKind,
+            clangCursorName,
+            clangTypeInfo.Name,
+            clangCursor,
+            clangTypeInfo.ClangType,
+            null);
     }
 
     public void Dispose()
@@ -192,7 +205,7 @@ public sealed class ExploreContext : IDisposable
             return type;
         }
 
-        var info = CreateNodeInfo(type.NodeKind, type.Name, clangCursor, clangType, rootNode);
+        var info = CreateNodeInfo(type.NodeKind, type.Name, type.Name, clangCursor, clangType, rootNode);
         TryEnqueueNode(info);
         return type;
     }
@@ -255,12 +268,12 @@ public sealed class ExploreContext : IDisposable
     private ExploreNodeInfo CreateNodeInfo(
         CNodeKind kind,
         string name,
+        string typeName,
         clang.CXCursor clangCursor,
         clang.CXType clangType,
         ExploreNodeInfo? parentInfo)
     {
         var location = ParseContext.Location(clangCursor);
-        var typeName = clangType.Spelling();
         var sizeOf = ParseContext.SizeOf(kind, clangType);
         var alignOf = ParseContext.AlignOf(kind, clangType);
 

@@ -102,7 +102,7 @@ namespace c2ffi.Data.Serialization
             
             properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info2);
 
-            var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<bool?>
+            var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<bool>
             {
                 IsProperty = true,
                 IsPublic = true,
@@ -119,7 +119,7 @@ namespace c2ffi.Data.Serialization
                 JsonPropertyName = "is_anonymous"
             };
             
-            properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool?>(options, info3);
+            properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool>(options, info3);
 
             var info4 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.Nodes.CRecordField>>
             {

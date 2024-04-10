@@ -27,7 +27,7 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
     {
         var fields = UnionFields(context, info.ClangType, info);
         var comment = context.Comment(info.ClangCursor);
-        var isAnonymous = clang_Cursor_isAnonymousRecordDecl(info.ClangCursor) > 0;
+        var isAnonymous = clang_Cursor_isAnonymous(info.ClangCursor) > 0;
 
         var record = new CRecord
         {

@@ -38,7 +38,7 @@ public class Test : ExtractFfiTest
         field.OffsetOf.Should().Be(0);
 
         var fieldType = field.Type;
-        fieldType.Name.Should().NotBeNull();
+        fieldType.Name.Should().Be(name + "_ANONYMOUS_0");
         fieldType.SizeOf.Should().Be(8);
         fieldType.AlignOf.Should().Be(4);
         fieldType.IsAnonymous.Should().BeTrue();
