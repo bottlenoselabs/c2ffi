@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using bottlenoselabs;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
 using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
@@ -26,7 +27,8 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
     private CRecord Struct(ExploreContext context, ExploreNodeInfo info)
     {
         var fields = StructFields(context, info);
-        var comment = context.Comment(info.Cursor);
+        var comment = context.Comment(info.ClangCursor);
+        var isAnonymous = clang_Cursor_isAnonymous(info.ClangCursor) > 0;
 
         var record = new CRecord
         {
@@ -36,6 +38,7 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
             Fields = fields,
             SizeOf = info.SizeOf!.Value,
             AlignOf = info.AlignOf!.Value,
+            IsAnonymous = isAnonymous,
             Comment = comment
         };
 
@@ -47,14 +50,14 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
         ExploreNodeInfo structInfo)
     {
         var builder = ImmutableArray.CreateBuilder<CRecordField>();
-        var fieldCursors = FieldCursors(structInfo.Type);
+        var fieldCursors = FieldCursors(structInfo.ClangType);
         var fieldCursorsLength = fieldCursors.Length;
         if (fieldCursorsLength > 0)
         {
             for (var i = 0; i < fieldCursors.Length; i++)
             {
-                var fieldCursor = fieldCursors[i];
-                var field = StructField(context, structInfo, fieldCursor);
+                var clangCursor = fieldCursors[i];
+                var field = StructField(context, structInfo, clangCursor);
                 builder.Add(field);
             }
         }
@@ -66,20 +69,20 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
     private CRecordField StructField(
         ExploreContext context,
         ExploreNodeInfo structInfo,
-        CXCursor fieldCursor)
+        CXCursor clangCursor)
     {
-        var fieldName = fieldCursor.Spelling();
-        var type = clang_getCursorType(fieldCursor);
-        var location = context.ParseContext.Location(fieldCursor);
-        var typeInfo = context.VisitType(type, structInfo);
-        var offsetOf = (int)clang_Cursor_getOffsetOfField(fieldCursor) / 8;
-        var comment = context.Comment(fieldCursor);
+        var fieldName = clangCursor.Spelling();
+        var clangType = clang_getCursorType(clangCursor);
+        var location = context.ParseContext.Location(clangCursor);
+        var type = context.VisitType(clangType, structInfo);
+        var offsetOf = (int)clang_Cursor_getOffsetOfField(clangCursor) / 8;
+        var comment = context.Comment(clangCursor);
 
         return new CRecordField
         {
             Name = fieldName,
             Location = location,
-            TypeInfo = typeInfo,
+            Type = type,
             OffsetOf = offsetOf,
             Comment = comment
         };

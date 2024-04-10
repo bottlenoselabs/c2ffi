@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Xunit;
 
@@ -251,10 +252,13 @@ public sealed class CTestFfiTargetPlatform
     {
         var recordKindName = record.IsUnion ? "union" : "struct";
 
-        Assert.False(
-            namesLookup.Contains(field.Name),
-            $"C {recordKindName} '{record.Name}' already has a field named `{field.Name}`.");
-        namesLookup.Add(field.Name);
+        if (!field.Type.IsAnonymous)
+        {
+            Assert.False(
+                namesLookup.Contains(field.Name),
+                $"C {recordKindName} '{record.Name}' already has a field named `{field.Name}`.");
+            namesLookup.Add(field.Name);
+        }
 
         Assert.True(
             field.OffsetOf >= 0,
@@ -269,8 +273,8 @@ public sealed class CTestFfiTargetPlatform
                 field.OffsetOf == 0,
                 $"C union '{record.Name}' field '{field.Name}' does not have an offset of zero.");
             Assert.True(
-                field.Type.SizeOf == record.SizeOf,
-                $"C union '{record.Name}' field '{field.Name}' does not have a size that matches the union.");
+                field.Type.SizeOf <= record.SizeOf,
+                $"C union '{record.Name}' field '{field.Name}' is larger than the size of the containing record.");
         }
     }
 }

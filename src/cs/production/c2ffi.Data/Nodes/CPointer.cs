@@ -18,7 +18,7 @@ public class CPointer : CNode
     ///     Gets or sets the type information.
     /// </summary>
     [JsonPropertyName("type")]
-    public CTypeInfo TypeInfo { get; set; } = null!;
+    public CType Type { get; set; } = null!;
 
     /// <inheritdoc />
     public override bool Equals(CNode? other)
@@ -28,7 +28,7 @@ public class CPointer : CNode
             return false;
         }
 
-        return TypeInfo.Equals(other2.TypeInfo);
+        return Type.Equals(other2.Type);
     }
 
     /// <inheritdoc />
@@ -40,7 +40,7 @@ public class CPointer : CNode
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(TypeInfo);
+        hashCode.Add(Type);
 
         // ReSharper restore NonReadonlyMemberInGetHashCode
 

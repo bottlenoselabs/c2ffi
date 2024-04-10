@@ -18,6 +18,6 @@ public class CTestVariable
     public CTestVariable(CVariable variable)
     {
         Name = variable.Name;
-        TypeName = variable.TypeInfo.Name;
+        TypeName = variable.Type.Name;
     }
 }

@@ -22,11 +22,12 @@ public static class ClangTypeInfoProvider
         public static ClangTypeInfo Create(CNodeKind nodeKind, clang.CXType clangTypeCanonical)
         {
             var result = default(ClangTypeInfo);
+            var clangCursor = clang.clang_getTypeDeclaration(clangTypeCanonical);
 
-            result.Name = clangTypeCanonical.Spelling();
+            result.Name = GetTypeName(clangTypeCanonical, clangCursor);
             result.NodeKind = nodeKind;
             result.ClangType = clangTypeCanonical;
-            result.ClangCursor = clang.clang_getTypeDeclaration(clangTypeCanonical);
+            result.ClangCursor = clangCursor;
 
             return result;
         }
@@ -43,42 +44,42 @@ public static class ClangTypeInfoProvider
 
         if (clangCursorType.IsPrimitive())
         {
-            return TypeKindPrimitive(clangCursorType);
+            return GetTypeInfoPrimitive(clangCursorType);
         }
 
         switch (clangCursorType.kind)
         {
             case clang.CXTypeKind.CXType_Attributed:
-                return TypeKindAttributed(parentNodeKind, clangCursorType);
+                return GetTypeInfoAttributed(parentNodeKind, clangCursorType);
             case clang.CXTypeKind.CXType_Elaborated:
-                return TypeKindElaborated(parentNodeKind, clangCursorType);
+                return GetTypeInfoElaborated(parentNodeKind, clangCursorType);
             case clang.CXTypeKind.CXType_ConstantArray:
             case clang.CXTypeKind.CXType_IncompleteArray:
-                return TypeKindArray(clangCursorType);
+                return GetTypeInfoArray(clangCursorType);
             case clang.CXTypeKind.CXType_Unexposed:
-                return TypeKindUnexposed(parentNodeKind, clangCursorType);
+                return GetTypeInfoUnexposed(parentNodeKind, clangCursorType);
             case clang.CXTypeKind.CXType_Pointer:
-                return TypeKindPointer(clangCursorType);
+                return GetTypeInfoPointer(clangCursorType);
             case clang.CXTypeKind.CXType_Enum:
-                return TypeKindEnum(clangCursorType);
+                return GetTypeInfoEnum(clangCursorType);
             case clang.CXTypeKind.CXType_Record:
-                return TypeKindRecord(clangCursorType, clangCursor.kind);
+                return GetTypeInfoRecord(clangCursorType, clangCursor.kind);
             case clang.CXTypeKind.CXType_Typedef:
-                return TypeKindTypeAlias(parentNodeKind, clangCursor, clangCursorType);
+                return GetTypeInfoAlias(clangCursorType);
             case clang.CXTypeKind.CXType_FunctionNoProto or clang.CXTypeKind.CXType_FunctionProto:
-                return TypeKindFunction(parentNodeKind, clangCursor, clangCursorType);
+                return GetTypeInfoFunction(parentNodeKind, clangCursor, clangCursorType);
         }
 
         var up = new InvalidOperationException($"Unknown Clang type kind '{clangType.kind}'.");
         throw up;
     }
 
-    private static ClangTypeInfo TypeKindPrimitive(clang.CXType clangCursorType)
+    private static ClangTypeInfo GetTypeInfoPrimitive(clang.CXType clangCursorType)
     {
         return ClangTypeInfo.Create(CNodeKind.Primitive, clangCursorType);
     }
 
-    private static ClangTypeInfo TypeKindAttributed(
+    private static ClangTypeInfo GetTypeInfoAttributed(
         CNodeKind? parentNodeKind,
         clang.CXType clangCursorType)
     {
@@ -86,7 +87,7 @@ public static class ClangTypeInfoProvider
         return GetTypeInfo(clangType, parentNodeKind);
     }
 
-    private static ClangTypeInfo TypeKindElaborated(
+    private static ClangTypeInfo GetTypeInfoElaborated(
         CNodeKind? parentNodeKind,
         clang.CXType clangCursorType)
     {
@@ -94,7 +95,7 @@ public static class ClangTypeInfoProvider
         return GetTypeInfo(clangType, parentNodeKind);
     }
 
-    private static ClangTypeInfo TypeKindUnexposed(
+    private static ClangTypeInfo GetTypeInfoUnexposed(
         CNodeKind? parentNodeKind,
         clang.CXType clangCursorType)
     {
@@ -102,13 +103,13 @@ public static class ClangTypeInfoProvider
         return GetTypeInfo(clangTypeCanonical, parentNodeKind);
     }
 
-    private static ClangTypeInfo TypeKindArray(
+    private static ClangTypeInfo GetTypeInfoArray(
         clang.CXType clangCursorType)
     {
         return ClangTypeInfo.Create(CNodeKind.Array, clangCursorType);
     }
 
-    private static ClangTypeInfo TypeKindPointer(
+    private static ClangTypeInfo GetTypeInfoPointer(
         clang.CXType clangCursorType)
     {
         // ReSharper disable once IdentifierTypo
@@ -128,13 +129,13 @@ public static class ClangTypeInfoProvider
         return ClangTypeInfo.Create(CNodeKind.Pointer, clangCursorType);
     }
 
-    private static ClangTypeInfo TypeKindEnum(
+    private static ClangTypeInfo GetTypeInfoEnum(
         clang.CXType clangCursorType)
     {
         return ClangTypeInfo.Create(CNodeKind.Enum, clangCursorType);
     }
 
-    private static ClangTypeInfo TypeKindRecord(
+    private static ClangTypeInfo GetTypeInfoRecord(
         clang.CXType clangCursorType,
         clang.CXCursorKind clangCursorKind)
     {
@@ -149,10 +150,7 @@ public static class ClangTypeInfoProvider
         return ClangTypeInfo.Create(kind, clangCursorType);
     }
 
-    private static ClangTypeInfo TypeKindTypeAlias(
-        CNodeKind? parentNodeKind,
-        clang.CXCursor clangCursor,
-        clang.CXType clangCursorType)
+    private static ClangTypeInfo GetTypeInfoAlias(clang.CXType clangCursorType)
     {
         // var clangTypeUnderlying = clang.clang_getTypedefDeclUnderlyingType(clangCursor);
         // var clangTypeUnderlyingInfo = GetTypeInfo(clangTypeUnderlying, parentNodeKind);
@@ -160,7 +158,7 @@ public static class ClangTypeInfoProvider
         return ClangTypeInfo.Create(CNodeKind.TypeAlias, clangCursorType);
     }
 
-    private static ClangTypeInfo TypeKindFunction(
+    private static ClangTypeInfo GetTypeInfoFunction(
         CNodeKind? parentNodeKind,
         clang.CXCursor clangCursor,
         clang.CXType clangCursorType)
@@ -173,5 +171,45 @@ public static class ClangTypeInfoProvider
         return parentNodeKind == CNodeKind.TypeAlias
             ? ClangTypeInfo.Create(CNodeKind.FunctionPointer, clangCursorType)
             : ClangTypeInfo.Create(CNodeKind.Function, clangCursorType);
+    }
+
+    private static string GetTypeName(clang.CXType clangType, clang.CXCursor clangCursor)
+    {
+        var isAnonymous = clang.clang_Cursor_isAnonymous(clangCursor) > 0;
+        var isRecord = clangCursor.kind is clang.CXCursorKind.CXCursor_StructDecl or clang.CXCursorKind.CXCursor_UnionDecl;
+        if (!isRecord || !isAnonymous)
+        {
+            return clangType.Spelling();
+        }
+
+        var clangCursorParent = clang.clang_getCursorSemanticParent(clangCursor);
+        var clangTypeParent = clang.clang_getCursorType(clangCursorParent);
+        var parentName = GetTypeName(clangTypeParent, clangCursorParent);
+
+        var clangCursorFields = clangTypeParent.GetFields();
+        var index = -1;
+        for (var i = 0; i < clangCursorFields.Length; i++)
+        {
+            var clangCursorField = clangCursorFields[i];
+            var clangTypeField = clang.clang_getCursorType(clangCursorField);
+            if (clangTypeField.kind == clang.CXTypeKind.CXType_Elaborated)
+            {
+                clangTypeField = clang.clang_Type_getNamedType(clangTypeField);
+            }
+
+            var areEqual = clang.clang_equalTypes(clangType, clangTypeField) > 0;
+            if (areEqual)
+            {
+                index = i;
+            }
+        }
+
+        if (index == -1)
+        {
+            var name = clangType.Spelling();
+            throw new InvalidOperationException($"Could not find anonymous record declaration for type '{name}' in parent record '{parentName}'.");
+        }
+
+        return $"{parentName}_ANONYMOUS_{index}";
     }
 }

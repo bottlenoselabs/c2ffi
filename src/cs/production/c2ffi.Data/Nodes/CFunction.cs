@@ -26,7 +26,7 @@ public class CFunction : CNodeWithLocation
     ///     Gets or sets the function's return type information.
     /// </summary>
     [JsonPropertyName("return_type")]
-    public CTypeInfo ReturnTypeInfo { get; set; } = null!;
+    public CType ReturnType { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the function's parameters.
@@ -51,7 +51,7 @@ public class CFunction : CNodeWithLocation
 
         var callingConventionsAreEqual = CallingConvention == other2.CallingConvention;
         var parametersAreEqual = Parameters.SequenceEqual(other2.Parameters);
-        var returnTypesAreEqual = ReturnTypeInfo.Equals(other2.ReturnTypeInfo);
+        var returnTypesAreEqual = ReturnType.Equals(other2.ReturnType);
         return callingConventionsAreEqual && returnTypesAreEqual && parametersAreEqual;
     }
 
@@ -65,7 +65,7 @@ public class CFunction : CNodeWithLocation
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
         hashCode.Add(CallingConvention);
-        hashCode.Add(ReturnTypeInfo);
+        hashCode.Add(ReturnType);
 
         foreach (var parameter in Parameters)
         {

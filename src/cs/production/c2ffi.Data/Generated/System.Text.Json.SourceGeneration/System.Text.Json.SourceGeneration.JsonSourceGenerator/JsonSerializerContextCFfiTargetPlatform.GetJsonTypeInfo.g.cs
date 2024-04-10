@@ -51,9 +51,9 @@ namespace c2ffi.Data.Serialization
             {
                 return Create_CRecordKind(options);
             }
-            if (type == typeof(global::c2ffi.Data.CTypeInfo))
+            if (type == typeof(global::c2ffi.Data.CType))
             {
-                return Create_CTypeInfo(options);
+                return Create_CType(options);
             }
             if (type == typeof(global::c2ffi.Data.Nodes.CEnum))
             {

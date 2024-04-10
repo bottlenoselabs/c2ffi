@@ -19,13 +19,13 @@ public class CVariable : CNodeWithLocation
     ///     Gets or sets the type of the variable.
     /// </summary>
     [JsonPropertyName("type")]
-    public CTypeInfo TypeInfo { get; set; } = null!;
+    public CType Type { get; set; } = null!;
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {
-        return $"Variable '{Name}': {TypeInfo} @ {Location}";
+        return $"Variable '{Name}': {Type} @ {Location}";
     }
 
     /// <inheritdoc />
@@ -36,7 +36,7 @@ public class CVariable : CNodeWithLocation
             return false;
         }
 
-        return TypeInfo.Equals(other2.TypeInfo);
+        return Type.Equals(other2.Type);
     }
 
     /// <inheritdoc />
@@ -48,7 +48,7 @@ public class CVariable : CNodeWithLocation
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(TypeInfo.GetHashCode());
+        hashCode.Add(Type.GetHashCode());
 
         // ReSharper restore NonReadonlyMemberInGetHashCode
 

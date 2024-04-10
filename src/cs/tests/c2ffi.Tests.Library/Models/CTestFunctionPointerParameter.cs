@@ -18,7 +18,7 @@ public class CTestFunctionPointerParameter
     public CTestFunctionPointerParameter(CFunctionPointerParameter functionPointerParameter)
     {
         Name = functionPointerParameter.Name;
-        TypeName = functionPointerParameter.TypeInfo.Name;
+        TypeName = functionPointerParameter.Type.Name;
     }
 
     public override string ToString()

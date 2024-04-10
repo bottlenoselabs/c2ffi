@@ -173,7 +173,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "IsAnonymous",
-                JsonPropertyName = "is_snonymous"
+                JsonPropertyName = "is_anonymous"
             };
             
             properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool?>(options, info6);

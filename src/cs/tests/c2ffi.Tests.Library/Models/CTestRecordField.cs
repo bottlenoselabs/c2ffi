@@ -15,13 +15,13 @@ public class CTestRecordField
 
     public int OffsetOf { get; }
 
-    public CTestTypeInfo Type { get; }
+    public CTestType Type { get; }
 
     public CTestRecordField(CRecordField field)
     {
         Name = field.Name;
         OffsetOf = field.OffsetOf;
-        Type = new CTestTypeInfo(field.TypeInfo);
+        Type = new CTestType(field.Type);
     }
 
     public override string ToString()

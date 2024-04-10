@@ -25,10 +25,11 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
 
     private CRecord Union(ExploreContext context, ExploreNodeInfo info)
     {
-        var fields = UnionFields(context, info.Type, info);
-        var comment = context.Comment(info.Cursor);
+        var fields = UnionFields(context, info.ClangType, info);
+        var comment = context.Comment(info.ClangCursor);
+        var isAnonymous = clang_Cursor_isAnonymous(info.ClangCursor) > 0;
 
-        var result = new CRecord
+        var record = new CRecord
         {
             RecordKind = CRecordKind.Union,
             Location = info.Location,
@@ -36,25 +37,26 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
             Fields = fields,
             SizeOf = info.SizeOf!.Value,
             AlignOf = info.AlignOf!.Value,
-            Comment = comment
+            Comment = comment,
+            IsAnonymous = isAnonymous
         };
 
-        return result;
+        return record;
     }
 
     private ImmutableArray<CRecordField> UnionFields(
         ExploreContext context,
-        CXType type,
+        CXType clangType,
         ExploreNodeInfo parentInfo)
     {
         var builder = ImmutableArray.CreateBuilder<CRecordField>();
-        var fieldCursors = FieldCursors(type);
+        var fieldCursors = FieldCursors(clangType);
 
         for (var i = 0; i < fieldCursors.Length; i++)
         {
-            var fieldCursor = fieldCursors[i];
-            var nextRecordField = UnionField(context, fieldCursor, parentInfo);
-            builder.Add(nextRecordField);
+            var clangCursor = fieldCursors[i];
+            var field = UnionField(context, clangCursor, parentInfo);
+            builder.Add(field);
         }
 
         var result = builder.ToImmutable();
@@ -67,16 +69,16 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
         ExploreNodeInfo parentInfo)
     {
         var name = clangCursor.Spelling();
-        var type = clang_getCursorType(clangCursor);
+        var clangType = clang_getCursorType(clangCursor);
         var location = context.ParseContext.Location(clangCursor);
-        var typeInfo = context.VisitType(type, parentInfo);
+        var type = context.VisitType(clangType, parentInfo);
         var comment = context.Comment(clangCursor);
 
         var result = new CRecordField
         {
             Name = name,
             Location = location,
-            TypeInfo = typeInfo,
+            Type = type,
             Comment = comment
         };
 

@@ -29,13 +29,13 @@ public class CFunctionPointerParameter : CNode
     ///     Gets or sets the type information.
     /// </summary>
     [JsonPropertyName("type")]
-    public CTypeInfo TypeInfo { get; set; } = null!;
+    public CType Type { get; set; } = null!;
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {
-        return $"FunctionPointerParameter '{Name}': {TypeInfo}";
+        return $"FunctionPointerParameter '{Name}': {Type}";
     }
 
     /// <inheritdoc />
@@ -46,7 +46,7 @@ public class CFunctionPointerParameter : CNode
             return false;
         }
 
-        return TypeInfo.Equals(other2.TypeInfo);
+        return Type.Equals(other2.Type);
     }
 
     /// <inheritdoc />
@@ -58,7 +58,7 @@ public class CFunctionPointerParameter : CNode
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(TypeInfo);
+        hashCode.Add(Type);
 
         // ReSharper restore NonReadonlyMemberInGetHashCode
 

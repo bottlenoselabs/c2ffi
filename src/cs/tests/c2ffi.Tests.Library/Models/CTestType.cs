@@ -5,7 +5,7 @@ using c2ffi.Data;
 
 namespace c2ffi.Tests.Library.Models;
 
-public class CTestTypeInfo
+public class CTestType
 {
     public string NodeKind { get; }
 
@@ -15,14 +15,17 @@ public class CTestTypeInfo
 
     public int? AlignOf { get; }
 
-    public CTestTypeInfo? InnerType { get; }
+    public bool IsAnonymous { get; set; }
 
-    public CTestTypeInfo(CTypeInfo typeInfo)
+    public CTestType? InnerType { get; }
+
+    public CTestType(CType type)
     {
-        NodeKind = typeInfo.NodeKind.ToString().ToLowerInvariant();
-        Name = typeInfo.Name;
-        SizeOf = typeInfo.SizeOf;
-        AlignOf = typeInfo.AlignOf;
-        InnerType = typeInfo.InnerTypeInfo != null ? new CTestTypeInfo(typeInfo.InnerTypeInfo) : null;
+        NodeKind = type.NodeKind.ToString().ToLowerInvariant();
+        Name = type.Name;
+        SizeOf = type.SizeOf;
+        AlignOf = type.AlignOf;
+        IsAnonymous = type.IsAnonymous ?? false;
+        InnerType = type.InnerType != null ? new CTestType(type.InnerType) : null;
     }
 }

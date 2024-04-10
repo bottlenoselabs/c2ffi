@@ -21,11 +21,11 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiUnionExists(ffi);
+            UnionExists(ffi);
         }
     }
 
-    private void FfiUnionExists(CTestFfiTargetPlatform ffi)
+    private void UnionExists(CTestFfiTargetPlatform ffi)
     {
         const string name = $"union {UnionName}";
         var record = ffi.GetRecord(name);

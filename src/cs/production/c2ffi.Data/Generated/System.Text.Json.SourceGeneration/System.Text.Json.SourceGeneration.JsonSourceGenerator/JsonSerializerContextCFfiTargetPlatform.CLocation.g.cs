@@ -59,7 +59,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "FileName",
-                JsonPropertyName = "fileName"
+                JsonPropertyName = "file_name"
             };
             
             properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info0);
@@ -78,7 +78,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "FilePath",
-                JsonPropertyName = "filePath"
+                JsonPropertyName = "file_path"
             };
             
             properties[1] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info1);
@@ -154,7 +154,7 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "IsSystem",
-                JsonPropertyName = "isSystem"
+                JsonPropertyName = "is_system"
             };
             
             properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool>(options, info5);

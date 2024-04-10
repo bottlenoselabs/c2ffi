@@ -35,6 +35,12 @@ public class CRecord : CNodeWithLocation
     public int AlignOf { get; set; }
 
     /// <summary>
+    ///     Gets or sets a value indicating whether the C type is anonymous.
+    /// </summary>
+    [JsonPropertyName("is_anonymous")]
+    public bool IsAnonymous { get; set; }
+
+    /// <summary>
     ///     Gets or sets the fields.
     /// </summary>
     [JsonPropertyName("fields")]
@@ -55,10 +61,15 @@ public class CRecord : CNodeWithLocation
             return false;
         }
 
-        return RecordKind == other2.RecordKind &&
-               SizeOf == other2.SizeOf &&
-               AlignOf == other2.AlignOf &&
-               Fields.SequenceEqual(other2.Fields);
+        var kindsAreEqual = RecordKind == other2.RecordKind;
+        var sizesAreEqual = SizeOf == other2.SizeOf;
+        var alignmentsAreEqual = AlignOf == other2.AlignOf;
+        var fieldsAreEqual = Fields.SequenceEqual(other2.Fields);
+
+        return kindsAreEqual &&
+               sizesAreEqual &&
+               alignmentsAreEqual &&
+               fieldsAreEqual;
     }
 
     /// <inheritdoc />

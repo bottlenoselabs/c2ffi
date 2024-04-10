@@ -45,24 +45,24 @@ namespace c2ffi.Data.Serialization
         {
             var properties = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfo[5];
 
-            var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CTypeInfo>
+            var info0 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CType>
             {
                 IsProperty = true,
                 IsPublic = true,
                 IsVirtual = false,
                 DeclaringType = typeof(global::c2ffi.Data.Nodes.CMacroObject),
                 Converter = null,
-                Getter = static obj => ((global::c2ffi.Data.Nodes.CMacroObject)obj).TypeInfo,
-                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CMacroObject)obj).TypeInfo = value!,
+                Getter = static obj => ((global::c2ffi.Data.Nodes.CMacroObject)obj).Type,
+                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CMacroObject)obj).Type = value!,
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
                 NumberHandling = null,
-                PropertyName = "TypeInfo",
+                PropertyName = "Type",
                 JsonPropertyName = "type"
             };
             
-            properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CTypeInfo>(options, info0);
+            properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CType>(options, info0);
 
             var info1 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {

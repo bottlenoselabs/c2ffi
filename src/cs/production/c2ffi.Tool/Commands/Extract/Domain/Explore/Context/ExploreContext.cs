@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using bottlenoselabs;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
@@ -64,22 +65,23 @@ public sealed class ExploreContext : IDisposable
         return _ignoredIncludeFiles.Contains(filePath);
     }
 
-    public CTypeInfo VisitType(
+    public CType VisitType(
         clang.CXType clangType,
         ExploreNodeInfo? parentInfo,
         CNodeKind? nodeKind = null)
     {
-        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, parentInfo?.NodeKind);
-        var nodeKindUsed = nodeKind ?? clangTypeInfo.NodeKind;
+        var typeInfo = ClangTypeInfoProvider.GetTypeInfo(clangType, parentInfo?.NodeKind);
+        var nodeKindUsed = nodeKind ?? typeInfo.NodeKind;
 
-        var typeInfo = VisitTypeInternal(
+        var type = VisitTypeInternal(
             nodeKindUsed,
-            clangTypeInfo.Name,
-            clangTypeInfo.ClangType,
+            typeInfo.Name,
+            typeInfo.ClangType,
             clangType,
-            clangTypeInfo.ClangCursor,
+            typeInfo.ClangCursor,
             parentInfo);
-        return typeInfo;
+
+        return type;
     }
 
     public string? Comment(clang.CXCursor clangCursor)
@@ -96,13 +98,26 @@ public sealed class ExploreContext : IDisposable
         var clangCursorName = clangCursor.Spelling();
         var clangCursorType = clang.clang_getCursorType(clangCursor);
 
-        var clangCursorTypeCanonical = clangCursorType;
-        if (clangCursorType.kind == clang.CXTypeKind.CXType_Attributed)
+        if (nodeKind == CNodeKind.MacroObject)
         {
-            clangCursorTypeCanonical = clang.clang_Type_getModifiedType(clangCursorType);
+            return CreateNodeInfo(
+                nodeKind,
+                clangCursorName,
+                clangCursorType.Spelling(),
+                clangCursor,
+                clangCursorType,
+                null);
         }
 
-        return CreateNodeInfo(nodeKind, clangCursorName, clangCursor, clangCursorTypeCanonical, null);
+        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangCursorType);
+
+        return CreateNodeInfo(
+            nodeKind,
+            clangCursorName,
+            clangTypeInfo.Name,
+            clangCursor,
+            clangTypeInfo.ClangType,
+            null);
     }
 
     public void Dispose()
@@ -110,7 +125,7 @@ public sealed class ExploreContext : IDisposable
         ParseContext.Dispose();
     }
 
-    private CTypeInfo VisitTypeInternal(
+    private CType VisitTypeInternal(
         CNodeKind nodeKind,
         string typeName,
         clang.CXType clangType,
@@ -123,69 +138,28 @@ public sealed class ExploreContext : IDisposable
 
         int? sizeOf;
         int? alignOf;
-        CTypeInfo? innerType = null;
-        if (nodeKind is CNodeKind.Pointer)
+        CType? innerType = null;
+        switch (nodeKind)
         {
-            var pointeeTypeCandidate = clang.clang_getPointeeType(clangType);
-            var pointeeTypeInfo = ClangTypeInfoProvider.GetTypeInfo(pointeeTypeCandidate, nodeKind);
-
-            innerType = VisitTypeInternal(
-                pointeeTypeInfo.NodeKind,
-                pointeeTypeInfo.Name,
-                pointeeTypeInfo.ClangType,
-                pointeeTypeCandidate,
-                pointeeTypeInfo.ClangCursor,
-                rootNode);
-            sizeOf = ParseContext.PointerSize;
-            alignOf = ParseContext.PointerSize;
-        }
-        else if (nodeKind is CNodeKind.Array)
-        {
-            var elementTypeCandidate = clang.clang_getArrayElementType(clangType);
-            var elementTypeInfo = ClangTypeInfoProvider.GetTypeInfo(elementTypeCandidate, nodeKind);
-
-            innerType = VisitTypeInternal(
-                elementTypeInfo.NodeKind,
-                elementTypeInfo.Name,
-                elementTypeInfo.ClangType,
-                elementTypeCandidate,
-                elementTypeInfo.ClangCursor,
-                rootNode);
-            sizeOf = ParseContext.PointerSize;
-            alignOf = ParseContext.PointerSize;
-        }
-        else if (nodeKind is CNodeKind.TypeAlias)
-        {
-            var aliasTypeCandidate = clang.clang_getTypedefDeclUnderlyingType(clangCursor);
-            var aliasTypeInfo = ClangTypeInfoProvider.GetTypeInfo(aliasTypeCandidate, nodeKind);
-
-            innerType = VisitTypeInternal(
-                aliasTypeInfo.NodeKind,
-                aliasTypeInfo.Name,
-                aliasTypeInfo.ClangType,
-                aliasTypeCandidate,
-                aliasTypeInfo.ClangCursor,
-                rootNode);
-            if (innerType != null)
-            {
-                if (innerType.NodeKind == CNodeKind.OpaqueType)
-                {
-                    return innerType;
-                }
-
+            case CNodeKind.Pointer:
+                innerType = VisitTypeInternalPointer(nodeKind, clangType, rootNode);
+                sizeOf = ParseContext.PointerSize;
+                alignOf = ParseContext.PointerSize;
+                break;
+            case CNodeKind.Array:
+                innerType = VisitTypeInternalArray(nodeKind, clangType, rootNode);
+                sizeOf = ParseContext.PointerSize;
+                alignOf = ParseContext.PointerSize;
+                break;
+            case CNodeKind.TypeAlias:
+                innerType = VisitTypeInternalTypeAlias(nodeKind, clangCursor, rootNode);
                 sizeOf = innerType.SizeOf;
                 alignOf = innerType.AlignOf;
-            }
-            else
-            {
-                sizeOf = ParseContext.SizeOf(nodeKind, aliasTypeInfo.ClangType);
-                alignOf = ParseContext.AlignOf(nodeKind, aliasTypeInfo.ClangType);
-            }
-        }
-        else
-        {
-            sizeOf = ParseContext.SizeOf(nodeKind, clangContainerType);
-            alignOf = ParseContext.AlignOf(nodeKind, clangContainerType);
+                break;
+            default:
+                sizeOf = ParseContext.SizeOf(nodeKind, clangContainerType);
+                alignOf = ParseContext.AlignOf(nodeKind, clangContainerType);
+                break;
         }
 
         var arraySizeValue = (int)clang.clang_getArraySize(clangContainerType);
@@ -206,7 +180,7 @@ public sealed class ExploreContext : IDisposable
 
         var isAnonymous = clang.clang_Cursor_isAnonymous(clangCursorLocation) > 0;
 
-        var typeInfo = new CTypeInfo
+        var type = new CType
         {
             Name = typeName,
             NodeKind = nodeKind,
@@ -217,34 +191,89 @@ public sealed class ExploreContext : IDisposable
             Location = location,
             IsAnonymous = isAnonymous ? true : null,
             IsConst = false,
-            InnerTypeInfo = innerType
+            InnerType = innerType
         };
 
-        if (typeInfo.NodeKind == CNodeKind.TypeAlias && typeInfo.InnerTypeInfo != null &&
-            typeInfo.Name == typeInfo.InnerTypeInfo.Name)
+        if (type is { NodeKind: CNodeKind.TypeAlias, InnerType: not null } &&
+            type.Name == type.InnerType.Name)
         {
-            return typeInfo;
+            return type;
         }
 
         if (location.IsSystem && nodeKind != CNodeKind.FunctionPointer)
         {
-            return typeInfo;
+            return type;
         }
 
-        var info = CreateNodeInfo(typeInfo.NodeKind, typeInfo.Name, clangCursor, clangType, rootNode);
+        var info = CreateNodeInfo(type.NodeKind, type.Name, type.Name, clangCursor, clangType, rootNode);
         TryEnqueueNode(info);
-        return typeInfo;
+        return type;
+    }
+
+    private CType VisitTypeInternalPointer(
+        CNodeKind nodeKind,
+        clang.CXType clangType,
+        ExploreNodeInfo? rootNode)
+    {
+        var pointeeTypeCandidate = clang.clang_getPointeeType(clangType);
+        var pointeeTypeInfo = ClangTypeInfoProvider.GetTypeInfo(pointeeTypeCandidate, nodeKind);
+
+        var innerType = VisitTypeInternal(
+            pointeeTypeInfo.NodeKind,
+            pointeeTypeInfo.Name,
+            pointeeTypeInfo.ClangType,
+            pointeeTypeCandidate,
+            pointeeTypeInfo.ClangCursor,
+            rootNode);
+        return innerType;
+    }
+
+    private CType VisitTypeInternalArray(
+        CNodeKind nodeKind,
+        clang.CXType clangType,
+        ExploreNodeInfo? rootNode)
+    {
+        var elementTypeCandidate = clang.clang_getArrayElementType(clangType);
+        var elementTypeInfo = ClangTypeInfoProvider.GetTypeInfo(elementTypeCandidate, nodeKind);
+
+        var innerType = VisitTypeInternal(
+            elementTypeInfo.NodeKind,
+            elementTypeInfo.Name,
+            elementTypeInfo.ClangType,
+            elementTypeCandidate,
+            elementTypeInfo.ClangCursor,
+            rootNode);
+        return innerType;
+    }
+
+    private CType VisitTypeInternalTypeAlias(
+        CNodeKind nodeKind,
+        clang.CXCursor clangCursor,
+        ExploreNodeInfo? rootNode)
+    {
+        var aliasTypeCandidate = clang.clang_getTypedefDeclUnderlyingType(clangCursor);
+        var aliasTypeInfo = ClangTypeInfoProvider.GetTypeInfo(aliasTypeCandidate, nodeKind);
+
+        var innerType = VisitTypeInternal(
+            aliasTypeInfo.NodeKind,
+            aliasTypeInfo.Name,
+            aliasTypeInfo.ClangType,
+            aliasTypeCandidate,
+            aliasTypeInfo.ClangCursor,
+            rootNode);
+
+        return innerType;
     }
 
     private ExploreNodeInfo CreateNodeInfo(
         CNodeKind kind,
         string name,
+        string typeName,
         clang.CXCursor clangCursor,
         clang.CXType clangType,
         ExploreNodeInfo? parentInfo)
     {
         var location = ParseContext.Location(clangCursor);
-        var typeName = clangType.Spelling();
         var sizeOf = ParseContext.SizeOf(kind, clangType);
         var alignOf = ParseContext.AlignOf(kind, clangType);
 
@@ -253,8 +282,8 @@ public sealed class ExploreContext : IDisposable
             NodeKind = kind,
             Name = name,
             TypeName = typeName,
-            Type = clangType,
-            Cursor = clangCursor,
+            ClangType = clangType,
+            ClangCursor = clangCursor,
             Location = location,
             Parent = parentInfo,
             SizeOf = sizeOf,

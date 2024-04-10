@@ -120,11 +120,11 @@ public sealed partial class MergeFfisTool
                 _opaqueTypes.Add(opaqueType);
                 break;
             case CFunction function:
-                ClearLocationForTypeInfo(function.ReturnTypeInfo);
+                ClearLocationForTypeInfo(function.ReturnType);
                 foreach (var parameter in function.Parameters)
                 {
                     parameter.Location = null;
-                    ClearLocationForTypeInfo(parameter.TypeInfo);
+                    ClearLocationForTypeInfo(parameter.Type);
                 }
 
                 _functions.Add(function);
@@ -133,26 +133,26 @@ public sealed partial class MergeFfisTool
                 foreach (var field in record.Fields)
                 {
                     field.Location = null;
-                    ClearLocationForTypeInfo(field.TypeInfo);
+                    ClearLocationForTypeInfo(field.Type);
                 }
 
                 _records.Add(record);
                 break;
             case CFunctionPointer functionPointer:
-                ClearLocationForTypeInfo(functionPointer.ReturnTypeInfo);
+                ClearLocationForTypeInfo(functionPointer.ReturnType);
                 foreach (var parameter in functionPointer.Parameters)
                 {
-                    ClearLocationForTypeInfo(parameter.TypeInfo);
+                    ClearLocationForTypeInfo(parameter.Type);
                 }
 
                 _functionPointers.Add(functionPointer);
                 break;
             case CMacroObject macroObject:
-                ClearLocationForTypeInfo(macroObject.TypeInfo);
+                ClearLocationForTypeInfo(macroObject.Type);
                 _macroObjects.Add(macroObject);
                 break;
             case CTypeAlias typeAlias:
-                ClearLocationForTypeInfo(typeAlias.UnderlyingTypeInfo);
+                ClearLocationForTypeInfo(typeAlias.UnderlyingType);
                 _typeAliases.Add(typeAlias);
                 break;
             default:
@@ -160,13 +160,13 @@ public sealed partial class MergeFfisTool
         }
     }
 
-    private void ClearLocationForTypeInfo(CTypeInfo typeInfo)
+    private void ClearLocationForTypeInfo(CType type)
     {
-        var currentTypeInfo = typeInfo;
+        var currentTypeInfo = type;
         while (currentTypeInfo != null)
         {
             currentTypeInfo.Location = null;
-            currentTypeInfo = currentTypeInfo.InnerTypeInfo;
+            currentTypeInfo = currentTypeInfo.InnerType;
         }
     }
 

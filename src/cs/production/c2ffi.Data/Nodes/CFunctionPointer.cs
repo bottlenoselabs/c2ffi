@@ -20,13 +20,13 @@ public class CFunctionPointer : CNodeWithLocation
     ///     Gets or sets the type information.
     /// </summary>
     [JsonPropertyName("type")]
-    public CTypeInfo TypeInfo { get; set; } = null!;
+    public CType Type { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the return type information.
     /// </summary>
     [JsonPropertyName("return_type")]
-    public CTypeInfo ReturnTypeInfo { get; set; } = null!;
+    public CType ReturnType { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the parameters.
@@ -44,7 +44,7 @@ public class CFunctionPointer : CNodeWithLocation
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {
-        return $"FunctionPointer {TypeInfo} @ {Location}";
+        return $"FunctionPointer {Type} @ {Location}";
     }
 
     /// <inheritdoc />
@@ -55,8 +55,8 @@ public class CFunctionPointer : CNodeWithLocation
             return false;
         }
 
-        return TypeInfo.Equals(other2.TypeInfo) &&
-               ReturnTypeInfo.Equals(other2.ReturnTypeInfo) &&
+        return Type.Equals(other2.Type) &&
+               ReturnType.Equals(other2.ReturnType) &&
                Parameters.SequenceEqual(other2.Parameters);
     }
 
@@ -69,8 +69,8 @@ public class CFunctionPointer : CNodeWithLocation
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(TypeInfo);
-        hashCode.Add(ReturnTypeInfo);
+        hashCode.Add(Type);
+        hashCode.Add(ReturnType);
 
         foreach (var parameter in Parameters)
         {

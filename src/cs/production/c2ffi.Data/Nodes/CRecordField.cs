@@ -29,7 +29,7 @@ public class CRecordField : CNodeWithLocation
     ///     Gets or sets the type information of this field.
     /// </summary>
     [JsonPropertyName("type")]
-    public CTypeInfo TypeInfo { get; set; } = null!;
+    public CType Type { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the byte offset of this field.
@@ -41,7 +41,7 @@ public class CRecordField : CNodeWithLocation
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {
-        return $"Record field '{Name}': {TypeInfo} @ {Location}";
+        return $"Record field '{Name}': {Type} @ {Location}";
     }
 
     /// <inheritdoc />
@@ -52,7 +52,7 @@ public class CRecordField : CNodeWithLocation
             return false;
         }
 
-        return TypeInfo.Equals(other2.TypeInfo) && OffsetOf == other2.OffsetOf;
+        return Type.Equals(other2.Type) && OffsetOf == other2.OffsetOf;
     }
 
     /// <inheritdoc />
@@ -64,7 +64,7 @@ public class CRecordField : CNodeWithLocation
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(TypeInfo);
+        hashCode.Add(Type);
         hashCode.Add(OffsetOf);
 
         // ReSharper restore NonReadonlyMemberInGetHashCode
