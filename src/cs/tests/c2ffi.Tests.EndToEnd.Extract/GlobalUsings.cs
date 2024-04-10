@@ -5,3 +5,5 @@ global using c2ffi.Tests.Library.Models;
 global using FluentAssertions;
 global using Xunit;
 global using static c2ffi.Tests.Library.CTestTypeAssertionExtensions;
+
+[assembly: CollectionBehavior(MaxParallelThreads = 1)]
