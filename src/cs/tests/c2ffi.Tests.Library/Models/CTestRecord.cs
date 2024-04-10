@@ -21,6 +21,8 @@ public class CTestRecord
 
     public bool IsUnion { get; }
 
+    public bool IsAnonymous { get;  }
+
     public bool IsStruct => !IsUnion;
 
     public ImmutableArray<CTestRecordField> Fields { get; }
@@ -31,6 +33,7 @@ public class CTestRecord
         SizeOf = record.SizeOf;
         AlignOf = record.AlignOf;
         IsUnion = record.RecordKind == CRecordKind.Union;
+        IsAnonymous = record.IsAnonymous ?? false;
         Fields = record.Fields.Select(field => new CTestRecordField(field)).ToImmutableArray();
     }
 

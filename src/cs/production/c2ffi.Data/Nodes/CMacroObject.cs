@@ -19,7 +19,7 @@ public class CMacroObject : CNodeWithLocation
     ///     Gets or sets the type information.
     /// </summary>
     [JsonPropertyName("type")]
-    public CTypeInfo TypeInfo { get; set; } = null!;
+    public CType Type { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the value.
@@ -42,7 +42,7 @@ public class CMacroObject : CNodeWithLocation
             return false;
         }
 
-        return TypeInfo.Equals(other2.TypeInfo) && Value == other2.Value;
+        return Type.Equals(other2.Type) && Value == other2.Value;
     }
 
     public bool EqualsWithoutValue(CMacroObject other)
@@ -52,7 +52,7 @@ public class CMacroObject : CNodeWithLocation
             return false;
         }
 
-        return TypeInfo.Equals(other.TypeInfo);
+        return Type.Equals(other.Type);
     }
 
     /// <inheritdoc />
@@ -64,7 +64,7 @@ public class CMacroObject : CNodeWithLocation
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(TypeInfo);
+        hashCode.Add(Type);
         hashCode.Add(Value);
 
         // ReSharper restore NonReadonlyMemberInGetHashCode

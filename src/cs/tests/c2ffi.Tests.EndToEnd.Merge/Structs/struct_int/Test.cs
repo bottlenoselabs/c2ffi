@@ -35,9 +35,6 @@ public class Test : MergeFfisTest
         var field = record.Fields[0];
         field.Name.Should().Be("a");
         field.OffsetOf.Should().Be(0);
-        field.Type.Name.Should().Be("int");
-        field.Type.SizeOf.Should().Be(4);
-        field.Type.AlignOf.Should().Be(4);
-        field.Type.InnerType.Should().BeNull();
+        field.Type.Should().BeInt();
     }
 }

@@ -4,6 +4,6 @@
 struct struct_int
 {
     int a;
-}
+};
 
 FFI_API_DECL struct struct_int struct_int;

@@ -14,9 +14,9 @@ public sealed class ExploreNodeInfo
 
     public string TypeName { get; init; } = string.Empty;
 
-    public CXCursor Cursor { get; init; }
+    public CXCursor ClangCursor { get; init; }
 
-    public CXType Type { get; init; }
+    public CXType ClangType { get; init; }
 
     public CLocation Location { get; init; }
 

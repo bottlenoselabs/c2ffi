@@ -16,7 +16,7 @@ public class CTestFunction
 
     public string CallingConvention { get; }
 
-    public CTestTypeInfo ReturnType { get; }
+    public CTestType ReturnType { get; }
 
     public ImmutableArray<CTestFunctionParameter> Parameters { get; }
 
@@ -26,7 +26,7 @@ public class CTestFunction
     {
         Name = function.Name;
         CallingConvention = function.CallingConvention.ToString().ToLowerInvariant();
-        ReturnType = new CTestTypeInfo(function.ReturnTypeInfo);
+        ReturnType = new CTestType(function.ReturnType);
         Parameters = function.Parameters
             .Select(x => new CTestFunctionParameter(x)).ToImmutableArray();
         Comment = function.Comment;

@@ -29,17 +29,17 @@ public class TypeAliasExplorer : NodeExplorer<CTypeAlias>
 
     private static CTypeAlias TypeAlias(ExploreContext context, ExploreNodeInfo info)
     {
-        var aliasType = clang_getTypedefDeclUnderlyingType(info.Cursor);
-        var aliasTypeInfo = context.VisitType(aliasType, info);
-        var comment = context.Comment(info.Cursor);
+        var clangAliasType = clang_getTypedefDeclUnderlyingType(info.ClangCursor);
+        var underlyingType = context.VisitType(clangAliasType, info);
+        var comment = context.Comment(info.ClangCursor);
 
-        var typedef = new CTypeAlias
+        var typeAlias = new CTypeAlias
         {
             Name = info.Name,
             Location = info.Location,
-            UnderlyingTypeInfo = aliasTypeInfo,
+            UnderlyingType = underlyingType,
             Comment = comment
         };
-        return typedef;
+        return typeAlias;
     }
 }

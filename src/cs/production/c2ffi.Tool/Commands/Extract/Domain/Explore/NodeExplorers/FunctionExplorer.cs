@@ -50,16 +50,16 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
 
     private CFunction Function(ExploreContext context, ExploreNodeInfo info)
     {
-        var returnTypeInfo = FunctionReturnType(context, info);
+        var returnType = FunctionReturnType(context, info);
         var parameters = FunctionParameters(context, info);
-        var callingConvention = FunctionCallingConvention(info.Type);
-        var comment = context.Comment(info.Cursor);
+        var callingConvention = FunctionCallingConvention(info.ClangType);
+        var comment = context.Comment(info.ClangCursor);
 
         var result = new CFunction
         {
             Name = info.Name,
             Location = info.Location,
-            ReturnTypeInfo = returnTypeInfo,
+            ReturnType = returnType,
             Parameters = parameters,
             CallingConvention = callingConvention,
             Comment = comment
@@ -82,10 +82,10 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         return result;
     }
 
-    private static CTypeInfo FunctionReturnType(
+    private static CType FunctionReturnType(
         ExploreContext context, ExploreNodeInfo parentInfo)
     {
-        var resultType = clang_getCursorResultType(parentInfo.Cursor);
+        var resultType = clang_getCursorResultType(parentInfo.ClangCursor);
         return context.VisitType(resultType, parentInfo);
     }
 
@@ -95,10 +95,10 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     {
         var builder = ImmutableArray.CreateBuilder<CFunctionParameter>();
 
-        var count = clang_Cursor_getNumArguments(info.Cursor);
+        var count = clang_Cursor_getNumArguments(info.ClangCursor);
         for (uint i = 0; i < count; i++)
         {
-            var parameterCursor = clang_Cursor_getArgument(info.Cursor, i);
+            var parameterCursor = clang_Cursor_getArgument(info.ClangCursor, i);
             var functionParameter = FunctionParameter(context, parameterCursor, info);
 
             builder.Add(functionParameter);
@@ -123,7 +123,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
         {
             Name = name,
             Location = parameterTypeInfo.Location,
-            TypeInfo = parameterTypeInfo,
+            Type = parameterTypeInfo,
             Comment = comment
         };
         return functionExternParameter;

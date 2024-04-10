@@ -35,6 +35,12 @@ public class CRecord : CNodeWithLocation
     public int AlignOf { get; set; }
 
     /// <summary>
+    ///     Gets or sets a value indicating whether the C type is anonymous.
+    /// </summary>
+    [JsonPropertyName("is_anonymous")]
+    public bool? IsAnonymous { get; set; }
+
+    /// <summary>
     ///     Gets or sets the fields.
     /// </summary>
     [JsonPropertyName("fields")]

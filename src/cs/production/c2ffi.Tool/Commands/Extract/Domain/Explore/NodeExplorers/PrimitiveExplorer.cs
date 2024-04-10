@@ -46,13 +46,13 @@ public sealed class PrimitiveExplorer(ILogger<PrimitiveExplorer> logger)
 
     private static CPrimitive Primitive(ExploreContext context, ExploreNodeInfo info)
     {
-        var typeInfo = context.VisitType(info.Type, info);
-        var comment = context.Comment(info.Cursor);
+        var type = context.VisitType(info.ClangType, info);
+        var comment = context.Comment(info.ClangCursor);
 
         var result = new CPrimitive
         {
             Name = info.Name,
-            TypeInfo = typeInfo,
+            Type = type,
             Comment = comment
         };
         return result;

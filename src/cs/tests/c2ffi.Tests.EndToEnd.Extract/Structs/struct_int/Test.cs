@@ -21,26 +21,24 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiStructExists(ffi);
+            StructExists(ffi);
         }
     }
 
-    private void FfiStructExists(CTestFfiTargetPlatform ffi)
+    private void StructExists(CTestFfiTargetPlatform ffi)
     {
         const string name = $"struct {StructName}";
         var record = ffi.GetRecord(name);
         record.Name.Should().Be(name);
-        record.IsStruct.Should().Be(true);
-        record.IsUnion.Should().Be(false);
+        record.IsStruct.Should().BeTrue();
+        record.IsUnion.Should().BeFalse();
+        record.IsAnonymous.Should().BeFalse();
 
         record.Fields.Length.Should().Be(1);
 
         var field = record.Fields[0];
         field.Name.Should().Be("a");
         field.OffsetOf.Should().Be(0);
-        field.Type.Name.Should().Be("int");
-        field.Type.SizeOf.Should().Be(4);
-        field.Type.AlignOf.Should().Be(4);
-        field.Type.InnerType.Should().BeNull();
+        field.Type.Should().BeInt();
     }
 }

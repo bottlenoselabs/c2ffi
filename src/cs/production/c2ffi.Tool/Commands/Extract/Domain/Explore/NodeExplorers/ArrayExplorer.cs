@@ -29,13 +29,13 @@ public sealed class ArrayExplorer : NodeExplorer<CArray>
 
     private static CArray Array(ExploreContext context, ExploreNodeInfo info)
     {
-        var type = clang_getElementType(info.Type);
-        var typeInfo = context.VisitType(type, info);
+        var clangElementType = clang_getElementType(info.ClangType);
+        var elementType = context.VisitType(clangElementType, info);
 
         var result = new CArray
         {
             Name = info.Name,
-            TypeInfo = typeInfo
+            Type = elementType
         };
 
         return result;

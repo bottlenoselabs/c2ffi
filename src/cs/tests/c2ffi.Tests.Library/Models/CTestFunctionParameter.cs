@@ -13,12 +13,12 @@ public class CTestFunctionParameter
 {
     public string Name { get; }
 
-    public CTestTypeInfo Type { get; }
+    public CTestType Type { get; }
 
     public CTestFunctionParameter(CFunctionParameter functionParameter)
     {
         Name = functionParameter.Name;
-        Type = new CTestTypeInfo(functionParameter.TypeInfo);
+        Type = new CTestType(functionParameter.Type);
     }
 
     public override string ToString()

@@ -10,10 +10,10 @@ namespace c2ffi.Data;
 // NOTE: Properties are required for System.Text.Json serialization
 
 /// <summary>
-///     Represents information about a C type.
+///     Represents a C type.
 /// </summary>
 [PublicAPI]
-public class CTypeInfo : IEquatable<CTypeInfo>
+public class CType : IEquatable<CType>
 {
     /// <summary>
     ///     Gets or sets the name of the C type.
@@ -54,7 +54,7 @@ public class CTypeInfo : IEquatable<CTypeInfo>
     /// <summary>
     ///     Gets or sets a value indicating whether the C type is anonymous.
     /// </summary>
-    [JsonPropertyName("is_snonymous")]
+    [JsonPropertyName("is_anonymous")]
     public bool? IsAnonymous { get; set; }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class CTypeInfo : IEquatable<CTypeInfo>
     ///     Gets or sets the inner type information for pointer, array, and typedef alias types.
     /// </summary>
     [JsonPropertyName("inner_type")]
-    public CTypeInfo? InnerTypeInfo { get; set; }
+    public CType? InnerType { get; set; }
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
@@ -83,14 +83,14 @@ public class CTypeInfo : IEquatable<CTypeInfo>
     }
 
     /// <summary>
-    ///     Determines whether the specified <see cref="CTypeInfo" /> is equal to the current <see cref="CTypeInfo" />.
+    ///     Determines whether the specified <see cref="CType" /> is equal to the current <see cref="CType" />.
     /// </summary>
-    /// <param name="other">The <see cref="CTypeInfo" /> to compare with the current <see cref="CTypeInfo" />.</param>
+    /// <param name="other">The <see cref="CType" /> to compare with the current <see cref="CType" />.</param>
     /// <returns>
-    ///     <see langword="true" /> if the specified <see cref="CTypeInfo" /> is equal to the current
-    ///     <see cref="CTypeInfo" />; otherwise, <see langword="false" />.
+    ///     <see langword="true" /> if the specified <see cref="CType" /> is equal to the current
+    ///     <see cref="CType" />; otherwise, <see langword="false" />.
     /// </returns>
-    public bool Equals(CTypeInfo? other)
+    public bool Equals(CType? other)
     {
         if (other is null)
         {
@@ -130,7 +130,7 @@ public class CTypeInfo : IEquatable<CTypeInfo>
             return false;
         }
 
-        return Equals((CTypeInfo)obj);
+        return Equals((CType)obj);
     }
 
     /// <inheritdoc />
@@ -147,7 +147,7 @@ public class CTypeInfo : IEquatable<CTypeInfo>
         hashCode.Add(IsAnonymous);
         hashCode.Add(IsConst);
         hashCode.Add(Location);
-        hashCode.Add(InnerTypeInfo);
+        hashCode.Add(InnerType);
         return hashCode.ToHashCode();
         // ReSharper restore NonReadonlyMemberInGetHashCode
     }

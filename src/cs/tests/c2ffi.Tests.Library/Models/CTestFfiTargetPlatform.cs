@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Xunit;
 
@@ -269,8 +270,8 @@ public sealed class CTestFfiTargetPlatform
                 field.OffsetOf == 0,
                 $"C union '{record.Name}' field '{field.Name}' does not have an offset of zero.");
             Assert.True(
-                field.Type.SizeOf == record.SizeOf,
-                $"C union '{record.Name}' field '{field.Name}' does not have a size that matches the union.");
+                field.Type.SizeOf <= record.SizeOf,
+                $"C union '{record.Name}' field '{field.Name}' is larger than the size of the containing record.");
         }
     }
 }

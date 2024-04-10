@@ -39,19 +39,19 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
 
     private static CFunctionPointer FunctionPointer(ExploreContext context, ExploreNodeInfo info)
     {
-        var typeInfo = context.VisitType(info.Type, info, nodeKind: CNodeKind.FunctionPointer);
-        var returnTypeInfo = FunctionPointerReturnType(context, info);
+        var type = context.VisitType(info.ClangType, info, nodeKind: CNodeKind.FunctionPointer);
+        var returnType = FunctionPointerReturnType(context, info);
         var parameters = FunctionPointerParameters(context, info);
-        var callingConvention = FunctionPointerCallingConvention(info.Type);
-        var comment = context.Comment(info.Cursor);
+        var callingConvention = FunctionPointerCallingConvention(info.ClangType);
+        var comment = context.Comment(info.ClangCursor);
 
         var result = new CFunctionPointer
         {
             Name = info.Name,
             Location = info.Location,
             CallingConvention = callingConvention,
-            TypeInfo = typeInfo,
-            ReturnTypeInfo = returnTypeInfo,
+            Type = type,
+            ReturnType = returnType,
             Parameters = parameters,
             Comment = comment
         };
@@ -59,9 +59,9 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
         return result;
     }
 
-    private static CTypeInfo FunctionPointerReturnType(ExploreContext context, ExploreNodeInfo info)
+    private static CType FunctionPointerReturnType(ExploreContext context, ExploreNodeInfo info)
     {
-        var returnType = clang_getResultType(info.Type);
+        var returnType = clang_getResultType(info.ClangType);
         var returnTypeInfo = context.VisitType(returnType, info)!;
         return returnTypeInfo;
     }
@@ -72,10 +72,10 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
     {
         var builder = ImmutableArray.CreateBuilder<CFunctionPointerParameter>();
 
-        var count = clang_getNumArgTypes(info.Type);
+        var count = clang_getNumArgTypes(info.ClangType);
         for (uint i = 0; i < count; i++)
         {
-            var parameterType = clang_getArgType(info.Type, i);
+            var parameterType = clang_getArgType(info.ClangType, i);
             var functionPointerParameter = FunctionPointerParameter(context, parameterType, info);
             builder.Add(functionPointerParameter);
         }
@@ -94,7 +94,7 @@ public sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> log
         var result = new CFunctionPointerParameter
         {
             Name = string.Empty,
-            TypeInfo = parameterTypeInfo
+            Type = parameterTypeInfo
         };
         return result;
     }

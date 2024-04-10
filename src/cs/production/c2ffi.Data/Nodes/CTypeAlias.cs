@@ -19,13 +19,13 @@ public class CTypeAlias : CNodeWithLocation
     ///     Gets or sets the underlying type information.
     /// </summary>
     [JsonPropertyName("underlyingType")]
-    public CTypeInfo UnderlyingTypeInfo { get; set; } = null!;
+    public CType UnderlyingType { get; set; } = null!;
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {
-        return $"Typedef '{Name}': {UnderlyingTypeInfo} @ {Location}";
+        return $"Typedef '{Name}': {UnderlyingType} @ {Location}";
     }
 
     /// <inheritdoc />
@@ -36,7 +36,7 @@ public class CTypeAlias : CNodeWithLocation
             return false;
         }
 
-        return UnderlyingTypeInfo.Equals(other2.UnderlyingTypeInfo);
+        return UnderlyingType.Equals(other2.UnderlyingType);
     }
 
     /// <inheritdoc />
@@ -48,7 +48,7 @@ public class CTypeAlias : CNodeWithLocation
         hashCode.Add(baseHashCode);
 
         // ReSharper disable NonReadonlyMemberInGetHashCode
-        hashCode.Add(UnderlyingTypeInfo);
+        hashCode.Add(UnderlyingType);
 
         // ReSharper restore NonReadonlyMemberInGetHashCode
 

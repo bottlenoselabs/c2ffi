@@ -59,7 +59,7 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     private CMacroObject? MacroObject(ExploreContext context, ExploreNodeInfo info)
     {
-        var macroObjectCandidate = MacroObjectCandidate.Parse(context.ParseContext, info.Cursor);
+        var macroObjectCandidate = MacroObjectCandidate.Parse(context.ParseContext, info.ClangCursor);
         if (macroObjectCandidate == null)
         {
             return null;
@@ -181,12 +181,12 @@ int main(void)
             return null;
         }
 
-        var typeInfo = context.VisitType(clangType, info);
+        var type = context.VisitType(clangType, info);
         var macroObject = new CMacroObject
         {
             Name = macroName,
             Value = value,
-            TypeInfo = typeInfo,
+            Type = type,
             Location = info.Location
         };
 

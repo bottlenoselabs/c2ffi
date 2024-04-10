@@ -64,13 +64,13 @@ public abstract partial class NodeExplorer
     {
         if (!IsExpectedCursor(info))
         {
-            LogFailureUnexpectedCursor(info.Cursor.kind);
+            LogFailureUnexpectedCursor(info.ClangCursor.kind);
             return false;
         }
 
         if (!IsExpectedType(info))
         {
-            LogFailureUnexpectedType(info.Type.kind);
+            LogFailureUnexpectedType(info.ClangType.kind);
             return false;
         }
 
@@ -119,12 +119,12 @@ public abstract partial class NodeExplorer
 
     private bool IsExpectedCursor(ExploreNodeInfo info)
     {
-        return ExpectedCursors.Matches(info.Cursor.kind);
+        return ExpectedCursors.Matches(info.ClangCursor.kind);
     }
 
     private bool IsExpectedType(ExploreNodeInfo info)
     {
-        var typeKind = info.Type.kind;
+        var typeKind = info.ClangType.kind;
         return ExpectedTypes.Matches(typeKind);
     }
 

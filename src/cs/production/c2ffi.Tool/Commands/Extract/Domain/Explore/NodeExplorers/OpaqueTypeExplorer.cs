@@ -23,7 +23,7 @@ public sealed class OpaqueTypeExplorer(ILogger<OpaqueTypeExplorer> logger)
 
     private static COpaqueType OpaqueDataType(ExploreContext context, ExploreNodeInfo info)
     {
-        var comment = context.Comment(info.Cursor);
+        var comment = context.Comment(info.ClangCursor);
 
         var result = new COpaqueType
         {

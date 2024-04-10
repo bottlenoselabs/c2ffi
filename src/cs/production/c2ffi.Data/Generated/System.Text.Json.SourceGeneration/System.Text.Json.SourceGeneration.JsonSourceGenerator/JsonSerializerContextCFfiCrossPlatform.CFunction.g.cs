@@ -64,24 +64,24 @@ namespace c2ffi.Data.Serialization
             
             properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CFunctionCallingConvention>(options, info0);
 
-            var info1 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CTypeInfo>
+            var info1 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CType>
             {
                 IsProperty = true,
                 IsPublic = true,
                 IsVirtual = false,
                 DeclaringType = typeof(global::c2ffi.Data.Nodes.CFunction),
                 Converter = null,
-                Getter = static obj => ((global::c2ffi.Data.Nodes.CFunction)obj).ReturnTypeInfo,
-                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CFunction)obj).ReturnTypeInfo = value!,
+                Getter = static obj => ((global::c2ffi.Data.Nodes.CFunction)obj).ReturnType,
+                Setter = static (obj, value) => ((global::c2ffi.Data.Nodes.CFunction)obj).ReturnType = value!,
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
                 NumberHandling = null,
-                PropertyName = "ReturnTypeInfo",
+                PropertyName = "ReturnType",
                 JsonPropertyName = "return_type"
             };
             
-            properties[1] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CTypeInfo>(options, info1);
+            properties[1] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CType>(options, info1);
 
             var info2 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.Nodes.CFunctionParameter>>
             {

@@ -28,15 +28,15 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
 
     private CEnum Enum(ExploreContext context, ExploreNodeInfo info)
     {
-        var integerTypeInfo = IntegerTypeInfo(context, info);
-        var enumValues = EnumValues(info.Cursor);
-        var comment = context.Comment(info.Cursor);
+        var integerType = IntegerTypeInfo(context, info);
+        var enumValues = EnumValues(info.ClangCursor);
+        var comment = context.Comment(info.ClangCursor);
 
         var result = new CEnum
         {
             Name = info.Name,
             Location = info.Location,
-            SizeOf = integerTypeInfo.SizeOf!.Value,
+            SizeOf = integerType.SizeOf!.Value,
             Values = enumValues,
             Comment = comment
         };
@@ -44,17 +44,17 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
         return result;
     }
 
-    private static CTypeInfo IntegerTypeInfo(ExploreContext context, ExploreNodeInfo info)
+    private static CType IntegerTypeInfo(ExploreContext context, ExploreNodeInfo info)
     {
-        var clangType = clang_getEnumDeclIntegerType(info.Cursor);
+        var clangType = clang_getEnumDeclIntegerType(info.ClangCursor);
         return context.VisitType(clangType, info);
     }
 
-    private ImmutableArray<CEnumValue> EnumValues(CXCursor cursor)
+    private ImmutableArray<CEnumValue> EnumValues(CXCursor clangCursor)
     {
         var builder = ImmutableArray.CreateBuilder<CEnumValue>();
 
-        var enumValuesCursors = cursor.GetDescendents(
+        var enumValuesCursors = clangCursor.GetDescendents(
             static (child, _) => child.kind == CXCursorKind.CXCursor_EnumConstantDecl);
 
         foreach (var enumValueCursor in enumValuesCursors)
@@ -67,10 +67,10 @@ public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
         return result;
     }
 
-    private CEnumValue CreateEnumValue(CXCursor cursor, string? name = null)
+    private CEnumValue CreateEnumValue(CXCursor clangCursor, string? name = null)
     {
-        var value = clang_getEnumConstantDeclValue(cursor);
-        name ??= cursor.Spelling();
+        var value = clang_getEnumConstantDeclValue(clangCursor);
+        name ??= clangCursor.Spelling();
 
         var result = new CEnumValue
         {
