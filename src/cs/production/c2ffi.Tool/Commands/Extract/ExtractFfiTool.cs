@@ -1,27 +1,26 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using System.Collections.Immutable;
 using System.IO.Abstractions;
-using c2ffi.Data;
+using bottlenoselabs.Common.Tools;
 using c2ffi.Data.Serialization;
 using c2ffi.Tool.Commands.Extract.Domain.Explore;
+using c2ffi.Tool.Commands.Extract.Domain.Parse;
 using c2ffi.Tool.Commands.Extract.Input;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
+using c2ffi.Tool.Commands.Extract.Input.Unsanitized;
+using c2ffi.Tool.Commands.Extract.Output;
 using Microsoft.Extensions.Logging;
-using ClangInstaller = c2ffi.Tool.Commands.Extract.Domain.Parse.ClangInstaller;
-using ExtractOptions = c2ffi.Tool.Commands.Extract.Input.ExtractOptions;
 
 namespace c2ffi.Tool.Commands.Extract;
 
-public sealed partial class ExtractFfiTool
+public sealed class ExtractFfiTool : Tool<UnsanitizedExtractInput, ExtractInput, ExtractOutput>
 {
-    private readonly ILogger<ExtractFfiTool> _logger;
-
     private readonly IFileSystem _fileSystem;
-    private readonly ExtractInputSanitizer _inputSanitizer;
     private readonly ClangInstaller _clangInstaller;
     private readonly Explorer _explorer;
+
+    private string? _clangFilePath;
 
     public ExtractFfiTool(
         ILogger<ExtractFfiTool> logger,
@@ -29,97 +28,40 @@ public sealed partial class ExtractFfiTool
         ExtractInputSanitizer inputSanitizer,
         ClangInstaller clangInstaller,
         Explorer explorer)
+        : base(logger, inputSanitizer, fileSystem)
     {
-        _logger = logger;
         _fileSystem = fileSystem;
-        _inputSanitizer = inputSanitizer;
         _clangInstaller = clangInstaller;
         _explorer = explorer;
     }
 
     public void Run(string configurationFilePath, string? clangFilePath = null)
     {
-        if (!TryInstallClang(clangFilePath))
+        _clangFilePath = clangFilePath;
+        base.Run(configurationFilePath);
+    }
+
+    protected override void Execute(ExtractInput input, ExtractOutput output)
+    {
+        BeginStep("Install libclang");
+        var libClangIsInstalled = _clangInstaller.TryInstall(_clangFilePath);
+        EndStep();
+
+        if (!libClangIsInstalled)
         {
             return;
         }
 
-        var options = GetOptions(configurationFilePath);
-        var targetPlatforms = ExtractFfis(options);
-        if (targetPlatforms.IsDefaultOrEmpty)
+        foreach (var targetPlatformInput in input.TargetPlatformInputs)
         {
-            LogFailure();
-        }
-        else
-        {
-            LogSuccess(targetPlatforms);
-        }
-    }
+            BeginStep($"Extracting FFI {targetPlatformInput.TargetPlatform}");
 
-    private bool TryInstallClang(string? clangFilePath = null)
-    {
-        return _clangInstaller.TryInstall(clangFilePath);
-    }
-
-    private ExtractOptions GetOptions(string configurationFilePath)
-    {
-        return _inputSanitizer.SanitizeFromFile(configurationFilePath);
-    }
-
-    private ImmutableArray<TargetPlatform> ExtractFfis(ExtractOptions options)
-    {
-        var builder = ImmutableArray.CreateBuilder<TargetPlatform>();
-
-        foreach (var targetPlatformOptions in options.TargetPlatformsOptions)
-        {
-            var targetPlatform = ExtractFfi(options, targetPlatformOptions);
-            if (targetPlatform != null)
-            {
-                builder.Add(targetPlatform.Value);
-            }
-        }
-
-        return builder.ToImmutable();
-    }
-
-    private TargetPlatform? ExtractFfi(
-        ExtractOptions options,
-        ExtractTargetPlatformOptions targetPlatformOptions)
-    {
-        try
-        {
             var ffi = _explorer.ExtractFfi(
-                options.InputFilePath,
-                targetPlatformOptions);
-            Json.WriteFfiTargetPlatform(_fileSystem, targetPlatformOptions.OutputFilePath, ffi);
-        }
-#pragma warning disable CA1031
-        catch (Exception e)
-#pragma warning restore CA1031
-        {
-            LogWriteFfiTargetPlatformFailure(e, targetPlatformOptions.TargetPlatform, targetPlatformOptions.OutputFilePath);
-            return null;
-        }
+                input.InputFilePath,
+                targetPlatformInput);
+            Json.WriteFfiTargetPlatform(_fileSystem, targetPlatformInput.OutputFilePath, ffi);
 
-        LogWriteFfiTargetPlatformSuccess(targetPlatformOptions.TargetPlatform, targetPlatformOptions.OutputFilePath);
-        return targetPlatformOptions.TargetPlatform;
+            EndStep();
+        }
     }
-
-    [LoggerMessage(0, LogLevel.Information, "Success. Extracted FFI for the target platform '{TargetPlatform}': {FilePath}")]
-    private partial void LogWriteFfiTargetPlatformSuccess(
-        TargetPlatform targetPlatform,
-        string filePath);
-
-    [LoggerMessage(1, LogLevel.Error, "Failed to extract FFI for the target platform '{TargetPlatform}': {FilePath}")]
-    private partial void LogWriteFfiTargetPlatformFailure(
-        Exception exception,
-        TargetPlatform targetPlatform,
-        string filePath);
-
-    [LoggerMessage(2, LogLevel.Information, "Success. Extracted FFIs for the target platforms '{TargetPlatforms}'.")]
-    private partial void LogSuccess(
-        ImmutableArray<TargetPlatform> targetPlatforms);
-
-    [LoggerMessage(3, LogLevel.Error, "Failure.")]
-    private partial void LogFailure();
 }

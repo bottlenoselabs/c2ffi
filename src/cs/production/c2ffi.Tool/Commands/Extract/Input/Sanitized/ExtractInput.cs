@@ -2,13 +2,12 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
-using c2ffi.Tool.Commands.Extract.Input.Sanitized;
 
-namespace c2ffi.Tool.Commands.Extract.Input;
+namespace c2ffi.Tool.Commands.Extract.Input.Sanitized;
 
-public sealed class ExtractOptions
+public sealed class ExtractInput
 {
     public string InputFilePath { get; init; } = string.Empty;
 
-    public ImmutableArray<ExtractTargetPlatformOptions> TargetPlatformsOptions { get; init; }
+    public ImmutableArray<ExtractTargetPlatformInput> TargetPlatformInputs { get; init; }
 }

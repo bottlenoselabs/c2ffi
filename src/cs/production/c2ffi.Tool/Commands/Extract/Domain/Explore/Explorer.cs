@@ -33,10 +33,9 @@ public sealed partial class Explorer
 
     public CFfiTargetPlatform ExtractFfi(
         string filePath,
-        ExtractTargetPlatformOptions options)
+        ExtractTargetPlatformInput input)
     {
-        using var context = CreateExploreContext(filePath, options);
-        using var _ = _logger.BeginScope(options.TargetPlatform)!;
+        using var context = CreateExploreContext(filePath, input);
 
         CFfiTargetPlatform result;
         try
@@ -159,7 +158,7 @@ public sealed partial class Explorer
 
         var parseContext2 = _clangTranslationUnitParser.ParseTranslationUnit(
             filePath,
-            context.ParseContext.ExtractOptions,
+            context.ParseContext.ExtractInput,
             false,
             true);
         _parseContexts.Add(parseContext2);
@@ -167,9 +166,9 @@ public sealed partial class Explorer
         VisitTranslationUnit(context, parseContext2);
     }
 
-    private ExploreContext CreateExploreContext(string filePath, ExtractTargetPlatformOptions options)
+    private ExploreContext CreateExploreContext(string filePath, ExtractTargetPlatformInput input)
     {
-        var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(filePath, options);
+        var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(filePath, input);
         var result = new ExploreContext(_services, parseContext);
         return result;
     }

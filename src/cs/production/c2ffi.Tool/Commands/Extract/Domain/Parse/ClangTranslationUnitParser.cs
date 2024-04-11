@@ -29,7 +29,7 @@ public sealed partial class ClangTranslationUnitParser
 
     public ParseContext ParseTranslationUnit(
         string filePath,
-        ExtractTargetPlatformOptions extractOptions,
+        ExtractTargetPlatformInput extractInput,
         bool isCPlusPlus = false,
         bool ignoreWarnings = false,
         bool logClangDiagnostics = false,
@@ -37,9 +37,9 @@ public sealed partial class ClangTranslationUnitParser
         bool skipFunctionBodies = true)
     {
         var systemIncludeDirectories = _systemIncludeDirectoriesProvider.GetSystemIncludeDirectories(
-            extractOptions.TargetPlatform, extractOptions.SystemIncludeDirectories, extractOptions.IsEnabledFindSystemHeaders);
+            extractInput.TargetPlatform, extractInput.SystemIncludeDirectories, extractInput.IsEnabledFindSystemHeaders);
         var arguments = _argumentsProvider.GetArguments(
-            extractOptions, systemIncludeDirectories, isCPlusPlus, ignoreWarnings);
+            extractInput, systemIncludeDirectories, isCPlusPlus, ignoreWarnings);
         var argumentsString = string.Join(" ", arguments);
 
         if (!TryParseTranslationUnit(filePath, arguments, out var translationUnit, skipFunctionBodies, keepGoing))
@@ -57,7 +57,7 @@ public sealed partial class ClangTranslationUnitParser
         var result = new ParseContext(
             translationUnit,
             filePath,
-            extractOptions,
+            extractInput,
             arguments,
             systemIncludeDirectories);
         return result;

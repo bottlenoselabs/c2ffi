@@ -7,7 +7,7 @@ using c2ffi.Data;
 
 namespace c2ffi.Tool.Commands.Extract.Input.Sanitized;
 
-public sealed class ExtractTargetPlatformOptions
+public sealed class ExtractTargetPlatformInput
 {
     public string OutputFilePath { get; init; } = string.Empty;
 

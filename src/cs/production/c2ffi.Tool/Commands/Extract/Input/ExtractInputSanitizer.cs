@@ -12,7 +12,7 @@ using c2ffi.Tool.Internal.Input;
 
 namespace c2ffi.Tool.Commands.Extract.Input;
 
-public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInput, ExtractOptions>
+public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInput, ExtractInput>
 {
     private readonly string _hostOperatingSystemString;
 
@@ -22,16 +22,16 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         _hostOperatingSystemString = Native.OperatingSystem.ToString().ToUpperInvariant();
     }
 
-    protected override ExtractOptions Sanitize(UnsanitizedExtractInput unsanitizedInput)
+    public override ExtractInput Sanitize(UnsanitizedExtractInput unsanitizedInput)
     {
         unsanitizedInput.TargetPlatforms ??= CreateDefaultTargetPlatformsUnsanitizedInput();
         var inputFilePath = SanitizeCInputFilePath(unsanitizedInput.InputFilePath);
         var targetPlatformsOptions = SanitizeTargetPlatformsOptions(unsanitizedInput, inputFilePath);
 
-        var result = new ExtractOptions
+        var result = new ExtractInput
         {
             InputFilePath = inputFilePath,
-            TargetPlatformsOptions = targetPlatformsOptions
+            TargetPlatformInputs = targetPlatformsOptions
         };
 
         return result;
@@ -71,11 +71,11 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         return filePath;
     }
 
-    private ImmutableArray<ExtractTargetPlatformOptions> SanitizeTargetPlatformsOptions(
+    private ImmutableArray<ExtractTargetPlatformInput> SanitizeTargetPlatformsOptions(
         UnsanitizedExtractInput unsanitizedInput,
         string inputFilePath)
     {
-        var builder = ImmutableArray.CreateBuilder<ExtractTargetPlatformOptions>();
+        var builder = ImmutableArray.CreateBuilder<ExtractTargetPlatformInput>();
 
         var isAtLeastOneMatchingOperatingSystem = false;
         var targetPlatformsUnsanitizedInputByOperatingSystem = unsanitizedInput.TargetPlatforms;
@@ -109,14 +109,14 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
         return builder.ToImmutable();
     }
 
-    private ExtractTargetPlatformOptions SanitizeTargetPlatformInput(
+    private ExtractTargetPlatformInput SanitizeTargetPlatformInput(
         UnsanitizedExtractInput input,
         string targetPlatformString,
         UnsanitizedExtractInputTargetPlatform targetPlatformInput,
         string inputFilePath)
     {
         var targetPlatform = new TargetPlatform(targetPlatformString);
-        var options = new ExtractTargetPlatformOptions
+        var options = new ExtractTargetPlatformInput
         {
             TargetPlatform = targetPlatform,
             OutputFilePath = OutputFilePath(input, targetPlatformString),

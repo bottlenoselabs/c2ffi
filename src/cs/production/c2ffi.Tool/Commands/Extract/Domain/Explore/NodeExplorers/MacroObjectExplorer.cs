@@ -40,7 +40,7 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
-        var ignoredMacroObjectRegexes = context.ParseContext.ExtractOptions.IgnoredMacroObjectsRegexes;
+        var ignoredMacroObjectRegexes = context.ParseContext.ExtractInput.IgnoredMacroObjectsRegexes;
         foreach (var regex in ignoredMacroObjectRegexes)
         {
             if (regex.IsMatch(info.Name))
@@ -123,7 +123,7 @@ int main(void)
     {
         using var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(
             filePath,
-            context.ParseContext.ExtractOptions,
+            context.ParseContext.ExtractInput,
             isCPlusPlus: true,
             ignoreWarnings: true,
             logClangDiagnostics: false,

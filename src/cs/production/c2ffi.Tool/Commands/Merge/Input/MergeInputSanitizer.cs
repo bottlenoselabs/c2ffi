@@ -9,7 +9,7 @@ using c2ffi.Tool.Commands.Merge.Input.Unsanitized;
 
 namespace c2ffi.Tool.Commands.Merge.Input;
 
-public sealed class MergeInputSanitizer
+public sealed class MergeInputSanitizer : ToolInputSanitizer<UnsanitizedMergeInput, MergeInput>
 {
     private readonly IFileSystem _fileSystem;
 
@@ -18,9 +18,9 @@ public sealed class MergeInputSanitizer
         _fileSystem = fileSystem;
     }
 
-    public MergeOptions Sanitize(UnsanitizedMergeOptions unsanitizedOptions)
+    public override MergeInput Sanitize(UnsanitizedMergeInput unsanitizedInput)
     {
-        var directoryPath = _fileSystem.Path.GetFullPath(unsanitizedOptions.InputDirectoryPath);
+        var directoryPath = _fileSystem.Path.GetFullPath(unsanitizedInput.InputDirectoryPath);
         if (!_fileSystem.Directory.Exists(directoryPath))
         {
             throw new ToolInputSanitizationException($"The directory '{directoryPath}' does not exist.");
@@ -33,9 +33,9 @@ public sealed class MergeInputSanitizer
             throw new ToolInputSanitizationException($"The directory '{directoryPath}' does not contain any abstract syntax tree `.json` files.");
         }
 
-        var outputFilePath = _fileSystem.Path.GetFullPath(unsanitizedOptions.OutputFilePath);
+        var outputFilePath = _fileSystem.Path.GetFullPath(unsanitizedInput.OutputFilePath);
 
-        var result = new MergeOptions
+        var result = new MergeInput
         {
             OutputFilePath = outputFilePath,
             InputFilePaths = filePaths

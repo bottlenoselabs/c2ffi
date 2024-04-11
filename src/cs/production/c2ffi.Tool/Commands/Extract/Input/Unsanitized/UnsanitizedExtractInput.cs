@@ -3,13 +3,14 @@
 
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
+using bottlenoselabs.Common.Tools;
 using JetBrains.Annotations;
 
 namespace c2ffi.Tool.Commands.Extract.Input.Unsanitized;
 
 // NOTE: This class is considered un-sanitized input; all strings and other types could be null.
 [PublicAPI]
-public sealed class UnsanitizedExtractInput
+public sealed class UnsanitizedExtractInput : ToolUnsanitizedInput
 {
     /// <summary>
     ///     Gets or sets the path of the output FFI directory.
