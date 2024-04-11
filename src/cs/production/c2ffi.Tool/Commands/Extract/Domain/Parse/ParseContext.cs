@@ -12,7 +12,7 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 public sealed class ParseContext : IDisposable
 {
     public readonly string FilePath;
-    public readonly ExtractTargetPlatformOptions ExtractOptions;
+    public readonly ExtractTargetPlatformInput ExtractInput;
     public readonly ImmutableArray<string> Arguments;
     public readonly ImmutableArray<string> SystemIncludeDirectories;
     public readonly TargetPlatform TargetPlatformRequested;
@@ -26,17 +26,17 @@ public sealed class ParseContext : IDisposable
     public ParseContext(
         clang.CXTranslationUnit translationUnit,
         string filePath,
-        ExtractTargetPlatformOptions extractOptions,
+        ExtractTargetPlatformInput extractInput,
         ImmutableArray<string> arguments,
         ImmutableArray<string> systemIncludeDirectories)
     {
         _translationUnit = translationUnit;
 
         FilePath = filePath;
-        ExtractOptions = extractOptions;
+        ExtractInput = extractInput;
         Arguments = arguments;
         SystemIncludeDirectories = systemIncludeDirectories;
-        TargetPlatformRequested = extractOptions.TargetPlatform;
+        TargetPlatformRequested = extractInput.TargetPlatform;
 
         var targetInfo = GetTargetInfo(translationUnit);
         TargetPlatformActual = targetInfo.TargetPlatform;

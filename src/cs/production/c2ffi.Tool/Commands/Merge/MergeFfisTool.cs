@@ -3,21 +3,22 @@
 
 using System.Collections.Immutable;
 using System.IO.Abstractions;
+using bottlenoselabs.Common.Tools;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
 using c2ffi.Data.Serialization;
 using c2ffi.Tool.Commands.Merge.Input;
 using c2ffi.Tool.Commands.Merge.Input.Sanitized;
 using c2ffi.Tool.Commands.Merge.Input.Unsanitized;
+using c2ffi.Tool.Commands.Merge.Output;
 using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool.Commands.Merge;
 
-public sealed partial class MergeFfisTool
+public sealed partial class MergeFfisTool : Tool<UnsanitizedMergeInput, MergeInput, MergeOutput>
 {
     private readonly ILogger<MergeFfisTool> _logger;
     private readonly IFileSystem _fileSystem;
-    private readonly MergeInputSanitizer _mergeInputSanitizer;
 
     private readonly List<CEnum> _enums = new();
     private readonly List<CVariable> _variables = new();
@@ -44,34 +45,34 @@ public sealed partial class MergeFfisTool
         ILogger<MergeFfisTool> logger,
         IFileSystem fileSystem,
         MergeInputSanitizer mergeInputSanitizer)
+        : base(logger, mergeInputSanitizer, fileSystem)
     {
         _logger = logger;
         _fileSystem = fileSystem;
-        _mergeInputSanitizer = mergeInputSanitizer;
     }
 
     public void Run(string inputDirectoryPath, string outputFilePath)
     {
-        var options = GetOptions(inputDirectoryPath, outputFilePath);
+        var unsanitizedOptions = new UnsanitizedMergeInput
+        {
+            InputDirectoryPath = inputDirectoryPath,
+            OutputFilePath = outputFilePath
+        };
+
+        Run(unsanitizedOptions);
+    }
+
+    protected override void Execute(MergeInput input, MergeOutput output)
+    {
         var platformFfis =
-            GetPlatformFfis(options.InputFilePaths);
+            GetPlatformFfis(input.InputFilePaths);
         var platforms = platformFfis.
             Select(x => x.PlatformRequested).ToImmutableArray();
         var platformNodesByKey = GetPlatformNodesByKey(platformFfis);
         var ffi = CreateCrossPlatformFfi(platforms, platformNodesByKey);
 
-        Json.WriteFfiCrossPlatform(_fileSystem, options.OutputFilePath, ffi);
-        LogWriteAbstractSyntaxTreeSuccess(string.Join(", ", platforms), options.OutputFilePath);
-    }
-
-    private MergeOptions GetOptions(string inputDirectoryPath, string outputFilePath)
-    {
-        var unsanitizedOptions = new UnsanitizedMergeOptions
-        {
-            InputDirectoryPath = inputDirectoryPath,
-            OutputFilePath = outputFilePath
-        };
-        return _mergeInputSanitizer.Sanitize(unsanitizedOptions);
+        Json.WriteFfiCrossPlatform(_fileSystem, input.OutputFilePath, ffi);
+        LogWriteAbstractSyntaxTreeSuccess(string.Join(", ", platforms), input.OutputFilePath);
     }
 
     private CFfiCrossPlatform CreateCrossPlatformFfi(

@@ -20,7 +20,7 @@ public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
-        var regexes = context.ParseContext.ExtractOptions.IgnoredVariableRegexes;
+        var regexes = context.ParseContext.ExtractInput.IgnoredVariableRegexes;
         foreach (var regex in regexes)
         {
             if (regex.IsMatch(info.Name))

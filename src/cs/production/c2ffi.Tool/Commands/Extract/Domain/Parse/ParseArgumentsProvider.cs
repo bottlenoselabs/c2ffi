@@ -11,18 +11,18 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 public sealed class ParseArgumentsProvider
 {
     public ImmutableArray<string> GetArguments(
-        ExtractTargetPlatformOptions options,
+        ExtractTargetPlatformInput input,
         ImmutableArray<string> systemIncludeDirectories,
         bool isCPlusPlus,
         bool ignoreWarnings)
     {
         var args = ImmutableArray.CreateBuilder<string>();
 
-        AddDefaults(args, options.TargetPlatform, isCPlusPlus, ignoreWarnings);
-        AddUserIncludeDirectories(args, options.UserIncludeDirectories);
-        AddDefines(args, options.MacroObjectDefines);
-        AddTargetTriple(args, options.TargetPlatform);
-        AddAdditionalArgs(args, options.AdditionalArguments);
+        AddDefaults(args, input.TargetPlatform, isCPlusPlus, ignoreWarnings);
+        AddUserIncludeDirectories(args, input.UserIncludeDirectories);
+        AddDefines(args, input.MacroObjectDefines);
+        AddTargetTriple(args, input.TargetPlatform);
+        AddAdditionalArgs(args, input.AdditionalArguments);
         AddSystemIncludeDirectories(args, systemIncludeDirectories);
 
         return args.ToImmutable();

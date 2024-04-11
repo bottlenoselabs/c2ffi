@@ -5,10 +5,11 @@ using System.Collections.Immutable;
 using System.IO.Abstractions;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using bottlenoselabs.Common.Tools;
 
 namespace c2ffi.Tool.Internal.Input;
 
-public abstract class InputSanitizer<TUnsanitizedInput, TSanitizedInput>
+public abstract class InputSanitizer<TUnsanitizedInput, TSanitizedInput> : ToolInputSanitizer<TUnsanitizedInput, TSanitizedInput>
     where TUnsanitizedInput : class
     where TSanitizedInput : class
 {
@@ -58,8 +59,6 @@ public abstract class InputSanitizer<TUnsanitizedInput, TSanitizedInput>
 
         return result;
     }
-
-    protected abstract TSanitizedInput Sanitize(TUnsanitizedInput unsanitizedInput);
 
     protected ImmutableArray<string> SanitizeStrings(ImmutableArray<string>? strings)
     {

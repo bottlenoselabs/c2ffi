@@ -361,60 +361,6 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Parse
         }
     }
 }
-namespace c2ffi.Tool.Commands.Extract
-{
-    partial class ExtractFfiTool
-    {
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::c2ffi.Data.TargetPlatform, global::System.String, global::System.Exception?> __LogWriteFfiTargetPlatformSuccessCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2ffi.Data.TargetPlatform, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(0, nameof(LogWriteFfiTargetPlatformSuccess)), "Success. Extracted FFI for the target platform '{TargetPlatform}': {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
-
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogWriteFfiTargetPlatformSuccess(global::c2ffi.Data.TargetPlatform targetPlatform, global::System.String filePath)
-        {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
-            {
-                __LogWriteFfiTargetPlatformSuccessCallback(_logger, targetPlatform, filePath, null);
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::c2ffi.Data.TargetPlatform, global::System.String, global::System.Exception?> __LogWriteFfiTargetPlatformFailureCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::c2ffi.Data.TargetPlatform, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(1, nameof(LogWriteFfiTargetPlatformFailure)), "Failed to extract FFI for the target platform '{TargetPlatform}': {FilePath}", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
-
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogWriteFfiTargetPlatformFailure(global::System.Exception exception, global::c2ffi.Data.TargetPlatform targetPlatform, global::System.String filePath)
-        {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Error))
-            {
-                __LogWriteFfiTargetPlatformFailureCallback(_logger, targetPlatform, filePath, exception);
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.TargetPlatform>, global::System.Exception?> __LogSuccessCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.TargetPlatform>>(global::Microsoft.Extensions.Logging.LogLevel.Information, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogSuccess)), "Success. Extracted FFIs for the target platforms '{TargetPlatforms}'.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
-
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogSuccess(global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.TargetPlatform> targetPlatforms)
-        {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Information))
-            {
-                __LogSuccessCallback(_logger, targetPlatforms, null);
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.Exception?> __LogFailureCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(3, nameof(LogFailure)), "Failure.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
-
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogFailure()
-        {
-            if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Error))
-            {
-                __LogFailureCallback(_logger, null);
-            }
-        }
-    }
-}
 namespace c2ffi.Tool.Commands.Merge
 {
     partial class MergeFfisTool

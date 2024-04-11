@@ -41,7 +41,7 @@ public sealed class ExploreFfiBuilder
             PlatformActual = context.TargetPlatformActual,
             ClangArguments = context.Arguments,
             SystemIncludeDirectories = context.SystemIncludeDirectories,
-            UserIncludeDirectories = context.ExtractOptions.UserIncludeDirectories,
+            UserIncludeDirectories = context.ExtractInput.UserIncludeDirectories,
             PointerSize = context.PointerSize,
             Variables = variables,
             Functions = functions,

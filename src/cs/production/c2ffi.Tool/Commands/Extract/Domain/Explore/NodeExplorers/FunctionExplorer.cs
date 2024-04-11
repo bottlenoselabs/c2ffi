@@ -30,7 +30,7 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
 
     protected override bool IsAllowed(ExploreContext context, ExploreNodeInfo info)
     {
-        var regexes = context.ParseContext.ExtractOptions.IgnoredFunctionRegexes;
+        var regexes = context.ParseContext.ExtractInput.IgnoredFunctionRegexes;
         foreach (var regex in regexes)
         {
             if (regex.IsMatch(info.Name))

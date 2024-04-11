@@ -30,7 +30,7 @@ public sealed class ExploreContext : IDisposable
         _nodeHandlers = GetNodeHandlers(services);
         _ffiBuilder = new ExploreFfiBuilder();
         _frontier = services.GetService<ExploreFrontier>()!;
-        _ignoredIncludeFiles = parseContext.ExtractOptions.IgnoredIncludeFiles.ToImmutableHashSet();
+        _ignoredIncludeFiles = parseContext.ExtractInput.IgnoredIncludeFiles.ToImmutableHashSet();
     }
 
     public CFfiTargetPlatform GetFfi()
