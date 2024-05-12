@@ -152,9 +152,9 @@ public sealed class ParseContext : IDisposable
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
 
-        return translationUnitCursor.GetDescendents(Predicate);
+        return translationUnitCursor.GetDescendents(IsInclude);
 
-        static bool Predicate(clang.CXCursor child, clang.CXCursor parent)
+        static bool IsInclude(clang.CXCursor child, clang.CXCursor parent)
         {
             var isFromMainFile = child.IsFromMainFile();
             if (!isFromMainFile)
