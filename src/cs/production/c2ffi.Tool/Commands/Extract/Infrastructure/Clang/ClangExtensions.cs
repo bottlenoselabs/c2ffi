@@ -92,10 +92,10 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
         }
 
         public static ImmutableArray<CXCursor> GetDescendents(
-            this CXCursor cursor, VisitChildPredicate? predicate = null, bool mustBeFromSameFile = true)
+            this CXCursor cursor, VisitChildPredicate? predicate = null)
         {
             var predicate2 = predicate ?? EmptyVisitChildPredicate;
-            var visitData = new VisitChildInstance(predicate2, mustBeFromSameFile);
+            var visitData = new VisitChildInstance(predicate2);
             var visitsCount = Interlocked.Increment(ref _visitChildCount);
             if (visitsCount > _visitChildInstances.Length)
             {
@@ -155,17 +155,6 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
             }
 
             var data = _visitChildInstances[index - 1];
-
-            if (data.MustBeFromSameFile)
-            {
-                var location = clang_getCursorLocation(child);
-                var isFromMainFile = clang_Location_isFromMainFile(location) > 0;
-                if (!isFromMainFile)
-                {
-                    return CXChildVisitResult.CXChildVisit_Continue;
-                }
-            }
-
             var result = data.Predicate(child, parent);
             if (!result)
             {
@@ -195,13 +184,11 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
         {
             public readonly VisitChildPredicate Predicate;
             public readonly ImmutableArray<CXCursor>.Builder CursorBuilder;
-            public readonly bool MustBeFromSameFile;
 
-            public VisitChildInstance(VisitChildPredicate predicate, bool mustBeFromSameFile)
+            public VisitChildInstance(VisitChildPredicate predicate)
             {
                 Predicate = predicate;
                 CursorBuilder = ImmutableArray.CreateBuilder<CXCursor>();
-                MustBeFromSameFile = mustBeFromSameFile;
             }
         }
 

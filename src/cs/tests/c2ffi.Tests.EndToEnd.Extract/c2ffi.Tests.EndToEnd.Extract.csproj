@@ -13,7 +13,7 @@
 
   <!-- Project references -->
   <ItemGroup>
-    <ProjectReference Include="..\c2ffi.Tests.Library\c2ffi.Tests.Library.csproj" />
+    <ProjectReference Include="..\c2ffi.Tests.Common\c2ffi.Tests.Common.csproj" />
   </ItemGroup>
 
   <!-- NuGet package references -->

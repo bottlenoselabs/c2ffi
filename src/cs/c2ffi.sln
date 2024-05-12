@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tests.EndToEnd.Extrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Data", "production\c2ffi.Data\c2ffi.Data.csproj", "{14BAF06A-F498-4B99-AD01-FA300EFFAB42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tests.Library", "tests\c2ffi.Tests.Library\c2ffi.Tests.Library.csproj", "{D8933EFB-2F00-4356-8F69-4438A9711DA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tests.Common", "tests\c2ffi.Tests.Common\c2ffi.Tests.Common.csproj", "{D8933EFB-2F00-4356-8F69-4438A9711DA3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "c2ffi.Tests.EndToEnd.Merge", "tests\c2ffi.Tests.EndToEnd.Merge\c2ffi.Tests.EndToEnd.Merge.csproj", "{CEC639D4-F1FD-40BD-81B7-B20B2DE18EA1}"
 EndProject
