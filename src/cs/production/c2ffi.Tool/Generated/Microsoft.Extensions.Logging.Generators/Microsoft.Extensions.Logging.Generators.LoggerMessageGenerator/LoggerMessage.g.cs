@@ -390,15 +390,15 @@ namespace c2ffi.Tool.Commands.Merge
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.Exception?> __LogNodeNotEqualCallback =
-            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogNodeNotEqual)), "The node '{NodeName}' is not equal to all other platform nodes of the same name.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
+        private static readonly global::System.Action<global::Microsoft.Extensions.Logging.ILogger, global::System.String, global::System.String, global::System.Exception?> __LogNodeNotEqualCallback =
+            global::Microsoft.Extensions.Logging.LoggerMessage.Define<global::System.String, global::System.String>(global::Microsoft.Extensions.Logging.LogLevel.Error, new global::Microsoft.Extensions.Logging.EventId(2, nameof(LogNodeNotEqual)), "The node '{NodeName}' of kind '{NodeKind}' is not equal to all other platform nodes of the same name.", new global::Microsoft.Extensions.Logging.LogDefineOptions() { SkipEnabledCheck = true }); 
 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]
-        private partial void LogNodeNotEqual(global::System.String nodeName)
+        private partial void LogNodeNotEqual(global::System.String nodeName, global::System.String nodeKind)
         {
             if (_logger.IsEnabled(global::Microsoft.Extensions.Logging.LogLevel.Error))
             {
-                __LogNodeNotEqualCallback(_logger, nodeName, null);
+                __LogNodeNotEqualCallback(_logger, nodeName, nodeKind, null);
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Extensions.Logging.Generators", "8.0.9.3103")]

@@ -151,8 +151,19 @@ public sealed class ParseContext : IDisposable
     public ImmutableArray<clang.CXCursor> GetIncludes()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        return translationUnitCursor.GetDescendents(
-            static (child, _) => child.kind == clang.CXCursorKind.CXCursor_InclusionDirective);
+
+        return translationUnitCursor.GetDescendents(Predicate);
+
+        static bool Predicate(clang.CXCursor child, clang.CXCursor parent)
+        {
+            var isFromMainFile = child.IsFromMainFile();
+            if (!isFromMainFile)
+            {
+                return false;
+            }
+
+            return child.kind == clang.CXCursorKind.CXCursor_InclusionDirective;
+        }
     }
 
     public ImmutableArray<clang.CXCursor> GetExternalFunctions()
@@ -163,7 +174,14 @@ public sealed class ParseContext : IDisposable
 
         static bool IsExternalFunction(clang.CXCursor child, clang.CXCursor parent)
         {
-            return child.kind == clang.CXCursorKind.CXCursor_FunctionDecl && IsExternal(child);
+            var isFromMainFile = child.IsFromMainFile();
+            if (!isFromMainFile)
+            {
+                return false;
+            }
+
+            var isFunction = child.kind == clang.CXCursorKind.CXCursor_FunctionDecl;
+            return isFunction && IsExternal(child);
         }
     }
 
@@ -175,6 +193,12 @@ public sealed class ParseContext : IDisposable
 
         static bool IsExternalVariable(clang.CXCursor child, clang.CXCursor parent)
         {
+            var isFromMainFile = child.IsFromMainFile();
+            if (!isFromMainFile)
+            {
+                return false;
+            }
+
             return child.kind == clang.CXCursorKind.CXCursor_VarDecl && IsExternal(child);
         }
     }
@@ -187,6 +211,12 @@ public sealed class ParseContext : IDisposable
 
         bool IsMacroObject(clang.CXCursor clangCursor)
         {
+            var isFromMainFile = clangCursor.IsFromMainFile();
+            if (!isFromMainFile)
+            {
+                return false;
+            }
+
             if (clangCursor.kind != clang.CXCursorKind.CXCursor_MacroDefinition)
             {
                 return false;
