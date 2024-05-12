@@ -213,7 +213,7 @@ public sealed partial class MergeFfisTool : Tool<UnsanitizedMergeInput, MergeInp
                     }
                 }
 
-                LogNodeNotEqual(nodeName);
+                LogNodeNotEqual(nodeName, firstNode.NodeKind.ToString());
                 areAllEqual = false;
                 break;
             }
@@ -336,8 +336,8 @@ public sealed partial class MergeFfisTool : Tool<UnsanitizedMergeInput, MergeInp
     [LoggerMessage(1, LogLevel.Error, "The node '{NodeName}' of kind '{NodeKind}' for platform '{PlatformName}' does not match the kind '{NodeKindExpected}' for platform {PlatformNameExpected}.")]
     private partial void LogNodeNotSameKind(string nodeName, string nodeKind, string platformName, string nodeKindExpected, string platformNameExpected);
 
-    [LoggerMessage(2, LogLevel.Error, "The node '{NodeName}' is not equal to all other platform nodes of the same name.")]
-    private partial void LogNodeNotEqual(string nodeName);
+    [LoggerMessage(2, LogLevel.Error, "The node '{NodeName}' of kind '{NodeKind}' is not equal to all other platform nodes of the same name.")]
+    private partial void LogNodeNotEqual(string nodeName, string nodeKind);
 
     [LoggerMessage(3, LogLevel.Information, "Success. Merged FFIs for the target platforms '{TargetPlatformsString}': {FilePath}")]
     private partial void LogWriteAbstractSyntaxTreeSuccess(

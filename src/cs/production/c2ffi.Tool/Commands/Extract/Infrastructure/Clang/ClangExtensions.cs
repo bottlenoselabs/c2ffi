@@ -3,8 +3,6 @@
 
 using System.Collections.Immutable;
 using System.Runtime.InteropServices;
-using System.Text;
-using c2ffi.Data;
 using static bottlenoselabs.clang;
 
 #pragma warning disable CA1806
@@ -89,6 +87,13 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
                 CXTypeKind.CXType_LongLong => true,
                 _ => false
             };
+        }
+
+        public static bool IsFromMainFile(this CXCursor clangCursor)
+        {
+            var location = clang_getCursorLocation(clangCursor);
+            var isFromMainFile = clang_Location_isFromMainFile(location) > 0;
+            return isFromMainFile;
         }
 
         public static ImmutableArray<CXCursor> GetDescendents(
