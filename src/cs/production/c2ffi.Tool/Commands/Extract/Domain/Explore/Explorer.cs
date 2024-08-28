@@ -66,10 +66,18 @@ public sealed partial class Explorer
     private void VisitTranslationUnit(ExploreContext context, ParseContext parseContext)
     {
         LogVisitingTranslationUnit(parseContext.FilePath);
-        VisitIncludes(context, parseContext);
+
+        var isMultipleHeaders = !context.ParseContext.ExtractInput.IsSingleHeader;
+        if (isMultipleHeaders)
+        {
+            VisitIncludes(context, parseContext);
+        }
+
         VisitFunctions(context, parseContext);
         VisitVariables(context, parseContext);
         VisitMacroObjects(context, parseContext);
+        VisitExplicitIncludedNames(context, parseContext);
+
         LogVisitedTranslationUnit(parseContext.FilePath);
     }
 
@@ -115,6 +123,33 @@ public sealed partial class Explorer
     private void VisitMacroObject(ExploreContext context, clang.CXCursor clangCursor)
     {
         var info = context.CreateTopLevelNodeInfo(CNodeKind.MacroObject, clangCursor);
+        context.TryEnqueueNode(info);
+    }
+
+    private void VisitExplicitIncludedNames(ExploreContext context, ParseContext parseContext)
+    {
+        var cursors = parseContext.GetExplicitlyIncludedNamedCursors();
+        foreach (var cursor in cursors)
+        {
+            VisitExplicitlyIncludedName(context, cursor);
+        }
+    }
+
+    private void VisitExplicitlyIncludedName(ExploreContext context, clang.CXCursor clangCursor)
+    {
+        var nodeKind = clangCursor.kind switch
+        {
+            clang.CXCursorKind.CXCursor_EnumDecl => CNodeKind.Enum,
+            _ => CNodeKind.Unknown
+        };
+
+        if (nodeKind == CNodeKind.Unknown)
+        {
+            // TODO: Add more allowed kinds to explicitly included names
+            return;
+        }
+
+        var info = context.CreateTopLevelNodeInfo(nodeKind, clangCursor);
         context.TryEnqueueNode(info);
     }
 

@@ -55,45 +55,6 @@ public sealed class UnsanitizedExtractInput : ToolUnsanitizedInput
     public ImmutableArray<string>? IgnoredIncludeFiles { get; set; }
 
     /// <summary>
-    ///     Gets or sets a value that determines whether to show the the path of header code locations with full paths
-    ///     or relative paths.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         Default is <c>false</c>. Use <c>true</c> to use the full path for header locations. Use <c>false</c> to
-    ///         show only relative file paths.
-    ///     </para>
-    /// </remarks>
-    [JsonPropertyName("isEnabledLocationFullPaths")]
-    public bool? IsEnabledLocationFullPaths { get; set; }
-
-    /// <summary>
-    ///     Gets or sets a value that determines whether to include or exclude declarations (functions, enums, structs,
-    ///     typedefs, etc) with a prefixed underscore that are assumed to be 'non public'.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         Default is <c>false</c>. Use <c>true</c> to include declarations with a prefixed underscore. Use
-    ///         <c>false</c> to exclude declarations with a prefixed underscore.
-    ///     </para>
-    /// </remarks>
-    [JsonPropertyName("isEnabledAllowNamesWithPrefixedUnderscore")]
-    public bool? IsEnabledAllowNamesWithPrefixedUnderscore { get; set; }
-
-    /// <summary>
-    ///     Gets or sets a value that determines whether to include or exclude system declarations (functions, enums,
-    ///     typedefs, records, etc).
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         Default is `false`. Use <c>true</c> to include system declarations. Use `false` to exclude system
-    ///         declarations.
-    ///     </para>
-    /// </remarks>
-    [JsonPropertyName("isEnabledSystemDeclarations")]
-    public bool? IsEnabledSystemDeclarations { get; set; }
-
-    /// <summary>
     ///     Gets or sets a value that determines whether to automatically find and append the system headers for the
     ///     target platform.
     /// </summary>
@@ -107,15 +68,14 @@ public sealed class UnsanitizedExtractInput : ToolUnsanitizedInput
     public bool? IsEnabledAutomaticallyFindSystemHeaders { get; set; }
 
     /// <summary>
-    ///     Gets or sets determines whether to parse only the top-level cursors which are externally visible, or all
-    ///     top-level cursors.
+    ///     Gets or sets a value that determines whether the C code is parsed as a single header or multiple headers.
     /// </summary>
     /// <para>
-    ///     Default is <c>true</c>. Use <c>true</c> to parse only top-level cursors which are externally visible. Use
-    ///     <c>false</c> to parse all top-level cursors whether or not they are externally visible.
+    ///     Default is <c>false</c>. Use <c>true</c> to parse the C code as a single header. Use <c>false</c> to parse
+    ///     the C code as multiple headers.
     /// </para>
-    [JsonPropertyName("isEnabledOnlyExternalTopLevelCursors")]
-    public bool? IsEnabledOnlyExternalTopLevelCursors { get; set; }
+    [JsonPropertyName("isSingleHeader")]
+    public bool? IsSingleHeader { get; set; }
 
     /// <summary>
     ///     Gets or sets the cursor names to be treated as opaque types.
@@ -153,4 +113,10 @@ public sealed class UnsanitizedExtractInput : ToolUnsanitizedInput
     /// </summary>
     [JsonPropertyName("appleFrameworks")]
     public ImmutableArray<string>? AppleFrameworks { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the name of enums that are explicitly allowed.
+    /// </summary>
+    [JsonPropertyName("includedNames")]
+    public ImmutableArray<string>? IncludedNames { get; set; }
 }
