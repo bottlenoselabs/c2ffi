@@ -71,7 +71,7 @@ public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplo
         ExploreNodeInfo structInfo,
         CXCursor clangCursor)
     {
-        var fieldName = clangCursor.Spelling();
+        var fieldName = context.GetFieldName(clangCursor);
         var clangType = clang_getCursorType(clangCursor);
         var location = context.ParseContext.Location(clangCursor);
         var type = context.VisitType(clangType, structInfo);

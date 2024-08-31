@@ -68,7 +68,7 @@ public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplore
         CXCursor clangCursor,
         ExploreNodeInfo parentInfo)
     {
-        var name = clangCursor.Spelling();
+        var name = context.GetFieldName(clangCursor);
         var clangType = clang_getCursorType(clangCursor);
         var location = context.ParseContext.Location(clangCursor);
         var type = context.VisitType(clangType, parentInfo);
