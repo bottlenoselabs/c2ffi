@@ -52,5 +52,13 @@
     <Folder Include="Commands\Extract\Infrastructure\" />
     <Folder Include="Generated\" />
   </ItemGroup>
+  
+  <!-- libclang -->
+  <ItemGroup>
+    <None Include="$(GitRepositoryPath)\lib\libclang.dll" Condition="Exists('$(GitRepositoryPath)\lib\libclang.dll')">
+      <Link>libclang.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

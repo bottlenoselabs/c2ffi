@@ -8,3 +8,6 @@ obj/
 /artifacts/
 src/c/tests/**/ffi/*.json
 src/c/tests/**/ffi-x/*.json
+
+# Native library files
+lib/*.*
