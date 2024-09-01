@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
+using bottlenoselabs;
 using c2ffi.Data;
 
 namespace c2ffi.Tool.Commands.Extract.Input.Sanitized;
@@ -24,6 +25,10 @@ public sealed class ExtractTargetPlatformInput
     public ImmutableArray<string> AdditionalArguments { get; init; } = ImmutableArray<string>.Empty;
 
     public bool IsEnabledFindSystemHeaders { get; init; }
+
+    public bool IsSingleHeader { get; init; }
+
+    public ImmutableHashSet<string> IncludedNames { get; init; } = ImmutableHashSet<string>.Empty;
 
     public ImmutableArray<Regex> IgnoredMacroObjectsRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 

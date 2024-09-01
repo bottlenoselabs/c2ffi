@@ -125,6 +125,24 @@ public sealed class ExploreContext : IDisposable
         ParseContext.Dispose();
     }
 
+    public string GetFieldName(clang.CXCursor clangCursor)
+    {
+        if (clangCursor.kind != clang.CXCursorKind.CXCursor_FieldDecl)
+        {
+            return string.Empty;
+        }
+
+        var name = clangCursor.Spelling();
+
+        // NOTE: In newer versions of Clang (specifically found on 18.1), getting the name of the field has changed if it anonymous. Old behavior was to return empty string.
+        if (name.Contains("::(anonymous at", StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Empty;
+        }
+
+        return name;
+    }
+
     private CType VisitTypeInternal(
         CNodeKind nodeKind,
         string typeName,

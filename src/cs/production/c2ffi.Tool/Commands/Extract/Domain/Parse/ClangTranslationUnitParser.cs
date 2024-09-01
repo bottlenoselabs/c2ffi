@@ -68,7 +68,8 @@ public sealed partial class ClangTranslationUnitParser
         ImmutableArray<string> commandLineArgs,
         out CXTranslationUnit translationUnit,
         bool skipFunctionBodies = true,
-        bool keepGoing = false)
+        bool keepGoing = false,
+        bool isSingleHeader = false)
     {
         // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
         uint options = 0x0 |
@@ -78,6 +79,11 @@ public sealed partial class ClangTranslationUnitParser
                        0x2000 | // CXTranslationUnit_VisitImplicitAttributes
                        0x4000 | // CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles
                        0x0;
+
+        if (isSingleHeader)
+        {
+            options |= 0x400; // CXTranslationUnit_SingleFileParse
+        }
 
         if (skipFunctionBodies)
         {

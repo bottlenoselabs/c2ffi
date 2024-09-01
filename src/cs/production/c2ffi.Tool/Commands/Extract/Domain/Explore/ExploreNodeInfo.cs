@@ -28,6 +28,16 @@ public sealed class ExploreNodeInfo
 
     public override string ToString()
     {
-        return Name;
+        if (!string.IsNullOrEmpty(Name))
+        {
+            return Name;
+        }
+
+        if (!string.IsNullOrEmpty(TypeName))
+        {
+            return TypeName;
+        }
+
+        return "???";
     }
 }

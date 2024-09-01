@@ -126,6 +126,8 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
             MacroObjectDefines = ClangDefines(input, targetPlatformInput),
             AdditionalArguments = ClangArguments(targetPlatformInput),
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
+            IsSingleHeader = input.IsSingleHeader ?? false,
+            IncludedNames = IncludedNames(input),
             IgnoredMacroObjectsRegexes = IgnoredMacroObjects(input),
             IgnoredVariableRegexes = IgnoredVariables(input),
             IgnoredFunctionRegexes = IgnoredFunctions(input)
@@ -192,6 +194,11 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
     private ImmutableArray<Regex> IgnoredFunctions(UnsanitizedExtractInput input)
     {
         return SanitizeRegexes(input.IgnoredFunctions);
+    }
+
+    private ImmutableHashSet<string> IncludedNames(UnsanitizedExtractInput input)
+    {
+        return SanitizeStrings(input.IncludedNames).ToImmutableHashSet();
     }
 
     private string SanitizeOutputDirectoryPath(

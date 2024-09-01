@@ -199,7 +199,24 @@ public sealed class ParseContext : IDisposable
                 return false;
             }
 
-            return child.kind == clang.CXCursorKind.CXCursor_VarDecl && IsExternal(child);
+            var isExternal = IsExternal(child);
+            var isVariable = child.kind == clang.CXCursorKind.CXCursor_VarDecl;
+            return isVariable && isExternal;
+        }
+    }
+
+    public ImmutableArray<clang.CXCursor> GetExplicitlyIncludedNamedCursors()
+    {
+        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
+        var result = translationUnitCursor.GetDescendents(
+            (cursor, parent) => IsExplicitlyIncludedName(cursor, ExtractInput.IncludedNames));
+        return result;
+
+        static bool IsExplicitlyIncludedName(clang.CXCursor cursor, ImmutableHashSet<string> names)
+        {
+            var name = cursor.Spelling();
+            var isIncluded = names.Contains(name);
+            return isIncluded;
         }
     }
 
@@ -278,12 +295,6 @@ public sealed class ParseContext : IDisposable
 
     private static bool IsExternal(clang.CXCursor cursor)
     {
-        var spelling = cursor.Spelling();
-        if (spelling == "SDL_malloc")
-        {
-            Console.WriteLine();
-        }
-
         var linkage = clang.clang_getCursorLinkage(cursor);
         if (linkage == clang.CXLinkageKind.CXLinkage_Invalid)
         {
