@@ -13,7 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool;
 
+#pragma warning disable CA1515
 public static class Startup
+#pragma warning restore CA1515
 {
     [ExcludeFromCodeCoverage]
     public static IHost CreateHost(string[] args)
@@ -50,7 +52,7 @@ public static class Startup
         var filePath = path.Combine(AppContext.BaseDirectory, "appsettings.json");
         if (file.Exists(filePath))
         {
-            builder.AddJsonFile(filePath);
+            _ = builder.AddJsonFile(filePath);
         }
         else
         {
@@ -62,27 +64,27 @@ public static class Startup
             }
 
             var jsonStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(appSettingsResourceName)!;
-            builder.AddJsonStream(jsonStream);
+            _ = builder.AddJsonStream(jsonStream);
         }
 
         foreach (var originalSource in originalSources)
         {
-            builder.Add(originalSource);
+            _ = builder.Add(originalSource);
         }
     }
 
     private static void ConfigureLogging(HostBuilderContext context, ILoggingBuilder builder)
     {
-        builder.ClearProviders();
-        builder.AddSimpleConsole();
-        builder.AddConfiguration(context.Configuration.GetSection("Logging"));
+        _ = builder.ClearProviders();
+        _ = builder.AddSimpleConsole();
+        _ = builder.AddConfiguration(context.Configuration.GetSection("Logging"));
     }
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IFileSystem, FileSystem>();
-        services.AddHostedService<CommandLineInterfaceHost>();
-        services.AddSingleton<CommandLineInterfaceCommand>();
+        _ = services.AddSingleton<IFileSystem, FileSystem>();
+        _ = services.AddHostedService<CommandLineInterfaceHost>();
+        _ = services.AddSingleton<CommandLineInterfaceCommand>();
 
         ConfigureStartupServices(services);
     }

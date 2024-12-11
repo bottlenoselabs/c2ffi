@@ -3,7 +3,6 @@
 
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
-using bottlenoselabs;
 using c2ffi.Data;
 
 namespace c2ffi.Tool.Commands.Extract.Input.Sanitized;

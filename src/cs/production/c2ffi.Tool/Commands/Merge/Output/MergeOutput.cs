@@ -3,10 +3,12 @@
 
 using bottlenoselabs.Common.Tools;
 using c2ffi.Tool.Commands.Merge.Input.Sanitized;
+using JetBrains.Annotations;
 
 namespace c2ffi.Tool.Commands.Merge.Output;
 
-public class MergeOutput : ToolOutput<MergeInput>
+[UsedImplicitly]
+public sealed class MergeOutput : ToolOutput<MergeInput>
 {
     protected override void OnComplete()
     {

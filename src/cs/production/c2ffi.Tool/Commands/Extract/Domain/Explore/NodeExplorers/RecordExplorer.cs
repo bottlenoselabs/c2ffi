@@ -9,7 +9,7 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
-public abstract class RecordExplorer(ILogger<RecordExplorer> logger, bool logAlreadyExplored = true)
+internal abstract class RecordExplorer(ILogger<RecordExplorer> logger, bool logAlreadyExplored = true)
     : NodeExplorer<CRecord>(logger, logAlreadyExplored)
 {
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Is(CXTypeKind.CXType_Record);

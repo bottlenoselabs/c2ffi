@@ -6,27 +6,18 @@ using System.Text;
 using bottlenoselabs;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 
-public sealed partial class ClangTranslationUnitParser
+[UsedImplicitly]
+public sealed partial class ClangTranslationUnitParser(
+    ILogger<ClangTranslationUnitParser> logger,
+    ParseArgumentsProvider argumentsProvider,
+    ParseSystemIncludeDirectoriesProvider systemIncludeDirectoriesProvider)
 {
-    private readonly ILogger<ClangTranslationUnitParser> _logger;
-    private readonly ParseArgumentsProvider _argumentsProvider;
-    private readonly ParseSystemIncludeDirectoriesProvider _systemIncludeDirectoriesProvider;
-
-    public ClangTranslationUnitParser(
-        ILogger<ClangTranslationUnitParser> logger,
-        ParseArgumentsProvider argumentsProvider,
-        ParseSystemIncludeDirectoriesProvider systemIncludeDirectoriesProvider)
-    {
-        _logger = logger;
-        _argumentsProvider = argumentsProvider;
-        _systemIncludeDirectoriesProvider = systemIncludeDirectoriesProvider;
-    }
-
     public ParseContext ParseTranslationUnit(
         string filePath,
         ExtractTargetPlatformInput extractInput,
@@ -36,9 +27,9 @@ public sealed partial class ClangTranslationUnitParser
         bool keepGoing = false,
         bool skipFunctionBodies = true)
     {
-        var systemIncludeDirectories = _systemIncludeDirectoriesProvider.GetSystemIncludeDirectories(
+        var systemIncludeDirectories = systemIncludeDirectoriesProvider.GetSystemIncludeDirectories(
             extractInput.TargetPlatform, extractInput.SystemIncludeDirectories, extractInput.IsEnabledFindSystemHeaders);
-        var arguments = _argumentsProvider.GetArguments(
+        var arguments = argumentsProvider.GetArguments(
             extractInput, systemIncludeDirectories, isCPlusPlus, ignoreWarnings);
         var argumentsString = string.Join(" ", arguments);
 
@@ -136,7 +127,7 @@ public sealed partial class ClangTranslationUnitParser
                     isSuccess = false;
                 }
 
-                stringBuilder.AppendLine(clangDiagnostic.Message);
+                _ = stringBuilder.AppendLine(clangDiagnostic.Message);
             }
         }
 

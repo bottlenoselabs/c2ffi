@@ -6,7 +6,7 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
 
-public class ExploreKindTypes
+internal sealed class ExploreKindTypes
 {
     private readonly ImmutableArray<CXTypeKind>? _expectedTypeKinds;
 

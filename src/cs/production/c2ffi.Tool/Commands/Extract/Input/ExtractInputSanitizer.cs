@@ -9,18 +9,14 @@ using c2ffi.Data;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
 using c2ffi.Tool.Commands.Extract.Input.Unsanitized;
 using c2ffi.Tool.Internal.Input;
+using JetBrains.Annotations;
 
 namespace c2ffi.Tool.Commands.Extract.Input;
 
-public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInput, ExtractInput>
+[UsedImplicitly]
+public sealed class ExtractInputSanitizer(IFileSystem fileSystem) : InputSanitizer<UnsanitizedExtractInput, ExtractInput>(fileSystem)
 {
-    private readonly string _hostOperatingSystemString;
-
-    public ExtractInputSanitizer(IFileSystem fileSystem)
-        : base(fileSystem)
-    {
-        _hostOperatingSystemString = Native.OperatingSystem.ToString().ToUpperInvariant();
-    }
+    private readonly string _hostOperatingSystemString = Native.OperatingSystem.ToString().ToUpperInvariant();
 
     public override ExtractInput Sanitize(UnsanitizedExtractInput unsanitizedInput)
     {
@@ -198,7 +194,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
 
     private ImmutableHashSet<string> IncludedNames(UnsanitizedExtractInput input)
     {
-        return SanitizeStrings(input.IncludedNames).ToImmutableHashSet();
+        return [.. SanitizeStrings(input.IncludedNames)];
     }
 
     private string SanitizeOutputDirectoryPath(
@@ -243,7 +239,7 @@ public sealed class ExtractInputSanitizer : InputSanitizer<UnsanitizedExtractInp
                 directoryPath = Environment.CurrentDirectory;
             }
 
-            directoryPaths.AddRange(Path.GetFullPath(directoryPath));
+            _ = directoryPaths.AddRange(Path.GetFullPath(directoryPath));
         }
 
         foreach (var directory in directoryPaths)

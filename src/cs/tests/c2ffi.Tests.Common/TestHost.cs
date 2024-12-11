@@ -27,6 +27,6 @@ public static class TestHost
 
     private static void ConfigureTestServices(IServiceCollection services)
     {
-        services.AddSingleton<FileSystemHelper>();
+        _ = services.AddSingleton<FileSystemHelper>();
     }
 }

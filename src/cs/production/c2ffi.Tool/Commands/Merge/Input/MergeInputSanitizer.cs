@@ -6,34 +6,29 @@ using System.IO.Abstractions;
 using bottlenoselabs.Common.Tools;
 using c2ffi.Tool.Commands.Merge.Input.Sanitized;
 using c2ffi.Tool.Commands.Merge.Input.Unsanitized;
+using JetBrains.Annotations;
 
 namespace c2ffi.Tool.Commands.Merge.Input;
 
-public sealed class MergeInputSanitizer : ToolInputSanitizer<UnsanitizedMergeInput, MergeInput>
+[UsedImplicitly]
+public sealed class MergeInputSanitizer(IFileSystem fileSystem) : ToolInputSanitizer<UnsanitizedMergeInput, MergeInput>
 {
-    private readonly IFileSystem _fileSystem;
-
-    public MergeInputSanitizer(IFileSystem fileSystem)
-    {
-        _fileSystem = fileSystem;
-    }
-
     public override MergeInput Sanitize(UnsanitizedMergeInput unsanitizedInput)
     {
-        var directoryPath = _fileSystem.Path.GetFullPath(unsanitizedInput.InputDirectoryPath);
-        if (!_fileSystem.Directory.Exists(directoryPath))
+        var directoryPath = fileSystem.Path.GetFullPath(unsanitizedInput.InputDirectoryPath);
+        if (!fileSystem.Directory.Exists(directoryPath))
         {
             throw new ToolInputSanitizationException($"The directory '{directoryPath}' does not exist.");
         }
 
-        var filePaths = _fileSystem.Directory.GetFiles(directoryPath, "*.json").ToImmutableArray();
+        var filePaths = fileSystem.Directory.GetFiles(directoryPath, "*.json").ToImmutableArray();
 
         if (filePaths.IsDefaultOrEmpty)
         {
             throw new ToolInputSanitizationException($"The directory '{directoryPath}' does not contain any abstract syntax tree `.json` files.");
         }
 
-        var outputFilePath = _fileSystem.Path.GetFullPath(unsanitizedInput.OutputFilePath);
+        var outputFilePath = fileSystem.Path.GetFullPath(unsanitizedInput.OutputFilePath);
 
         var result = new MergeInput
         {

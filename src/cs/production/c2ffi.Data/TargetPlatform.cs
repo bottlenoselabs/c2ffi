@@ -36,105 +36,12 @@ public record struct TargetPlatform(string ClangTargetTriple)
     /// </summary>
     public NativeOperatingSystem OperatingSystem = ParseTargetOperatingSystem(ClangTargetTriple);
 
-    internal string ClangTargetTriple = ClangTargetTriple;
-
-    private static NativeArchitecture ParseTargetArchitecture(string targetTriple)
-    {
-        if (targetTriple.StartsWith("aarch64-", StringComparison.InvariantCultureIgnoreCase) ||
-            targetTriple.StartsWith("arm64-", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeArchitecture.ARM64;
-        }
-
-        if (targetTriple.StartsWith("x86_64-", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeArchitecture.X64;
-        }
-
-        if (targetTriple.StartsWith("i686-", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeArchitecture.X86;
-        }
-
-        if (targetTriple.StartsWith("arm-", StringComparison.InvariantCultureIgnoreCase) ||
-            targetTriple.StartsWith("armv7-", StringComparison.InvariantCultureIgnoreCase) ||
-            targetTriple.StartsWith("armv6k-", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeArchitecture.ARM32;
-        }
-
-        if (targetTriple.StartsWith("wasm64", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeArchitecture.WASM64;
-        }
-
-        if (targetTriple.StartsWith("wasm32", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeArchitecture.WASM32;
-        }
-
-        return NativeArchitecture.Unknown;
-    }
-
-    private static NativeOperatingSystem ParseTargetOperatingSystem(string targetTriple)
-    {
-        if (targetTriple.Contains("-pc-windows", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.Windows;
-        }
-
-        if (targetTriple.Contains("-unknown-linux", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.Linux;
-        }
-
-        if (targetTriple.Contains("-apple-darwin", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.macOS;
-        }
-
-        if (targetTriple.Contains("-apple-ios", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.iOS;
-        }
-
-        if (targetTriple.Contains("-apple-tvos", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.tvOS;
-        }
-
-        if (targetTriple.Contains("-unknown-freebsd", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.FreeBSD;
-        }
-
-        if (targetTriple.Contains("-linux-android", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.Android;
-        }
-
-        if (targetTriple.Contains("-scei-ps4", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.PlayStation4;
-        }
-
-        if (targetTriple.Contains("-nintendo_3ds", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.DualScreen3D;
-        }
-
-        if (targetTriple.StartsWith("wasm", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return NativeOperatingSystem.Browser;
-        }
-
-        return NativeOperatingSystem.Unknown;
-    }
+    internal readonly string _clangTargetTriple = ClangTargetTriple;
 
     /// <inheritdoc />
-    public readonly override string ToString()
+    public override readonly string ToString()
     {
-        return ClangTargetTriple;
+        return _clangTargetTriple;
     }
 
     /// <summary>
@@ -288,4 +195,100 @@ public record struct TargetPlatform(string ClangTargetTriple)
     public static readonly TargetPlatform wasm32_unknown_emscripten = new("wasm32-unknown-emscripten");
 
     #endregion
+
+    private static NativeArchitecture ParseTargetArchitecture(string targetTriple)
+    {
+        if (targetTriple.StartsWith("aarch64-", StringComparison.InvariantCultureIgnoreCase) ||
+            targetTriple.StartsWith("arm64-", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeArchitecture.ARM64;
+        }
+
+        if (targetTriple.StartsWith("x86_64-", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeArchitecture.X64;
+        }
+
+        if (targetTriple.StartsWith("i686-", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeArchitecture.X86;
+        }
+
+        if (targetTriple.StartsWith("arm-", StringComparison.InvariantCultureIgnoreCase) ||
+            targetTriple.StartsWith("armv7-", StringComparison.InvariantCultureIgnoreCase) ||
+            targetTriple.StartsWith("armv6k-", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeArchitecture.ARM32;
+        }
+
+        if (targetTriple.StartsWith("wasm64", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeArchitecture.WASM64;
+        }
+
+        // ReSharper disable once ConvertIfStatementToReturnStatement
+#pragma warning disable IDE0046
+        if (targetTriple.StartsWith("wasm32", StringComparison.InvariantCultureIgnoreCase))
+#pragma warning restore IDE0046
+        {
+            return NativeArchitecture.WASM32;
+        }
+
+        return NativeArchitecture.Unknown;
+    }
+
+    private static NativeOperatingSystem ParseTargetOperatingSystem(string targetTriple)
+    {
+        if (targetTriple.Contains("-pc-windows", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.Windows;
+        }
+
+        if (targetTriple.Contains("-unknown-linux", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.Linux;
+        }
+
+        if (targetTriple.Contains("-apple-darwin", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.macOS;
+        }
+
+        if (targetTriple.Contains("-apple-ios", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.iOS;
+        }
+
+        if (targetTriple.Contains("-apple-tvos", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.tvOS;
+        }
+
+        if (targetTriple.Contains("-unknown-freebsd", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.FreeBSD;
+        }
+
+        if (targetTriple.Contains("-linux-android", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.Android;
+        }
+
+        if (targetTriple.Contains("-scei-ps4", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.PlayStation4;
+        }
+
+        if (targetTriple.Contains("-nintendo_3ds", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.DualScreen3D;
+        }
+
+        if (targetTriple.StartsWith("wasm", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return NativeOperatingSystem.Browser;
+        }
+
+        return NativeOperatingSystem.Unknown;
+    }
 }

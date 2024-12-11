@@ -15,7 +15,9 @@ namespace c2ffi.Data.Serialization
         /// <summary>
         /// Defines the source generated JSON serialization contract metadata for a given type.
         /// </summary>
+        #nullable disable annotations // Marking the property type as nullable-oblivious.
         public global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CRecordKind> CRecordKind
+        #nullable enable annotations
         {
             get => _CRecordKind ??= (global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CRecordKind>)Options.GetTypeInfo(typeof(global::c2ffi.Data.CRecordKind));
         }

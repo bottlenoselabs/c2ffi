@@ -9,18 +9,11 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestMacroObject
+public class CTestMacroObject(CMacroObject macroObject)
 {
-    public string Name { get; }
+    public string Name { get; } = macroObject.Name;
 
-    public CTestType Type { get; }
+    public CTestType Type { get; } = new(macroObject.Type);
 
-    public string Value { get; }
-
-    public CTestMacroObject(CMacroObject macroObject)
-    {
-        Name = macroObject.Name;
-        Type = new CTestType(macroObject.Type);
-        Value = macroObject.Value;
-    }
+    public string Value { get; } = macroObject.Value;
 }

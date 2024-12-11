@@ -6,7 +6,7 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
 
-public sealed class ExploreNodeInfo
+internal sealed class ExploreNodeInfo
 {
     public CNodeKind NodeKind { get; init; }
 

@@ -7,17 +7,12 @@ using System.IO.Abstractions;
 namespace c2ffi.Tests.Library.Helpers;
 
 [ExcludeFromCodeCoverage]
-public class FileSystemHelper
+public class FileSystemHelper(IFileSystem fileSystem)
 {
-    private readonly IFileSystem _fileSystem;
+    private readonly IFileSystem _fileSystem = fileSystem;
     private string? _gitRepositoryRootDirectoryPath;
 
     public string GitRepositoryRootDirectoryPath => _gitRepositoryRootDirectoryPath ??= FindGitRepositoryRootDirectoryPath();
-
-    public FileSystemHelper(IFileSystem fileSystem)
-    {
-        _fileSystem = fileSystem;
-    }
 
     public string GetFullFilePath(string relativeFilePath)
     {

@@ -1,9 +1,6 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2ffi.Tests.Library.Models;
-using FluentAssertions;
-
 #pragma warning disable CA1707
 
 namespace c2ffi.Tests.EndToEnd.Extract.Functions.function_internal;
@@ -32,30 +29,30 @@ public class Test : ExtractFfiTest
     private void Function1DoesNotExist(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.TryGetFunction("function_internal_1");
-        function.Should().BeNull();
+        _ = function.Should().BeNull();
     }
 
     private void Function2DoesExist(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.TryGetFunction("function_internal_2");
-        function.Should().NotBeNull();
+        _ = function.Should().NotBeNull();
     }
 
     private void Function3DoesNotExist(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.TryGetFunction("function_internal_3");
-        function.Should().BeNull();
+        _ = function.Should().BeNull();
     }
 
     private void Function4DoesNotExist(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.TryGetFunction("function_internal_4");
-        function.Should().BeNull();
+        _ = function.Should().BeNull();
     }
 
     private void Function5DoesExist(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.TryGetFunction("function_internal_5");
-        function.Should().NotBeNull();
+        _ = function.Should().NotBeNull();
     }
 }

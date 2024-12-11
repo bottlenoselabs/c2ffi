@@ -6,7 +6,7 @@ using c2ffi.Tool.Commands.Extract.Input.Sanitized;
 
 namespace c2ffi.Tool.Commands.Extract.Output;
 
-public class ExtractOutput : ToolOutput<ExtractInput>
+public sealed class ExtractOutput : ToolOutput<ExtractInput>
 {
     protected override void OnComplete()
     {

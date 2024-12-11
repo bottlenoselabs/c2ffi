@@ -2,11 +2,12 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.CommandLine;
-using c2ffi.Tool.Commands.Merge.Input.Unsanitized;
+using JetBrains.Annotations;
 
 namespace c2ffi.Tool.Commands.Merge;
 
-public sealed class MergeFfisCommand : Command
+[UsedImplicitly]
+internal sealed class MergeFfisCommand : Command
 {
     private readonly MergeFfisTool _tool;
 
@@ -19,9 +20,9 @@ public sealed class MergeFfisCommand : Command
 
         var directoryOption = new Option<string>(
             "--inputDirectoryPath", "The input directory where the multiple target platform FFI (foreign function interface) `.json` files are located.")
-            {
-                IsRequired = true
-            };
+        {
+            IsRequired = true
+        };
         AddOption(directoryOption);
 
         var fileOption = new Option<string>(

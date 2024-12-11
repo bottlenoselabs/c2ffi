@@ -11,44 +11,32 @@ using c2ffi.Tool.Commands.Merge.Input;
 using c2ffi.Tool.Commands.Merge.Input.Sanitized;
 using c2ffi.Tool.Commands.Merge.Input.Unsanitized;
 using c2ffi.Tool.Commands.Merge.Output;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool.Commands.Merge;
 
-public sealed partial class MergeFfisTool : Tool<UnsanitizedMergeInput, MergeInput, MergeOutput>
+[UsedImplicitly]
+public sealed partial class MergeFfisTool(
+    ILogger<MergeFfisTool> logger,
+    IFileSystem fileSystem,
+    MergeInputSanitizer mergeInputSanitizer) : Tool<UnsanitizedMergeInput, MergeInput, MergeOutput>(logger, mergeInputSanitizer, fileSystem)
 {
-    private readonly ILogger<MergeFfisTool> _logger;
-    private readonly IFileSystem _fileSystem;
+    private readonly IFileSystem _fileSystem = fileSystem;
 
-    private readonly List<CEnum> _enums = new();
-    private readonly List<CVariable> _variables = new();
-    private readonly List<COpaqueType> _opaqueTypes = new();
-    private readonly List<CFunction> _functions = new();
-    private readonly List<CRecord> _records = new();
-    private readonly List<CFunctionPointer> _functionPointers = new();
-    private readonly List<CMacroObject> _macroObjects = new();
-    private readonly List<CTypeAlias> _typeAliases = new();
+    private readonly List<CEnum> _enums = [];
+    private readonly List<CVariable> _variables = [];
+    private readonly List<COpaqueType> _opaqueTypes = [];
+    private readonly List<CFunction> _functions = [];
+    private readonly List<CRecord> _records = [];
+    private readonly List<CFunctionPointer> _functionPointers = [];
+    private readonly List<CMacroObject> _macroObjects = [];
+    private readonly List<CTypeAlias> _typeAliases = [];
 
-    private sealed class CNodeWithTargetPlatform
+    private sealed class CNodeWithTargetPlatform(CNode node, TargetPlatform targetPlatform)
     {
-        public readonly CNode Node;
-        public readonly TargetPlatform TargetPlatform;
-
-        public CNodeWithTargetPlatform(CNode node, TargetPlatform targetPlatform)
-        {
-            Node = node;
-            TargetPlatform = targetPlatform;
-        }
-    }
-
-    public MergeFfisTool(
-        ILogger<MergeFfisTool> logger,
-        IFileSystem fileSystem,
-        MergeInputSanitizer mergeInputSanitizer)
-        : base(logger, mergeInputSanitizer, fileSystem)
-    {
-        _logger = logger;
-        _fileSystem = fileSystem;
+        public readonly CNode Node = node;
+        public readonly TargetPlatform TargetPlatform = targetPlatform;
     }
 
     public void Run(string inputDirectoryPath, string outputFilePath)
@@ -59,7 +47,7 @@ public sealed partial class MergeFfisTool : Tool<UnsanitizedMergeInput, MergeInp
             OutputFilePath = outputFilePath
         };
 
-        Run(unsanitizedOptions);
+        _ = Run(unsanitizedOptions);
     }
 
     protected override void Execute(MergeInput input, MergeOutput output)
@@ -271,7 +259,7 @@ public sealed partial class MergeFfisTool : Tool<UnsanitizedMergeInput, MergeInp
 
         if (!platformNodesByKey.TryGetValue(key, out var platformNodes))
         {
-            platformNodes = new List<CNodeWithTargetPlatform>();
+            platformNodes = [];
             platformNodesByKey.Add(key, platformNodes);
         }
 

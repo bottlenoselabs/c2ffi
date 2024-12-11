@@ -8,7 +8,7 @@
 
 namespace c2ffi.Data.Serialization
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.Json.SourceGeneration", "8.0.10.31311")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.Json.SourceGeneration", "9.0.11.2809")]
     public partial class JsonSerializerContextCFfiCrossPlatform
     {
         private readonly static global::System.Text.Json.JsonSerializerOptions s_defaultOptions = new()
@@ -17,7 +17,12 @@ namespace c2ffi.Data.Serialization
             PropertyNamingPolicy = global::System.Text.Json.JsonNamingPolicy.CamelCase,
             WriteIndented = true,
         };
-
+        
+        private const global::System.Reflection.BindingFlags InstanceMemberBindingFlags =
+            global::System.Reflection.BindingFlags.Instance |
+            global::System.Reflection.BindingFlags.Public |
+            global::System.Reflection.BindingFlags.NonPublic;
+        
         /// <summary>
         /// The default <see cref="global::System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="global::System.Text.Json.JsonSerializerOptions"/> instance.
         /// </summary>

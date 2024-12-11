@@ -3,7 +3,7 @@
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 
-public sealed class ClangException : Exception
+internal sealed class ClangException : Exception
 {
     public ClangException()
     {

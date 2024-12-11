@@ -10,24 +10,18 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestFunctionPointer
+public class CTestFunctionPointer(CFunctionPointer functionPointer)
 {
-    public string Name { get; }
+    public string Name { get; } = functionPointer.Name;
 
-    public string CallingConvention { get; }
+    public string CallingConvention { get; } = functionPointer.CallingConvention.ToString().ToLowerInvariant();
 
-    public CTestType ReturnType { get; }
+    public CTestType ReturnType { get; } = new(functionPointer.ReturnType);
 
-    public ImmutableArray<CTestFunctionPointerParameter> Parameters { get; set; }
-
-    public CTestFunctionPointer(CFunctionPointer functionPointer)
-    {
-        Name = functionPointer.Name;
-        CallingConvention = functionPointer.CallingConvention.ToString().ToLowerInvariant();
-        ReturnType = new CTestType(functionPointer.ReturnType);
-        Parameters = functionPointer.Parameters
-            .Select(x => new CTestFunctionPointerParameter(x)).ToImmutableArray();
-    }
+    public ImmutableArray<CTestFunctionPointerParameter> Parameters { get; set; } = [
+        ..functionPointer.Parameters
+            .Select(x => new CTestFunctionPointerParameter(x))
+    ];
 
     public override string ToString()
     {

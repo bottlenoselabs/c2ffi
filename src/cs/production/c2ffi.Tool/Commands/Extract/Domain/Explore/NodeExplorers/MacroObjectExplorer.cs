@@ -18,21 +18,11 @@ using Microsoft.Extensions.Logging;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
+internal sealed class MacroObjectExplorer(
+    ILogger<MacroObjectExplorer> logger,
+    IFileSystem fileSystem,
+    ClangTranslationUnitParser clangTranslationUnitParser) : NodeExplorer<COpaqueType>(logger, false)
 {
-    private readonly IFileSystem _fileSystem;
-    private readonly ClangTranslationUnitParser _clangTranslationUnitParser;
-
-    public MacroObjectExplorer(
-        ILogger<MacroObjectExplorer> logger,
-        IFileSystem fileSystem,
-        ClangTranslationUnitParser clangTranslationUnitParser)
-        : base(logger, false)
-    {
-        _fileSystem = fileSystem;
-        _clangTranslationUnitParser = clangTranslationUnitParser;
-    }
-
     protected override ExploreKindCursors ExpectedCursors =>
         ExploreKindCursors.Is(clang.CXCursorKind.CXCursor_MacroDefinition);
 
@@ -73,9 +63,9 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
         }
         finally
         {
-            if (_fileSystem.File.Exists(filePath))
+            if (fileSystem.File.Exists(filePath))
             {
-                _fileSystem.File.Delete(filePath);
+                fileSystem.File.Delete(filePath);
             }
         }
 
@@ -84,8 +74,8 @@ public sealed class MacroObjectExplorer : NodeExplorer<COpaqueType>
 
     private string WriteMacroObjectsFile(MacroObjectCandidate macroObjectCandidate)
     {
-        var tempFilePath = _fileSystem.Path.ChangeExtension(_fileSystem.Path.GetTempFileName(), ".txt");
-        using var fileStream = _fileSystem.File.OpenWrite(tempFilePath);
+        var tempFilePath = fileSystem.Path.ChangeExtension(fileSystem.Path.GetTempFileName(), ".txt");
+        using var fileStream = fileSystem.File.OpenWrite(tempFilePath);
         using var writer = new StreamWriter(fileStream);
 
         var includeHeaderFilePath = macroObjectCandidate.Location!.Value.FullFilePath;
@@ -121,7 +111,7 @@ int main(void)
 
     private CMacroObject? GetMacroObjectFromParsingFile(string filePath, ExploreContext context, ExploreNodeInfo info)
     {
-        using var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(
+        using var parseContext = clangTranslationUnitParser.ParseTranslationUnit(
             filePath,
             context.ParseContext.ExtractInput,
             isCPlusPlus: true,
@@ -199,7 +189,9 @@ int main(void)
         var kind = clang.clang_EvalResult_getKind(evaluateResult);
         string value;
 
+#pragma warning disable IDE0010
         switch (kind)
+#pragma warning restore IDE0010
         {
             case clang.CXEvalResultKind.CXEval_UnExposed:
                 return null;

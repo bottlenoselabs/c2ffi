@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class OpaqueTypeExplorer(ILogger<OpaqueTypeExplorer> logger)
+internal sealed class OpaqueTypeExplorer(ILogger<OpaqueTypeExplorer> logger)
     : NodeExplorer<COpaqueType>(logger, false)
 {
     protected override ExploreKindCursors ExpectedCursors => ExploreKindCursors.Any;

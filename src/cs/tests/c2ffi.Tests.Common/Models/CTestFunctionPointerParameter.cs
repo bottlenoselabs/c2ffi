@@ -9,17 +9,11 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestFunctionPointerParameter
+public class CTestFunctionPointerParameter(CFunctionPointerParameter functionPointerParameter)
 {
-    public string Name { get; }
+    public string Name { get; } = functionPointerParameter.Name;
 
-    public string TypeName { get; }
-
-    public CTestFunctionPointerParameter(CFunctionPointerParameter functionPointerParameter)
-    {
-        Name = functionPointerParameter.Name;
-        TypeName = functionPointerParameter.Type.Name;
-    }
+    public string TypeName { get; } = functionPointerParameter.Type.Name;
 
     public override string ToString()
     {

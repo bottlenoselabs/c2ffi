@@ -14,38 +14,22 @@ using TargetPlatform = c2ffi.Data.TargetPlatform;
 namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 
 [UsedImplicitly]
-public sealed partial class ParseSystemIncludeDirectoriesProvider
+public sealed partial class ParseSystemIncludeDirectoriesProvider(
+    ILogger<ParseSystemIncludeDirectoriesProvider> logger,
+    IFileSystem fileSystem)
 {
-    private readonly ILogger<ParseSystemIncludeDirectoriesProvider> _logger;
-    private readonly IFileSystem _fileSystem;
-
-    public ParseSystemIncludeDirectoriesProvider(
-        ILogger<ParseSystemIncludeDirectoriesProvider> logger,
-        IFileSystem fileSystem)
-    {
-        _fileSystem = fileSystem;
-        _logger = logger;
-    }
-
     public ImmutableArray<string> GetSystemIncludeDirectories(
         TargetPlatform targetPlatform,
         ImmutableArray<string> userProvidedSystemIncludeDirectories,
         bool isEnabledFindSystemHeaders = true)
     {
-        ImmutableArray<string> systemIncludeDirectories;
-        if (isEnabledFindSystemHeaders)
-        {
-            systemIncludeDirectories = FindSystemIncludeDirectories(targetPlatform, userProvidedSystemIncludeDirectories);
-        }
-        else
-        {
-            systemIncludeDirectories = userProvidedSystemIncludeDirectories;
-        }
+        var systemIncludeDirectories =
+            isEnabledFindSystemHeaders ? FindSystemIncludeDirectories(targetPlatform, userProvidedSystemIncludeDirectories) : userProvidedSystemIncludeDirectories;
 
         var builder = ImmutableArray.CreateBuilder<string>();
         foreach (var directory in systemIncludeDirectories)
         {
-            if (_fileSystem.Directory.Exists(directory))
+            if (fileSystem.Directory.Exists(directory))
             {
                 builder.Add(directory);
             }
@@ -66,25 +50,30 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         var hostArchitecture = Native.Architecture;
         var directories = ImmutableArray.CreateBuilder<string>();
 
+#pragma warning disable IDE0010
         switch (hostOperatingSystem)
+#pragma warning restore IDE0010
         {
             case NativeOperatingSystem.Windows:
-            {
-                FindSystemIncludeDirectoriesHostWindows(targetPlatform, directories);
-                break;
-            }
+                {
+                    FindSystemIncludeDirectoriesHostWindows(targetPlatform, directories);
+                    break;
+                }
 
             case NativeOperatingSystem.macOS:
-            {
-                FindSystemIncludeDirectoriesHostMac(targetPlatform, directories);
-                break;
-            }
+                {
+                    FindSystemIncludeDirectoriesHostMac(targetPlatform, directories);
+                    break;
+                }
 
             case NativeOperatingSystem.Linux:
-            {
-                FindSystemIncludeDirectoriesHostLinux(targetPlatform, hostArchitecture, directories);
-                break;
-            }
+                {
+                    FindSystemIncludeDirectoriesHostLinux(targetPlatform, hostArchitecture, directories);
+                    break;
+                }
+
+            default:
+                throw new NotImplementedException();
         }
 
         directories.AddRange(userProvidedSystemIncludeDirectories);
@@ -97,7 +86,9 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         TargetPlatform targetPlatform,
         ImmutableArray<string>.Builder directories)
     {
+#pragma warning disable IDE0010
         switch (targetPlatform.OperatingSystem)
+#pragma warning restore IDE0010
         {
             case NativeOperatingSystem.Windows:
                 FindSystemIncludeDirectoriesTargetWindows(directories);
@@ -117,7 +108,9 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
             directories.Add($"{clangVersionDirectory}/include");
         }
 
+#pragma warning disable IDE0010
         switch (targetPlatform.OperatingSystem)
+#pragma warning restore IDE0010
         {
             case NativeOperatingSystem.macOS:
                 FindSystemIncludesDirectoriesTargetMac(directories);
@@ -135,7 +128,9 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
         NativeArchitecture hostArchitecture,
         ImmutableArray<string>.Builder directories)
     {
+#pragma warning disable IDE0010
         switch (targetPlatform.OperatingSystem)
+#pragma warning restore IDE0010
         {
             case NativeOperatingSystem.Linux:
                 FindSystemIncludeDirectoriesTargetLinux(hostArchitecture, targetPlatform.Architecture, directories);
@@ -149,7 +144,7 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
     {
         var sdkDirectoryPath =
             Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Windows Kits\10\Include");
-        if (!string.IsNullOrEmpty(sdkDirectoryPath) && !_fileSystem.Directory.Exists(sdkDirectoryPath))
+        if (!string.IsNullOrEmpty(sdkDirectoryPath) && !fileSystem.Directory.Exists(sdkDirectoryPath))
         {
             throw new ClangException(
                 "Please install the software development kit (SDK) for Windows 10: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/");
@@ -171,14 +166,14 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
                 @"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe");
         var shellOutput = "-latest -property installationPath".ExecuteShellCommand(fileName: vsWhereFilePath);
         var visualStudioInstallationDirectoryPath = shellOutput.Output.Trim();
-        if (!_fileSystem.File.Exists(vsWhereFilePath) || string.IsNullOrEmpty(visualStudioInstallationDirectoryPath))
+        if (!fileSystem.File.Exists(vsWhereFilePath) || string.IsNullOrEmpty(visualStudioInstallationDirectoryPath))
         {
             throw new ClangException(
                 "Please install Visual Studio 2017 or later (community, professional, or enterprise).");
         }
 
-        var mscvVersionsDirectoryPath = _fileSystem.Path.Combine(visualStudioInstallationDirectoryPath, @"VC\Tools\MSVC");
-        if (!_fileSystem.Directory.Exists(mscvVersionsDirectoryPath))
+        var mscvVersionsDirectoryPath = fileSystem.Path.Combine(visualStudioInstallationDirectoryPath, @"VC\Tools\MSVC");
+        if (!fileSystem.Directory.Exists(mscvVersionsDirectoryPath))
         {
             throw new ClangException(
                 $"Please install the Microsoft Visual C++ (MSVC) build tools for Visual Studio ({visualStudioInstallationDirectoryPath}).");
@@ -191,8 +186,8 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
                 $"Unable to find a version for Microsoft Visual C++ (MSVC) build tools for Visual Studio ({visualStudioInstallationDirectoryPath}).");
         }
 
-        var mscvIncludeDirectoryPath = _fileSystem.Path.Combine(mscvHighestVersionDirectoryPath, "include");
-        if (!_fileSystem.Directory.Exists(mscvIncludeDirectoryPath))
+        var mscvIncludeDirectoryPath = fileSystem.Path.Combine(mscvHighestVersionDirectoryPath, "include");
+        if (!fileSystem.Directory.Exists(mscvIncludeDirectoryPath))
         {
             throw new ClangException(
                 $"Please install Microsoft Visual C++ (MSVC) build tools for Visual Studio ({visualStudioInstallationDirectoryPath}).");
@@ -205,7 +200,7 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
     {
         var shellOutput = "xcrun --sdk macosx --show-sdk-path".ExecuteShellCommand();
         var sdkPath = shellOutput.Output.Trim();
-        if (!_fileSystem.Directory.Exists(sdkPath))
+        if (!fileSystem.Directory.Exists(sdkPath))
         {
             throw new ClangException(
                 "Please install XCode or CommandLineTools for macOS."
@@ -219,7 +214,7 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
     {
         var shellOutput = "xcrun --sdk iphoneos --show-sdk-path".ExecuteShellCommand();
         var sdkPath = shellOutput.Output.Trim();
-        if (!_fileSystem.Directory.Exists(sdkPath))
+        if (!fileSystem.Directory.Exists(sdkPath))
         {
             throw new ClangException(
                 "Please install XCode for macOS." +
@@ -283,13 +278,13 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider
 
     private string GetHighestVersionDirectoryPathFrom(string directoryPath)
     {
-        var versionDirectoryPaths = _fileSystem.Directory.EnumerateDirectories(directoryPath);
+        var versionDirectoryPaths = fileSystem.Directory.EnumerateDirectories(directoryPath);
         var result = string.Empty;
         var highestVersion = Version.Parse("0.0.0");
 
         foreach (var versionDirectoryPath in versionDirectoryPaths)
         {
-            var versionStringIndex = versionDirectoryPath.LastIndexOf(_fileSystem.Path.DirectorySeparatorChar);
+            var versionStringIndex = versionDirectoryPath.LastIndexOf(fileSystem.Path.DirectorySeparatorChar);
             var versionString = versionDirectoryPath[(versionStringIndex + 1)..];
             if (!Version.TryParse(versionString, out var version))
             {

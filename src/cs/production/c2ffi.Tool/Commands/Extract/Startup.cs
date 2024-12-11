@@ -13,34 +13,34 @@ using ClangInstaller = c2ffi.Tool.Commands.Extract.Domain.Parse.ClangInstaller;
 namespace c2ffi.Tool.Commands.Extract;
 
 [UsedImplicitly]
-public sealed class Startup : IDependencyInjectionStartup
+internal sealed class Startup : IDependencyInjectionStartup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<ExtractInputSanitizer>();
+        _ = services.AddSingleton<ExtractInputSanitizer>();
 
-        services.AddSingleton<ClangInstaller>();
-        services.AddSingleton<ClangTranslationUnitParser>();
-        services.AddSingleton<ParseArgumentsProvider>();
-        services.AddSingleton<ParseSystemIncludeDirectoriesProvider>();
-        services.AddSingleton<Explorer>();
+        _ = services.AddSingleton<ClangInstaller>();
+        _ = services.AddSingleton<ClangTranslationUnitParser>();
+        _ = services.AddSingleton<ParseArgumentsProvider>();
+        _ = services.AddSingleton<ParseSystemIncludeDirectoriesProvider>();
+        _ = services.AddSingleton<Explorer>();
 
-        services.AddTransient<ExploreFrontier>();
+        _ = services.AddTransient<ExploreFrontier>();
 
-        services.AddTransient<ArrayExplorer>();
-        services.AddTransient<EnumExplorer>();
-        services.AddTransient<FunctionExplorer>();
-        services.AddTransient<FunctionPointerExplorer>();
-        services.AddTransient<MacroObjectExplorer>();
-        services.AddTransient<OpaqueTypeExplorer>();
-        services.AddTransient<StructExplorer>();
-        services.AddTransient<UnionExplorer>();
-        services.AddTransient<TypeAliasExplorer>();
-        services.AddTransient<VariableExplorer>();
-        services.AddTransient<PointerExplorer>();
-        services.AddTransient<PrimitiveExplorer>();
+        _ = services.AddTransient<ArrayExplorer>();
+        _ = services.AddTransient<EnumExplorer>();
+        _ = services.AddTransient<FunctionExplorer>();
+        _ = services.AddTransient<FunctionPointerExplorer>();
+        _ = services.AddTransient<MacroObjectExplorer>();
+        _ = services.AddTransient<OpaqueTypeExplorer>();
+        _ = services.AddTransient<StructExplorer>();
+        _ = services.AddTransient<UnionExplorer>();
+        _ = services.AddTransient<TypeAliasExplorer>();
+        _ = services.AddTransient<VariableExplorer>();
+        _ = services.AddTransient<PointerExplorer>();
+        _ = services.AddTransient<PrimitiveExplorer>();
 
-        services.AddSingleton<ExtractFfiCommand>();
-        services.AddSingleton<ExtractFfiTool>();
+        _ = services.AddSingleton<ExtractFfiCommand>();
+        _ = services.AddSingleton<ExtractFfiTool>();
     }
 }

@@ -10,20 +10,13 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestEnum
+public class CTestEnum(CEnum @enum)
 {
-    public string Name { get; }
+    public string Name { get; } = @enum.Name;
 
-    public int SizeOf { get; }
+    public int SizeOf { get; } = @enum.SizeOf;
 
-    public ImmutableArray<CTestEnumValue> Values { get; }
-
-    public CTestEnum(CEnum @enum)
-    {
-        Name = @enum.Name;
-        SizeOf = @enum.SizeOf;
-        Values = @enum.Values.Select(x => new CTestEnumValue(x)).ToImmutableArray();
-    }
+    public ImmutableArray<CTestEnumValue> Values { get; } = [..@enum.Values.Select(x => new CTestEnumValue(x))];
 
     public override string ToString()
     {

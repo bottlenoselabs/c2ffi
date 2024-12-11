@@ -5,7 +5,6 @@ using System.Collections.Immutable;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
 using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
-using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
@@ -13,7 +12,7 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplorer(logger, false)
+internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplorer(logger, false)
 {
     protected override ExploreKindCursors ExpectedCursors { get; } =
         ExploreKindCursors.Is(CXCursorKind.CXCursor_UnionDecl);

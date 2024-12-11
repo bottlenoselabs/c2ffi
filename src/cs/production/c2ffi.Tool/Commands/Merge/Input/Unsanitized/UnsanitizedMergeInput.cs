@@ -6,7 +6,7 @@ using bottlenoselabs.Common.Tools;
 namespace c2ffi.Tool.Commands.Merge.Input.Unsanitized;
 
 // NOTE: This class is considered un-sanitized input; all strings and other types could be null.
-public class UnsanitizedMergeInput : ToolUnsanitizedInput
+public sealed class UnsanitizedMergeInput : ToolUnsanitizedInput
 {
     public string InputDirectoryPath { get; set; } = string.Empty;
 

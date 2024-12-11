@@ -4,7 +4,7 @@
 namespace c2ffi.Tool;
 
 [AttributeUsage(AttributeTargets.Assembly)]
-public sealed class ProjectInfoAttribute(string toolDescription) : Attribute
+internal sealed class ProjectInfoAttribute(string toolDescription) : Attribute
 {
     public string ToolDescription { get; } = toolDescription;
 }

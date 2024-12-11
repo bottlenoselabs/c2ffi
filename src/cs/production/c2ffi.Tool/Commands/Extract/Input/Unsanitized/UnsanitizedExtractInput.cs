@@ -10,6 +10,7 @@ namespace c2ffi.Tool.Commands.Extract.Input.Unsanitized;
 
 // NOTE: This class is considered un-sanitized input; all strings and other types could be null.
 [PublicAPI]
+[UsedImplicitly]
 public sealed class UnsanitizedExtractInput : ToolUnsanitizedInput
 {
     /// <summary>

@@ -1,10 +1,6 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2ffi.Tests.Library.Models;
-using FluentAssertions;
-using Xunit;
-
 #pragma warning disable CA1707
 
 namespace c2ffi.Tests.EndToEnd.Merge.FunctionPointers.function_pointer_void;
@@ -25,21 +21,21 @@ public class Test : MergeFfisTest
     private void FfiFunctionPointer(CTestFfiCrossPlatform ffi)
     {
         var alias = ffi.GetTypeAlias(FunctionPointerName);
-        alias.Name.Should().Be(FunctionPointerName);
-        alias.UnderlyingType.NodeKind.Should().Be("functionpointer");
-        alias.UnderlyingType.Name.Should().Be("void ()");
-        alias.UnderlyingType.SizeOf.Should().Be(8);
-        alias.UnderlyingType.AlignOf.Should().Be(8);
-        alias.UnderlyingType.InnerType.Should().BeNull();
+        _ = alias.Name.Should().Be(FunctionPointerName);
+        _ = alias.UnderlyingType.NodeKind.Should().Be("functionpointer");
+        _ = alias.UnderlyingType.Name.Should().Be("void ()");
+        _ = alias.UnderlyingType.SizeOf.Should().Be(8);
+        _ = alias.UnderlyingType.AlignOf.Should().Be(8);
+        _ = alias.UnderlyingType.InnerType.Should().BeNull();
 
         var functionPointer = ffi.GetFunctionPointer("void ()");
-        functionPointer.Name.Should().Be("void ()");
-        functionPointer.CallingConvention.Should().Be("cdecl");
-        functionPointer.Parameters.Should().BeEmpty();
-        functionPointer.ReturnType.Name.Should().Be("void");
-        functionPointer.ReturnType.SizeOf.Should().BeNull();
-        functionPointer.ReturnType.AlignOf.Should().BeNull();
-        functionPointer.ReturnType.InnerType.Should().BeNull();
-        functionPointer.ReturnType.NodeKind.Should().Be("primitive");
+        _ = functionPointer.Name.Should().Be("void ()");
+        _ = functionPointer.CallingConvention.Should().Be("cdecl");
+        _ = functionPointer.Parameters.Should().BeEmpty();
+        _ = functionPointer.ReturnType.Name.Should().Be("void");
+        _ = functionPointer.ReturnType.SizeOf.Should().BeNull();
+        _ = functionPointer.ReturnType.AlignOf.Should().BeNull();
+        _ = functionPointer.ReturnType.InnerType.Should().BeNull();
+        _ = functionPointer.ReturnType.NodeKind.Should().Be("primitive");
     }
 }

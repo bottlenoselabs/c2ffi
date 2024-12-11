@@ -2,25 +2,19 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using c2ffi.Data;
-using c2ffi.Data.Nodes;
 using c2ffi.Tool.Internal;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 
-public sealed partial class ExploreFrontier
+[UsedImplicitly]
+internal sealed partial class ExploreFrontier(ILogger<ExploreFrontier> logger)
 {
-    private readonly ILogger<ExploreFrontier> _logger;
-
     private readonly ArrayDeque<ExploreNodeInfo> _frontierMacroObjects = new();
     private readonly ArrayDeque<ExploreNodeInfo> _frontierVariables = new();
     private readonly ArrayDeque<ExploreNodeInfo> _frontierFunctions = new();
     private readonly ArrayDeque<ExploreNodeInfo> _frontierTypes = new();
-
-    public ExploreFrontier(ILogger<ExploreFrontier> logger)
-    {
-        _logger = logger;
-    }
 
     public void EnqueueNode(ExploreNodeInfo info)
     {
@@ -75,7 +69,9 @@ public sealed partial class ExploreFrontier
 
     private ArrayDeque<ExploreNodeInfo> GetFrontier(ExploreNodeInfo info)
     {
+#pragma warning disable IDE0072
         var frontier = info.NodeKind switch
+#pragma warning restore IDE0072
         {
             CNodeKind.Variable => _frontierVariables,
             CNodeKind.Function => _frontierFunctions,

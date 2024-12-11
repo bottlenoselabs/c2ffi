@@ -3,7 +3,7 @@
 
 namespace c2ffi.Tool.Internal.Input;
 
-public sealed class InputSanitizationException : Exception
+internal sealed class InputSanitizationException : Exception
 {
     public InputSanitizationException()
     {

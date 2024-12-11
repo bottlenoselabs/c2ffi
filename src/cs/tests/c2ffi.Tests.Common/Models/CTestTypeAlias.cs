@@ -9,15 +9,9 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestTypeAlias
+public class CTestTypeAlias(CTypeAlias typeAlias)
 {
-    public string Name { get; }
+    public string Name { get; } = typeAlias.Name;
 
-    public CTestType UnderlyingType { get; }
-
-    public CTestTypeAlias(CTypeAlias typeAlias)
-    {
-        Name = typeAlias.Name;
-        UnderlyingType = new CTestType(typeAlias.UnderlyingType);
-    }
+    public CTestType UnderlyingType { get; } = new(typeAlias.UnderlyingType);
 }

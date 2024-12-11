@@ -7,7 +7,7 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 
-public static unsafe class ClangFunctions
+internal static unsafe class ClangFunctions
 {
     private static VisitChildInstance[] _visitChildInstances = new VisitChildInstance[512];
     private static int _visitChildCount;
@@ -43,9 +43,9 @@ public static unsafe class ClangFunctions
 
         var clientData = default(CXClientData);
         clientData.Data = (void*)_visitChildCount;
-        var hasTerminatedPrematurely = clang_visitChildren(cursor, VisitorChild, clientData) > 0;
+        _ = clang_visitChildren(cursor, VisitorChild, clientData) > 0;
 
-        Interlocked.Decrement(ref _visitChildCount);
+        _ = Interlocked.Decrement(ref _visitChildCount);
         var result = visitData.CursorBuilder.ToImmutable();
         visitData.CursorBuilder.Clear();
         return result;
@@ -73,11 +73,9 @@ public static unsafe class ClangFunctions
 
         var clientData = default(CXClientData);
         clientData.Data = (void*)_visitChildCount;
-#pragma warning disable CA1806
-        clang_visitChildren(cursor, VisitorAttribute, clientData);
-#pragma warning restore CA1806
+        _ = clang_visitChildren(cursor, VisitorAttribute, clientData);
 
-        Interlocked.Decrement(ref _visitChildCount);
+        _ = Interlocked.Decrement(ref _visitChildCount);
         var result = visitData.CursorBuilder.ToImmutable();
         visitData.CursorBuilder.Clear();
         return result;
@@ -98,11 +96,9 @@ public static unsafe class ClangFunctions
 
         var clientData = default(CXClientData);
         clientData.Data = (void*)_visitFieldsCount;
-#pragma warning disable CA1806
-        clang_Type_visitFields(type, VisitorField, clientData);
-#pragma warning restore CA1806
+        _ = clang_Type_visitFields(type, VisitorField, clientData);
 
-        Interlocked.Decrement(ref _visitFieldsCount);
+        _ = Interlocked.Decrement(ref _visitFieldsCount);
         var result = visitData.CursorBuilder.ToImmutable();
         visitData.CursorBuilder.Clear();
         return result;
@@ -157,16 +153,10 @@ public static unsafe class ClangFunctions
         return CXVisitorResult.CXVisit_Continue;
     }
 
-    private readonly struct VisitChildInstance
+    private readonly struct VisitChildInstance(ClangVisitCursorChildPredicate predicate)
     {
-        public readonly ClangVisitCursorChildPredicate Predicate;
-        public readonly ImmutableArray<CXCursor>.Builder CursorBuilder;
-
-        public VisitChildInstance(ClangVisitCursorChildPredicate predicate)
-        {
-            Predicate = predicate;
-            CursorBuilder = ImmutableArray.CreateBuilder<CXCursor>();
-        }
+        public readonly ClangVisitCursorChildPredicate Predicate = predicate;
+        public readonly ImmutableArray<CXCursor>.Builder CursorBuilder = ImmutableArray.CreateBuilder<CXCursor>();
     }
 
     private readonly struct VisitFieldsInstance

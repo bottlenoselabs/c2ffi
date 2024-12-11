@@ -16,7 +16,7 @@ namespace c2ffi.Tool.Internal;
 /// </summary>
 /// <typeparam name="T">The type of an element stored in the deque.</typeparam>
 [PublicAPI]
-public sealed class ArrayDeque<T> : IList<T>
+internal sealed class ArrayDeque<T> : IList<T>
 {
     private const int DefaultCapacity = 16;
     private T[] _elements;

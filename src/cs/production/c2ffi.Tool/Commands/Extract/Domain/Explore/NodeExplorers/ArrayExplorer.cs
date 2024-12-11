@@ -10,13 +10,8 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class ArrayExplorer : NodeExplorer<CArray>
+internal sealed class ArrayExplorer(ILogger<ArrayExplorer> logger) : NodeExplorer<CArray>(logger, false)
 {
-    public ArrayExplorer(ILogger<ArrayExplorer> logger)
-        : base(logger, false)
-    {
-    }
-
     protected override ExploreKindCursors ExpectedCursors => ExploreKindCursors.Any;
 
     protected override ExploreKindTypes ExpectedTypes { get; } = ExploreKindTypes.Either(

@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace c2ffi.Tool.Commands.Extract;
 
 [UsedImplicitly]
-public sealed class ExtractFfiCommand : Command
+internal sealed class ExtractFfiCommand : Command
 {
     private readonly ExtractFfiTool _tool;
 

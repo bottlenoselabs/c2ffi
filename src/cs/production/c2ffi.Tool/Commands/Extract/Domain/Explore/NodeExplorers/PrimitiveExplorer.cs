@@ -10,7 +10,7 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class PrimitiveExplorer(ILogger<PrimitiveExplorer> logger)
+internal sealed class PrimitiveExplorer(ILogger<PrimitiveExplorer> logger)
     : NodeExplorer<CPrimitive>(logger, false)
 {
     protected override ExploreKindCursors ExpectedCursors => ExploreKindCursors.Any;

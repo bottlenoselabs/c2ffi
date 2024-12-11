@@ -6,7 +6,7 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
 
-public class ExploreKindCursors
+internal sealed class ExploreKindCursors
 {
     private readonly ImmutableArray<CXCursorKind>? _expectedCursorKinds;
 

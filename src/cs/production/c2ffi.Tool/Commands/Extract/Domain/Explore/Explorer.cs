@@ -3,33 +3,24 @@
 
 using bottlenoselabs;
 using c2ffi.Data;
-using c2ffi.Data.Nodes;
 using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 using c2ffi.Tool.Commands.Extract.Domain.Parse;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
-using c2ffi.Tool.Internal;
-using Microsoft.Extensions.Hosting.Internal;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
 
-public sealed partial class Explorer
+[UsedImplicitly]
+public sealed partial class Explorer(
+    ILogger<Explorer> logger,
+    IServiceProvider services,
+    ClangTranslationUnitParser clangTranslationUnitParser)
 {
-    private readonly ILogger<Explorer> _logger;
-    private readonly IServiceProvider _services;
-    private readonly ClangTranslationUnitParser _clangTranslationUnitParser;
+    private readonly List<ParseContext> _parseContexts = [];
 
-    private readonly List<ParseContext> _parseContexts = new();
-
-    private readonly HashSet<string> _visitedIncludeFilePaths = new();
-
-    public Explorer(ILogger<Explorer> logger, IServiceProvider services, ClangTranslationUnitParser clangTranslationUnitParser)
-    {
-        _services = services;
-        _clangTranslationUnitParser = clangTranslationUnitParser;
-        _logger = logger;
-    }
+    private readonly HashSet<string> _visitedIncludeFilePaths = [];
 
     public CFfiTargetPlatform ExtractFfi(
         string filePath,
@@ -137,7 +128,9 @@ public sealed partial class Explorer
 
     private void VisitExplicitlyIncludedName(ExploreContext context, clang.CXCursor clangCursor)
     {
+#pragma warning disable IDE0072
         var nodeKind = clangCursor.kind switch
+#pragma warning restore IDE0072
         {
             clang.CXCursorKind.CXCursor_EnumDecl => CNodeKind.Enum,
             _ => CNodeKind.Unknown
@@ -191,7 +184,7 @@ public sealed partial class Explorer
             return;
         }
 
-        var parseContext2 = _clangTranslationUnitParser.ParseTranslationUnit(
+        var parseContext2 = clangTranslationUnitParser.ParseTranslationUnit(
             filePath,
             context.ParseContext.ExtractInput,
             false,
@@ -203,8 +196,10 @@ public sealed partial class Explorer
 
     private ExploreContext CreateExploreContext(string filePath, ExtractTargetPlatformInput input)
     {
-        var parseContext = _clangTranslationUnitParser.ParseTranslationUnit(filePath, input);
-        var result = new ExploreContext(_services, parseContext);
+#pragma warning disable CA2000
+        var parseContext = clangTranslationUnitParser.ParseTranslationUnit(filePath, input);
+#pragma warning restore CA2000
+        var result = new ExploreContext(services, parseContext);
         return result;
     }
 

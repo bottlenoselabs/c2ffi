@@ -7,17 +7,19 @@ using System.Runtime.InteropServices;
 using bottlenoselabs;
 using c2ffi.Data;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 
+[UsedImplicitly]
 public sealed partial class ClangInstaller
 {
     private readonly ILogger<ClangInstaller> _logger;
     private readonly IFileSystem _fileSystem;
     private readonly IPath _path;
 
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private string _clangNativeLibraryFilePath = null!;
     private bool _isInstalled;
 
@@ -32,7 +34,7 @@ public sealed partial class ClangInstaller
 
     public bool TryInstall(string? clangFilePath = null)
     {
-        lock (_lock)
+        using (_lock.EnterScope())
         {
             if (_isInstalled)
             {
@@ -63,12 +65,14 @@ public sealed partial class ClangInstaller
             return clangFilePath;
         }
 
+#pragma warning disable IDE0072
         var result = Native.OperatingSystem switch
+#pragma warning restore IDE0072
         {
             NativeOperatingSystem.Windows => GetClangFilePathWindows(),
             NativeOperatingSystem.Linux => GetClangFilePathLinux(),
             NativeOperatingSystem.macOS => GetClangFilePathMacOs(),
-            _ => string.Empty
+            _ => throw new NotImplementedException()
         };
 
         return result;

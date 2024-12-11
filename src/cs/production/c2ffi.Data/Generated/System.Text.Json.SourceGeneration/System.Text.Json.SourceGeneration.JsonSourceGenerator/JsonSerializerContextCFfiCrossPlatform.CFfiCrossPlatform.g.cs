@@ -15,7 +15,9 @@ namespace c2ffi.Data.Serialization
         /// <summary>
         /// Defines the source generated JSON serialization contract metadata for a given type.
         /// </summary>
+        #nullable disable annotations // Marking the property type as nullable-oblivious.
         public global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CFfiCrossPlatform> CFfiCrossPlatform
+        #nullable enable annotations
         {
             get => _CFfiCrossPlatform ??= (global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CFfiCrossPlatform>)Options.GetTypeInfo(typeof(global::c2ffi.Data.CFfiCrossPlatform));
         }
@@ -30,7 +32,8 @@ namespace c2ffi.Data.Serialization
                     ObjectWithParameterizedConstructorCreator = null,
                     PropertyMetadataInitializer = _ => CFfiCrossPlatformPropInit(options),
                     ConstructorParameterMetadataInitializer = null,
-                    SerializeHandler = null
+                    ConstructorAttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetConstructor(InstanceMemberBindingFlags, binder: null, global::System.Array.Empty<global::System.Type>(), modifiers: null),
+                    SerializeHandler = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::c2ffi.Data.CFfiCrossPlatform>(options, objectInfo);
@@ -59,7 +62,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "Platforms",
-                JsonPropertyName = "platforms"
+                JsonPropertyName = "platforms",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("Platforms", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.TargetPlatform>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.TargetPlatform>>(options, info0);
@@ -78,10 +82,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "MacroObjects",
-                JsonPropertyName = "macroObjects"
+                JsonPropertyName = "macroObjects",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("MacroObjects", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[1] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CMacroObject>>(options, info1);
+            properties[1].IsGetNullable = false;
+            properties[1].IsSetNullable = false;
 
             var info2 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>>
             {
@@ -97,10 +104,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "Variables",
-                JsonPropertyName = "variables"
+                JsonPropertyName = "variables",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("Variables", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CVariable>>(options, info2);
+            properties[2].IsGetNullable = false;
+            properties[2].IsSetNullable = false;
 
             var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>>
             {
@@ -116,10 +126,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "Functions",
-                JsonPropertyName = "functions"
+                JsonPropertyName = "functions",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("Functions", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunction>>(options, info3);
+            properties[3].IsGetNullable = false;
+            properties[3].IsSetNullable = false;
 
             var info4 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>>
             {
@@ -135,10 +148,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "Records",
-                JsonPropertyName = "records"
+                JsonPropertyName = "records",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("Records", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CRecord>>(options, info4);
+            properties[4].IsGetNullable = false;
+            properties[4].IsSetNullable = false;
 
             var info5 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>>
             {
@@ -154,10 +170,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "Enums",
-                JsonPropertyName = "enums"
+                JsonPropertyName = "enums",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("Enums", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CEnum>>(options, info5);
+            properties[5].IsGetNullable = false;
+            properties[5].IsSetNullable = false;
 
             var info6 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>>
             {
@@ -173,10 +192,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "TypeAliases",
-                JsonPropertyName = "typeAliases"
+                JsonPropertyName = "typeAliases",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("TypeAliases", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CTypeAlias>>(options, info6);
+            properties[6].IsGetNullable = false;
+            properties[6].IsSetNullable = false;
 
             var info7 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>>
             {
@@ -192,10 +214,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "OpaqueTypes",
-                JsonPropertyName = "opaqueTypes"
+                JsonPropertyName = "opaqueTypes",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("OpaqueTypes", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[7] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.COpaqueType>>(options, info7);
+            properties[7].IsGetNullable = false;
+            properties[7].IsSetNullable = false;
 
             var info8 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>>
             {
@@ -211,10 +236,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "FunctionPointers",
-                JsonPropertyName = "functionPointers"
+                JsonPropertyName = "functionPointers",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CFfiCrossPlatform).GetProperty("FunctionPointers", InstanceMemberBindingFlags, null, typeof(global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[8] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::System.Collections.Immutable.ImmutableSortedDictionary<string, global::c2ffi.Data.Nodes.CFunctionPointer>>(options, info8);
+            properties[8].IsGetNullable = false;
+            properties[8].IsSetNullable = false;
 
             return properties;
         }

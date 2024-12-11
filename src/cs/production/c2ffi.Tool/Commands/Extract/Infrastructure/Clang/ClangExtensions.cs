@@ -9,9 +9,9 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
 {
-    public static class ClangExtensions
+    internal static class ClangExtensions
     {
-        public delegate bool VisitChildPredicate(CXCursor child, CXCursor parent);
+        internal delegate bool VisitChildPredicate(CXCursor child, CXCursor parent);
 
         private static VisitChildInstance[] _visitChildInstances = new VisitChildInstance[512];
         private static int _visitChildCount;
@@ -51,7 +51,9 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
 
         public static bool IsPrimitive(this CXType clangType)
         {
+#pragma warning disable IDE0072
             return clangType.kind switch
+#pragma warning restore IDE0072
             {
                 CXTypeKind.CXType_Void => true,
                 CXTypeKind.CXType_Bool => true,
@@ -76,7 +78,9 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
 
         public static bool IsSignedPrimitive(this CXType clangType)
         {
+#pragma warning disable IDE0072
             return clangType.kind switch
+#pragma warning restore IDE0072
             {
                 CXTypeKind.CXType_Char_S => true,
                 CXTypeKind.CXType_SChar => true,
@@ -115,9 +119,9 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
                 clientData.Data = (void*)_visitChildCount;
             }
 
-            clang_visitChildren(cursor, VisitorChild, clientData);
+            _ = clang_visitChildren(cursor, VisitorChild, clientData);
 
-            Interlocked.Decrement(ref _visitChildCount);
+            _ = Interlocked.Decrement(ref _visitChildCount);
             var result = visitData.CursorBuilder.ToImmutable();
             visitData.CursorBuilder.Clear();
             return result;
@@ -142,9 +146,9 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
                 clientData.Data = (void*)_visitFieldsCount;
             }
 
-            clang_Type_visitFields(type, VisitorField, clientData);
+            _ = clang_Type_visitFields(type, VisitorField, clientData);
 
-            Interlocked.Decrement(ref _visitFieldsCount);
+            _ = Interlocked.Decrement(ref _visitFieldsCount);
             var result = visitData.CursorBuilder.ToImmutable();
             visitData.CursorBuilder.Clear();
             return result;
@@ -185,16 +189,10 @@ namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang
             return CXVisitorResult.CXVisit_Continue;
         }
 
-        private readonly struct VisitChildInstance
+        private readonly struct VisitChildInstance(VisitChildPredicate predicate)
         {
-            public readonly VisitChildPredicate Predicate;
-            public readonly ImmutableArray<CXCursor>.Builder CursorBuilder;
-
-            public VisitChildInstance(VisitChildPredicate predicate)
-            {
-                Predicate = predicate;
-                CursorBuilder = ImmutableArray.CreateBuilder<CXCursor>();
-            }
+            public readonly VisitChildPredicate Predicate = predicate;
+            public readonly ImmutableArray<CXCursor>.Builder CursorBuilder = ImmutableArray.CreateBuilder<CXCursor>();
         }
 
         private readonly struct VisitFieldsInstance

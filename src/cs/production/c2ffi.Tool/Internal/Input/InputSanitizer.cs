@@ -9,7 +9,9 @@ using bottlenoselabs.Common.Tools;
 
 namespace c2ffi.Tool.Internal.Input;
 
+#pragma warning disable CA1515
 public abstract class InputSanitizer<TUnsanitizedInput, TSanitizedInput> : ToolInputSanitizer<TUnsanitizedInput, TSanitizedInput>
+#pragma warning restore CA1515
     where TUnsanitizedInput : class
     where TSanitizedInput : class
 {
@@ -46,12 +48,8 @@ public abstract class InputSanitizer<TUnsanitizedInput, TSanitizedInput> : ToolI
             throw new InputSanitizationException($"The file '{fullFilePath}' is empty.");
         }
 
-        var unsanitizedInput = JsonSerializer.Deserialize<TUnsanitizedInput>(fileContents, _jsonSerializerOptions);
-        if (unsanitizedInput == null)
-        {
-            throw new InputSanitizationException($"The {typeof(TUnsanitizedInput)} is null.");
-        }
-
+        var unsanitizedInput = JsonSerializer.Deserialize<TUnsanitizedInput>(fileContents, _jsonSerializerOptions) ??
+                               throw new InputSanitizationException($"The {typeof(TUnsanitizedInput)} is null.");
         var previousCurrentDirectory = Environment.CurrentDirectory;
         Environment.CurrentDirectory = Path.GetDirectoryName(fullFilePath)!;
         var result = Sanitize(unsanitizedInput);

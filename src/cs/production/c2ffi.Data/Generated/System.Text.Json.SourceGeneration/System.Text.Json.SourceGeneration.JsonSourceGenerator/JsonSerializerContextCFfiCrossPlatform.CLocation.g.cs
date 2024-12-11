@@ -15,7 +15,9 @@ namespace c2ffi.Data.Serialization
         /// <summary>
         /// Defines the source generated JSON serialization contract metadata for a given type.
         /// </summary>
+        #nullable disable annotations // Marking the property type as nullable-oblivious.
         public global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CLocation> CLocation
+        #nullable enable annotations
         {
             get => _CLocation ??= (global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CLocation>)Options.GetTypeInfo(typeof(global::c2ffi.Data.CLocation));
         }
@@ -30,7 +32,8 @@ namespace c2ffi.Data.Serialization
                     ObjectWithParameterizedConstructorCreator = null,
                     PropertyMetadataInitializer = _ => CLocationPropInit(options),
                     ConstructorParameterMetadataInitializer = null,
-                    SerializeHandler = null
+                    ConstructorAttributeProviderFactory = static () => typeof(global::c2ffi.Data.CLocation).GetConstructor(InstanceMemberBindingFlags, binder: null, global::System.Array.Empty<global::System.Type>(), modifiers: null),
+                    SerializeHandler = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::c2ffi.Data.CLocation>(options, objectInfo);
@@ -59,10 +62,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "FileName",
-                JsonPropertyName = "file_name"
+                JsonPropertyName = "file_name",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CLocation).GetProperty("FileName", InstanceMemberBindingFlags, null, typeof(string), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info0);
+            properties[0].IsGetNullable = false;
+            properties[0].IsSetNullable = false;
 
             var info1 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
@@ -78,10 +84,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "FilePath",
-                JsonPropertyName = "file_path"
+                JsonPropertyName = "file_path",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CLocation).GetProperty("FilePath", InstanceMemberBindingFlags, null, typeof(string), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[1] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info1);
+            properties[1].IsGetNullable = false;
+            properties[1].IsSetNullable = false;
 
             var info2 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<string>
             {
@@ -97,10 +106,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "FullFilePath",
-                JsonPropertyName = null
+                JsonPropertyName = null,
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CLocation).GetProperty("FullFilePath", InstanceMemberBindingFlags, null, typeof(string), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info2);
+            properties[2].IsGetNullable = false;
+            properties[2].IsSetNullable = false;
 
             var info3 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<int>
             {
@@ -116,7 +128,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "LineNumber",
-                JsonPropertyName = "line"
+                JsonPropertyName = "line",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CLocation).GetProperty("LineNumber", InstanceMemberBindingFlags, null, typeof(int), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info3);
@@ -135,7 +148,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "LineColumn",
-                JsonPropertyName = "column"
+                JsonPropertyName = "column",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CLocation).GetProperty("LineColumn", InstanceMemberBindingFlags, null, typeof(int), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int>(options, info4);
@@ -154,7 +168,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "IsSystem",
-                JsonPropertyName = "is_system"
+                JsonPropertyName = "is_system",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CLocation).GetProperty("IsSystem", InstanceMemberBindingFlags, null, typeof(bool), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool>(options, info5);

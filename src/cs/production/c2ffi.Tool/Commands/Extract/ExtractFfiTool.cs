@@ -10,41 +10,33 @@ using c2ffi.Tool.Commands.Extract.Input;
 using c2ffi.Tool.Commands.Extract.Input.Sanitized;
 using c2ffi.Tool.Commands.Extract.Input.Unsanitized;
 using c2ffi.Tool.Commands.Extract.Output;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace c2ffi.Tool.Commands.Extract;
 
-public sealed class ExtractFfiTool : Tool<UnsanitizedExtractInput, ExtractInput, ExtractOutput>
+[UsedImplicitly]
+public sealed class ExtractFfiTool(
+    ILogger<ExtractFfiTool> logger,
+    IFileSystem fileSystem,
+    ExtractInputSanitizer inputSanitizer,
+    ClangInstaller clangInstaller,
+    Explorer explorer) : Tool<UnsanitizedExtractInput, ExtractInput, ExtractOutput>(logger, inputSanitizer, fileSystem)
 {
-    private readonly IFileSystem _fileSystem;
-    private readonly ClangInstaller _clangInstaller;
-    private readonly Explorer _explorer;
+    private readonly IFileSystem _fileSystem = fileSystem;
 
     private string? _clangFilePath;
-
-    public ExtractFfiTool(
-        ILogger<ExtractFfiTool> logger,
-        IFileSystem fileSystem,
-        ExtractInputSanitizer inputSanitizer,
-        ClangInstaller clangInstaller,
-        Explorer explorer)
-        : base(logger, inputSanitizer, fileSystem)
-    {
-        _fileSystem = fileSystem;
-        _clangInstaller = clangInstaller;
-        _explorer = explorer;
-    }
 
     public void Run(string configurationFilePath, string? clangFilePath = null)
     {
         _clangFilePath = clangFilePath;
-        base.Run(configurationFilePath);
+        _ = base.Run(configurationFilePath);
     }
 
     protected override void Execute(ExtractInput input, ExtractOutput output)
     {
         BeginStep("Install libclang");
-        var libClangIsInstalled = _clangInstaller.TryInstall(_clangFilePath);
+        var libClangIsInstalled = clangInstaller.TryInstall(_clangFilePath);
         EndStep();
 
         if (!libClangIsInstalled)
@@ -56,7 +48,7 @@ public sealed class ExtractFfiTool : Tool<UnsanitizedExtractInput, ExtractInput,
         {
             BeginStep($"Extracting FFI {targetPlatformInput.TargetPlatform}");
 
-            var ffi = _explorer.ExtractFfi(
+            var ffi = explorer.ExtractFfi(
                 input.InputFilePath,
                 targetPlatformInput);
             Json.WriteFfiTargetPlatform(_fileSystem, targetPlatformInput.OutputFilePath, ffi);

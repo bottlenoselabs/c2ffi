@@ -9,17 +9,11 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestEnumValue
+public class CTestEnumValue(CEnumValue enumValue)
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = enumValue.Name;
 
-    public long Value { get; set; }
-
-    public CTestEnumValue(CEnumValue enumValue)
-    {
-        Name = enumValue.Name;
-        Value = enumValue.Value;
-    }
+    public long Value { get; set; } = enumValue.Value;
 
     public override string ToString()
     {

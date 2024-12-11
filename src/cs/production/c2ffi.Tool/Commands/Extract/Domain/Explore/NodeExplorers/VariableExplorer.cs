@@ -10,7 +10,7 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class VariableExplorer(ILogger<VariableExplorer> logger)
+internal sealed class VariableExplorer(ILogger<VariableExplorer> logger)
     : NodeExplorer<CVariable>(logger, false)
 {
     protected override ExploreKindCursors ExpectedCursors { get; } =

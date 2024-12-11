@@ -10,9 +10,9 @@ namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 #pragma warning disable CA1815
 #pragma warning disable CA1034
 
-public static class ClangTypeInfoProvider
+internal static class ClangTypeInfoProvider
 {
-    public struct ClangTypeInfo
+    internal struct ClangTypeInfo
     {
         public string Name;
         public CNodeKind NodeKind;
@@ -47,7 +47,9 @@ public static class ClangTypeInfoProvider
             return GetTypeInfoPrimitive(clangCursorType);
         }
 
+#pragma warning disable IDE0010
         switch (clangCursorType.kind)
+#pragma warning restore IDE0010
         {
             case clang.CXTypeKind.CXType_Attributed:
                 return GetTypeInfoAttributed(parentNodeKind, clangCursorType);

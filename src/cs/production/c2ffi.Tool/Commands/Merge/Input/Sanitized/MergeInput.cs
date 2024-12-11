@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace c2ffi.Tool.Commands.Merge.Input.Sanitized;
 
-public class MergeInput
+public sealed class MergeInput
 {
     public ImmutableArray<string> InputFilePaths { get; set; } = ImmutableArray<string>.Empty;
 

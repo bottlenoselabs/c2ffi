@@ -13,7 +13,7 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class EnumExplorer(ILogger<EnumExplorer> logger)
+internal sealed class EnumExplorer(ILogger<EnumExplorer> logger)
     : NodeExplorer<CEnum>(logger, false)
 {
     protected override ExploreKindCursors ExpectedCursors { get; } =

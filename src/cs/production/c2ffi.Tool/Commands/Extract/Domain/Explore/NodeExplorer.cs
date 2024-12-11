@@ -9,31 +9,16 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore;
 
-public abstract class NodeExplorer<TNode> : NodeExplorer
-    where TNode : CNode
+internal abstract class NodeExplorer<TNode>(
+    ILogger<NodeExplorer<TNode>> logger,
+    bool logAlreadyExplored = true) : NodeExplorer(logger, logAlreadyExplored)
+    where TNode : CNode;
+
+internal abstract partial class NodeExplorer(
+    ILogger<NodeExplorer> logger,
+    bool logAlreadyExplored = true)
 {
-    protected NodeExplorer(
-        ILogger<NodeExplorer<TNode>> logger,
-        bool logAlreadyExplored = true)
-        : base(logger, logAlreadyExplored)
-    {
-    }
-}
-
-public abstract partial class NodeExplorer
-{
-    private readonly bool _logAlreadyExplored;
-    private readonly ILogger<NodeExplorer> _logger;
-
-    private readonly Dictionary<string, CLocation?> _visitedNodeNames = new();
-
-    protected NodeExplorer(
-        ILogger<NodeExplorer> logger,
-        bool logAlreadyExplored = true)
-    {
-        _logger = logger;
-        _logAlreadyExplored = logAlreadyExplored;
-    }
+    private readonly Dictionary<string, CLocation?> _visitedNodeNames = [];
 
     protected abstract ExploreKindCursors ExpectedCursors { get; }
 
@@ -81,7 +66,7 @@ public abstract partial class NodeExplorer
 
         if (IsAlreadyVisited(info, out var firstLocation))
         {
-            if (_logAlreadyExplored)
+            if (logAlreadyExplored)
             {
                 LogAlreadyVisited(info.NodeKind.ToString(), info.Name, firstLocation);
             }

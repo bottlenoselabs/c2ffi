@@ -10,7 +10,7 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class PointerExplorer(ILogger<PointerExplorer> logger)
+internal sealed class PointerExplorer(ILogger<PointerExplorer> logger)
     : NodeExplorer<CPointer>(logger, false)
 {
     protected override ExploreKindCursors ExpectedCursors => ExploreKindCursors.Any;

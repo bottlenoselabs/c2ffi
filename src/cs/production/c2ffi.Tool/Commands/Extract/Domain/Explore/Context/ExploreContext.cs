@@ -2,10 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using bottlenoselabs;
 using c2ffi.Data;
-using c2ffi.Data.Nodes;
 using c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 using c2ffi.Tool.Commands.Extract.Domain.Parse;
 using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
@@ -13,25 +11,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 
-public sealed class ExploreContext : IDisposable
+internal sealed class ExploreContext(
+    IServiceProvider services,
+    ParseContext parseContext) : IDisposable
 {
-    public readonly ParseContext ParseContext;
-    private readonly ImmutableDictionary<CNodeKind, NodeExplorer> _nodeHandlers;
-    private readonly ExploreFfiBuilder _ffiBuilder;
-    private readonly ExploreFrontier _frontier;
+    public readonly ParseContext ParseContext = parseContext;
+    private readonly ImmutableDictionary<CNodeKind, NodeExplorer> _nodeHandlers = GetNodeHandlers(services);
+    private readonly ExploreFfiBuilder _ffiBuilder = new();
+    private readonly ExploreFrontier _frontier = services.GetService<ExploreFrontier>()!;
 
-    private readonly ImmutableHashSet<string> _ignoredIncludeFiles;
-
-    public ExploreContext(
-        IServiceProvider services,
-        ParseContext parseContext)
-    {
-        ParseContext = parseContext;
-        _nodeHandlers = GetNodeHandlers(services);
-        _ffiBuilder = new ExploreFfiBuilder();
-        _frontier = services.GetService<ExploreFrontier>()!;
-        _ignoredIncludeFiles = parseContext.ExtractInput.IgnoredIncludeFiles.ToImmutableHashSet();
-    }
+    private readonly ImmutableHashSet<string> _ignoredIncludeFiles = [.. parseContext.ExtractInput.IgnoredIncludeFiles];
 
     public CFfiTargetPlatform GetFfi()
     {
@@ -157,7 +146,9 @@ public sealed class ExploreContext : IDisposable
         int? sizeOf;
         int? alignOf;
         CType? innerType = null;
+#pragma warning disable IDE0010
         switch (nodeKind)
+#pragma warning restore IDE0010
         {
             case CNodeKind.Pointer:
                 innerType = VisitTypeInternalPointer(nodeKind, clangType, rootNode);

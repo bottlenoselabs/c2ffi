@@ -2,11 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
-using bottlenoselabs;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
 using c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
-using c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
@@ -14,7 +12,7 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplorer(logger, false)
+internal sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExplorer(logger, false)
 {
     protected override ExploreKindCursors ExpectedCursors { get; } =
         ExploreKindCursors.Is(CXCursorKind.CXCursor_StructDecl);

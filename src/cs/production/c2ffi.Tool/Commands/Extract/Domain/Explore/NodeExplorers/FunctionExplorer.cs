@@ -13,7 +13,7 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
+internal sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     : NodeExplorer<CFunction>(logger, false)
 {
     // NOTE: Function visiting by name.
@@ -71,7 +71,9 @@ public sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     private static CFunctionCallingConvention FunctionCallingConvention(CXType type)
     {
         var callingConvention = clang_getFunctionTypeCallingConv(type);
+#pragma warning disable IDE0072
         var result = callingConvention switch
+#pragma warning restore IDE0072
         {
             CXCallingConv.CXCallingConv_C => CFunctionCallingConvention.Cdecl,
             CXCallingConv.CXCallingConv_X86StdCall => CFunctionCallingConvention.StdCall,

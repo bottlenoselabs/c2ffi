@@ -10,27 +10,18 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestFunction
+public class CTestFunction(CFunction function)
 {
-    public string Name { get; }
+    public string Name { get; } = function.Name;
 
-    public string CallingConvention { get; }
+    public string CallingConvention { get; } = function.CallingConvention.ToString().ToLowerInvariant();
 
-    public CTestType ReturnType { get; }
+    public CTestType ReturnType { get; } = new CTestType(function.ReturnType);
 
-    public ImmutableArray<CTestFunctionParameter> Parameters { get; }
-
-    public string? Comment { get; }
-
-    public CTestFunction(CFunction function)
-    {
-        Name = function.Name;
-        CallingConvention = function.CallingConvention.ToString().ToLowerInvariant();
-        ReturnType = new CTestType(function.ReturnType);
-        Parameters = function.Parameters
+    public ImmutableArray<CTestFunctionParameter> Parameters { get; } = function.Parameters
             .Select(x => new CTestFunctionParameter(x)).ToImmutableArray();
-        Comment = function.Comment;
-    }
+
+    public string? Comment { get; } = function.Comment;
 
     public override string ToString()
     {

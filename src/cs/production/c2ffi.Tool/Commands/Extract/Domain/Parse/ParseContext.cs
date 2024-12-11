@@ -101,7 +101,9 @@ public sealed class ParseContext : IDisposable
 
     public int? SizeOf(CNodeKind nodeKind, clang.CXType clangType)
     {
+#pragma warning disable IDE0010
         switch (nodeKind)
+#pragma warning restore IDE0010
         {
             case CNodeKind.Function or CNodeKind.OpaqueType:
             case CNodeKind.Primitive when clangType.kind == clang.CXTypeKind.CXType_Void:
@@ -114,19 +116,20 @@ public sealed class ParseContext : IDisposable
             return sizeOf;
         }
 
-        switch (nodeKind)
+#pragma warning disable IDE0072
+        return nodeKind switch
+#pragma warning restore IDE0072
         {
-            case CNodeKind.Pointer:
-            case CNodeKind.Array:
-                return PointerSize;
-            default:
-                return sizeOf;
-        }
+            CNodeKind.Pointer or CNodeKind.Array => PointerSize,
+            _ => sizeOf
+        };
     }
 
     public int? AlignOf(CNodeKind nodeKind, clang.CXType clangType)
     {
+#pragma warning disable IDE0010
         switch (nodeKind)
+#pragma warning restore IDE0010
         {
             case CNodeKind.Function or CNodeKind.OpaqueType:
             case CNodeKind.Primitive when clangType.kind == clang.CXTypeKind.CXType_Void:

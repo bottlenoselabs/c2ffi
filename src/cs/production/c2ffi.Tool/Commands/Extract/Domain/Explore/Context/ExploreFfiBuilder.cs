@@ -8,20 +8,20 @@ using c2ffi.Tool.Commands.Extract.Domain.Parse;
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.Context;
 
-public sealed class ExploreFfiBuilder
+internal sealed class ExploreFfiBuilder
 {
-    private readonly List<CVariable> _variables = new();
-    private readonly List<CFunction> _functions = new();
-    private readonly List<CRecord> _records = new();
-    private readonly List<CEnum> _enums = new();
-    private readonly List<CTypeAlias> _typeAliases = new();
-    private readonly List<COpaqueType> _opaqueTypes = new();
-    private readonly List<CFunctionPointer> _functionPointers = new();
-    private readonly List<CMacroObject> _macroObjects = new();
+    private readonly List<CVariable> _variables = [];
+    private readonly List<CFunction> _functions = [];
+    private readonly List<CRecord> _records = [];
+    private readonly List<CEnum> _enums = [];
+    private readonly List<CTypeAlias> _typeAliases = [];
+    private readonly List<COpaqueType> _opaqueTypes = [];
+    private readonly List<CFunctionPointer> _functionPointers = [];
+    private readonly List<CMacroObject> _macroObjects = [];
 
-    private readonly List<CArray> _arrays = new();
-    private readonly List<CPointer> _pointers = new();
-    private readonly List<CPrimitive> _primitives = new();
+    private readonly List<CArray> _arrays = [];
+    private readonly List<CPointer> _pointers = [];
+    private readonly List<CPrimitive> _primitives = [];
 
     public CFfiTargetPlatform GetFfi(ParseContext context)
     {
@@ -58,8 +58,9 @@ public sealed class ExploreFfiBuilder
 
     public void AddNode(CNode node)
     {
-        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+#pragma warning disable IDE0010
         switch (node.NodeKind)
+#pragma warning restore IDE0010
         {
             case CNodeKind.Variable:
                 AddVariable((CVariable)node);

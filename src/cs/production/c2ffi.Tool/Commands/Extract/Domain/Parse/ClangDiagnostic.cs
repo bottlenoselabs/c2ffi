@@ -3,7 +3,7 @@
 
 namespace c2ffi.Tool.Commands.Extract.Domain.Parse;
 
-public class ClangDiagnostic
+internal sealed class ClangDiagnostic
 {
     public bool IsErrorOrFatal { get; set; }
 

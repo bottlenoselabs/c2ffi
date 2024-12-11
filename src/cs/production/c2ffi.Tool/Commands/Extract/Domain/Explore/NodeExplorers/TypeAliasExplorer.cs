@@ -10,13 +10,8 @@ using static bottlenoselabs.clang;
 namespace c2ffi.Tool.Commands.Extract.Domain.Explore.NodeExplorers;
 
 [UsedImplicitly]
-public class TypeAliasExplorer : NodeExplorer<CTypeAlias>
+internal sealed class TypeAliasExplorer(ILogger<TypeAliasExplorer> logger) : NodeExplorer<CTypeAlias>(logger, false)
 {
-    public TypeAliasExplorer(ILogger<TypeAliasExplorer> logger)
-        : base(logger, false)
-    {
-    }
-
     protected override ExploreKindCursors ExpectedCursors { get; } =
         ExploreKindCursors.Is(CXCursorKind.CXCursor_TypedefDecl);
 

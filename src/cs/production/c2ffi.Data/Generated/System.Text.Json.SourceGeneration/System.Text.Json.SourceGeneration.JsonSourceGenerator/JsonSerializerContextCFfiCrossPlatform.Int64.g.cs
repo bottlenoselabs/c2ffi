@@ -15,7 +15,9 @@ namespace c2ffi.Data.Serialization
         /// <summary>
         /// Defines the source generated JSON serialization contract metadata for a given type.
         /// </summary>
+        #nullable disable annotations // Marking the property type as nullable-oblivious.
         public global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<long> Int64
+        #nullable enable annotations
         {
             get => _Int64 ??= (global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<long>)Options.GetTypeInfo(typeof(long));
         }

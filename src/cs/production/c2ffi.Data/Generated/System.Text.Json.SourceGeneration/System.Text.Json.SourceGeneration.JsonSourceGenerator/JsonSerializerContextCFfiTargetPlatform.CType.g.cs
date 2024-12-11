@@ -15,7 +15,9 @@ namespace c2ffi.Data.Serialization
         /// <summary>
         /// Defines the source generated JSON serialization contract metadata for a given type.
         /// </summary>
+        #nullable disable annotations // Marking the property type as nullable-oblivious.
         public global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CType> CType
+        #nullable enable annotations
         {
             get => _CType ??= (global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::c2ffi.Data.CType>)Options.GetTypeInfo(typeof(global::c2ffi.Data.CType));
         }
@@ -30,7 +32,8 @@ namespace c2ffi.Data.Serialization
                     ObjectWithParameterizedConstructorCreator = null,
                     PropertyMetadataInitializer = _ => CTypePropInit(options),
                     ConstructorParameterMetadataInitializer = null,
-                    SerializeHandler = null
+                    ConstructorAttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetConstructor(InstanceMemberBindingFlags, binder: null, global::System.Array.Empty<global::System.Type>(), modifiers: null),
+                    SerializeHandler = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::c2ffi.Data.CType>(options, objectInfo);
@@ -59,10 +62,13 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "Name",
-                JsonPropertyName = "name"
+                JsonPropertyName = "name",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("Name", InstanceMemberBindingFlags, null, typeof(string), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[0] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<string>(options, info0);
+            properties[0].IsGetNullable = false;
+            properties[0].IsSetNullable = false;
 
             var info1 = new global::System.Text.Json.Serialization.Metadata.JsonPropertyInfoValues<global::c2ffi.Data.CNodeKind>
             {
@@ -78,7 +84,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "NodeKind",
-                JsonPropertyName = "kind"
+                JsonPropertyName = "kind",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("NodeKind", InstanceMemberBindingFlags, null, typeof(global::c2ffi.Data.CNodeKind), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[1] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CNodeKind>(options, info1);
@@ -97,7 +104,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "SizeOf",
-                JsonPropertyName = "size_of"
+                JsonPropertyName = "size_of",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("SizeOf", InstanceMemberBindingFlags, null, typeof(int?), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[2] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info2);
@@ -116,7 +124,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "AlignOf",
-                JsonPropertyName = "align_of"
+                JsonPropertyName = "align_of",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("AlignOf", InstanceMemberBindingFlags, null, typeof(int?), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[3] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info3);
@@ -135,7 +144,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "ElementSize",
-                JsonPropertyName = "size_of_element"
+                JsonPropertyName = "size_of_element",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("ElementSize", InstanceMemberBindingFlags, null, typeof(int?), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[4] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info4);
@@ -154,7 +164,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "ArraySizeOf",
-                JsonPropertyName = "array_size"
+                JsonPropertyName = "array_size",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("ArraySizeOf", InstanceMemberBindingFlags, null, typeof(int?), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[5] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<int?>(options, info5);
@@ -173,7 +184,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "IsAnonymous",
-                JsonPropertyName = "is_anonymous"
+                JsonPropertyName = "is_anonymous",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("IsAnonymous", InstanceMemberBindingFlags, null, typeof(bool?), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[6] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool?>(options, info6);
@@ -192,7 +204,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "IsConst",
-                JsonPropertyName = "is_const"
+                JsonPropertyName = "is_const",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("IsConst", InstanceMemberBindingFlags, null, typeof(bool), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[7] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<bool>(options, info7);
@@ -211,7 +224,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "Location",
-                JsonPropertyName = "location"
+                JsonPropertyName = "location",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("Location", InstanceMemberBindingFlags, null, typeof(global::c2ffi.Data.CLocation?), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[8] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CLocation?>(options, info8);
@@ -230,7 +244,8 @@ namespace c2ffi.Data.Serialization
                 IsExtensionData = false,
                 NumberHandling = null,
                 PropertyName = "InnerType",
-                JsonPropertyName = "inner_type"
+                JsonPropertyName = "inner_type",
+                AttributeProviderFactory = static () => typeof(global::c2ffi.Data.CType).GetProperty("InnerType", InstanceMemberBindingFlags, null, typeof(global::c2ffi.Data.CType), global::System.Array.Empty<global::System.Type>(), null),
             };
             
             properties[9] = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreatePropertyInfo<global::c2ffi.Data.CType>(options, info9);

@@ -5,4 +5,4 @@ using static bottlenoselabs.clang;
 
 namespace c2ffi.Tool.Commands.Extract.Infrastructure.Clang;
 
-public delegate bool ClangVisitCursorChildPredicate(CXCursor child, CXCursor parent);
+internal delegate bool ClangVisitCursorChildPredicate(CXCursor child, CXCursor parent);

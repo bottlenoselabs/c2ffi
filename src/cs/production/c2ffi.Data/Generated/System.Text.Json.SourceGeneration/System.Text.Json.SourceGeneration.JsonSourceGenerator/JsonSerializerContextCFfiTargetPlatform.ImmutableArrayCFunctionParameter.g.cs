@@ -15,7 +15,9 @@ namespace c2ffi.Data.Serialization
         /// <summary>
         /// Defines the source generated JSON serialization contract metadata for a given type.
         /// </summary>
+        #nullable disable annotations // Marking the property type as nullable-oblivious.
         public global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.Nodes.CFunctionParameter>> ImmutableArrayCFunctionParameter
+        #nullable enable annotations
         {
             get => _ImmutableArrayCFunctionParameter ??= (global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.Nodes.CFunctionParameter>>)Options.GetTypeInfo(typeof(global::System.Collections.Immutable.ImmutableArray<global::c2ffi.Data.Nodes.CFunctionParameter>));
         }
