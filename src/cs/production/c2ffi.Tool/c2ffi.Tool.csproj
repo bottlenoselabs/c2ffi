@@ -2,11 +2,11 @@
 
   <!-- MSBuild properties -->
   <PropertyGroup>
-    <RootNamespace>c2ffi.Tool</RootNamespace>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>c2ffi</RootNamespace>
   </PropertyGroup>
 
   <!-- NuGet -->
@@ -27,7 +27,7 @@
 
   <!-- Read .csproj information at runtime -->
   <ItemGroup>
-    <AssemblyAttribute Include="c2ffi.Tool.ProjectInfoAttribute">
+    <AssemblyAttribute Include="c2ffi.ProjectInfoAttribute">
       <_Parameter1>$(PackageDescription)</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
@@ -52,9 +52,6 @@
   </ItemGroup>
 
   <!-- Generated source code files -->
-  <ItemGroup>
-    <Folder Include="Generated\" />
-  </ItemGroup>
   
   <!-- libclang -->
   <ItemGroup>

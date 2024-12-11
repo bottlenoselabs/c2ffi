@@ -4,7 +4,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Hosting;
 
-namespace c2ffi.Tool;
+namespace c2ffi;
 
 [ExcludeFromCodeCoverage]
 internal static class Program

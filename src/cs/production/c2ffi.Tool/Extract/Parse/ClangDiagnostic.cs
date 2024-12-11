@@ -1,10 +1,11 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-namespace c2ffi;
+namespace c2ffi.Extract.Parse;
 
-[AttributeUsage(AttributeTargets.Assembly)]
-internal sealed class ProjectInfoAttribute(string toolDescription) : Attribute
+internal sealed class ClangDiagnostic
 {
-    public string ToolDescription { get; } = toolDescription;
+    public bool IsErrorOrFatal { get; set; }
+
+    public string Message { get; set; } = string.Empty;
 }

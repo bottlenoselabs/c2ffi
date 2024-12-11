@@ -13,10 +13,4 @@
     </None>
   </ItemGroup>
 
-  <!-- Do not include generated files as part of compilation -->
-  <ItemGroup>
-    <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
-    <None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
-  </ItemGroup>
-
 </Project>

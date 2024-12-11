@@ -8,7 +8,6 @@ using c2ffi.Data;
 using c2ffi.Data.Serialization;
 using c2ffi.Tests.Library;
 using c2ffi.Tests.Library.Helpers;
-using c2ffi.Tool.Commands.Merge;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,14 +19,14 @@ public abstract class MergeFfisTest
 {
     private readonly IFileSystem _fileSystem;
     private readonly FileSystemHelper _fileSystemHelper;
-    private readonly MergeFfisTool _tool;
+    private readonly c2ffi.Merge.Tool _tool;
 
     protected MergeFfisTest()
     {
         var services = TestHost.Services;
         _fileSystem = services.GetService<IFileSystem>()!;
         _fileSystemHelper = services.GetService<FileSystemHelper>()!;
-        _tool = services.GetService<MergeFfisTool>()!;
+        _tool = services.GetService<c2ffi.Merge.Tool>()!;
     }
 
     public CTestFfiCrossPlatform GetCrossPlatformFfi(string ffiDirectoryPath)

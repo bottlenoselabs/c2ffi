@@ -3,10 +3,9 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace c2ffi.Tool;
+namespace c2ffi;
 
 internal interface IDependencyInjectionStartup
 {
     void ConfigureServices(IServiceCollection services);
-    // void Configure(IApplicationBuilder app, IWebHostEnvironment env);
 }

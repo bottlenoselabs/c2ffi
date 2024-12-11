@@ -8,7 +8,6 @@ using c2ffi.Data;
 using c2ffi.Data.Serialization;
 using c2ffi.Tests.Library;
 using c2ffi.Tests.Library.Helpers;
-using c2ffi.Tool.Commands.Extract;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,7 +22,7 @@ public abstract class ExtractFfiTest
     private readonly IDirectory _directory;
     private readonly IFile _file;
     private readonly FileSystemHelper _fileSystemHelper;
-    private readonly ExtractFfiTool _tool;
+    private readonly c2ffi.Extract.Tool _tool;
 
     protected ExtractFfiTest()
     {
@@ -33,7 +32,7 @@ public abstract class ExtractFfiTest
         _directory = _fileSystem.Directory;
         _file = _fileSystem.File;
         _fileSystemHelper = services.GetService<FileSystemHelper>()!;
-        _tool = services.GetService<ExtractFfiTool>()!;
+        _tool = services.GetService<c2ffi.Extract.Tool>()!;
     }
 
     public ImmutableArray<CTestFfiTargetPlatform> GetTargetPlatformFfis(string configurationFilePath)

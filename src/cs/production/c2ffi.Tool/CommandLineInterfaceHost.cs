@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Hosting;
 
-namespace c2ffi.Tool;
+namespace c2ffi;
 
 [ExcludeFromCodeCoverage]
 [UsedImplicitly]

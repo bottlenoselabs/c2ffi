@@ -20,7 +20,7 @@
 
   <!-- Project references -->
   <ItemGroup>
-    <ProjectReference Include="..\..\production\c2ffi.Tool\c2ffi.Tool.csproj" />
+    <ProjectReference Include="../../production/c2ffi.Tool/c2ffi.Tool.csproj" />
   </ItemGroup>
 
 </Project>

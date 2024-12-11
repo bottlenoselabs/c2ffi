@@ -4,23 +4,21 @@
 using System.CommandLine;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using c2ffi.Tool.Commands.Extract;
-using c2ffi.Tool.Commands.Merge;
 using JetBrains.Annotations;
 
-namespace c2ffi.Tool;
+namespace c2ffi;
 
 [ExcludeFromCodeCoverage]
 [UsedImplicitly]
 internal sealed class CommandLineInterfaceCommand : RootCommand
 {
     public CommandLineInterfaceCommand(
-        ExtractFfiCommand extractFfiCommand,
-        MergeFfisCommand mergeFfisCommand)
+        Extract.Command extractCommand,
+        Merge.Command mergeCommand)
         : base(GetDescription())
     {
-        AddCommand(extractFfiCommand);
-        AddCommand(mergeFfisCommand);
+        AddCommand(extractCommand);
+        AddCommand(mergeCommand);
     }
 
     private static string GetDescription()

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace c2ffi.Tool;
+namespace c2ffi;
 
 #pragma warning disable CA1515
 public static class Startup

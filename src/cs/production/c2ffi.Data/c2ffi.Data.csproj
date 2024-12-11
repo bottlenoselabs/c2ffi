@@ -29,8 +29,5 @@
   </ItemGroup>
 
   <!-- Generated source code files -->
-  <ItemGroup>
-    <Folder Include="Generated\" />
-  </ItemGroup>
 
 </Project>
