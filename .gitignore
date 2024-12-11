@@ -9,5 +9,8 @@ obj/
 src/c/tests/**/ffi/*.json
 src/c/tests/**/ffi-x/*.json
 
+# macOS
+.DS_Store
+
 # Native library files
 lib/*.*
