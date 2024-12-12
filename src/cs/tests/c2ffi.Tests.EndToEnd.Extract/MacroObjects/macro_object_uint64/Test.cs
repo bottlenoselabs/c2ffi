@@ -1,9 +1,6 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2ffi.Tests.Library.Models;
-using FluentAssertions;
-
 #pragma warning disable CA1308
 #pragma warning disable CA1707
 
@@ -29,9 +26,9 @@ public class Test : ExtractFfiTest
     private void FfiMacroObjectExists(CTestFfiTargetPlatform ffi)
     {
         var macroObject = ffi.GetMacroObject(MacroObjectName);
-        macroObject.Name.Should().Be(MacroObjectName);
-        macroObject.Value.Should().Be("42");
-        macroObject.Type.Name.Should().Be("uint64_t");
-        macroObject.Type.InnerType.Should().NotBeNull();
+        _ = macroObject.Name.Should().Be(MacroObjectName);
+        _ = macroObject.Value.Should().Be("42");
+        _ = macroObject.Type.Name.Should().Be("uint64_t");
+        _ = macroObject.Type.InnerType.Should().NotBeNull();
     }
 }

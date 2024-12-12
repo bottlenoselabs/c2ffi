@@ -37,7 +37,7 @@ jobs:
     - name: "Setup .NET"
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.x'
+        dotnet-version: '9.x'
 
     - name: "Test .NET extract"
       run: |
@@ -65,7 +65,7 @@ jobs:
     - name: "Setup .NET"
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.x'
+        dotnet-version: '9.x'
 
     - name: "Download generated FFI files: windows"
       uses: actions/download-artifact@v4

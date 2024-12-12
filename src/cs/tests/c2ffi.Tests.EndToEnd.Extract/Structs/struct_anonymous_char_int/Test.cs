@@ -26,41 +26,41 @@ public class Test : ExtractFfiTest
     {
         const string name = $"struct {StructName}";
         var @struct = ffi.GetRecord(name);
-        @struct.Name.Should().Be(name);
-        @struct.IsStruct.Should().BeTrue();
-        @struct.IsUnion.Should().BeFalse();
-        @struct.IsAnonymous.Should().BeFalse();
+        _ = @struct.Name.Should().Be(name);
+        _ = @struct.IsStruct.Should().BeTrue();
+        _ = @struct.IsUnion.Should().BeFalse();
+        _ = @struct.IsAnonymous.Should().BeFalse();
 
-        @struct.Fields.Length.Should().Be(1);
+        _ = @struct.Fields.Length.Should().Be(1);
 
         var field = @struct.Fields[0];
-        field.Name.Should().BeEmpty();
-        field.OffsetOf.Should().Be(0);
+        _ = field.Name.Should().BeEmpty();
+        _ = field.OffsetOf.Should().Be(0);
 
         var fieldType = field.Type;
-        fieldType.Name.Should().Be(name + "_ANONYMOUS_0");
-        fieldType.SizeOf.Should().Be(8);
-        fieldType.AlignOf.Should().Be(4);
-        fieldType.IsAnonymous.Should().BeTrue();
-        fieldType.InnerType.Should().BeNull();
+        _ = fieldType.Name.Should().Be(name + "_ANONYMOUS_0");
+        _ = fieldType.SizeOf.Should().Be(8);
+        _ = fieldType.AlignOf.Should().Be(4);
+        _ = fieldType.IsAnonymous.Should().BeTrue();
+        _ = fieldType.InnerType.Should().BeNull();
 
         var anonymousStruct = ffi.GetRecord(fieldType.Name);
-        anonymousStruct.IsStruct.Should().BeTrue();
-        anonymousStruct.IsUnion.Should().BeFalse();
-        anonymousStruct.SizeOf.Should().Be(8);
-        anonymousStruct.AlignOf.Should().Be(4);
-        anonymousStruct.IsAnonymous.Should().BeTrue();
+        _ = anonymousStruct.IsStruct.Should().BeTrue();
+        _ = anonymousStruct.IsUnion.Should().BeFalse();
+        _ = anonymousStruct.SizeOf.Should().Be(8);
+        _ = anonymousStruct.AlignOf.Should().Be(4);
+        _ = anonymousStruct.IsAnonymous.Should().BeTrue();
 
-        anonymousStruct.Fields.Length.Should().Be(2);
+        _ = anonymousStruct.Fields.Length.Should().Be(2);
 
         var anonymousField1 = anonymousStruct.Fields[0];
-        anonymousField1.Name.Should().Be("a");
+        _ = anonymousField1.Name.Should().Be("a");
         anonymousField1.Type.Should().BeChar();
-        anonymousField1.OffsetOf.Should().Be(0);
+        _ = anonymousField1.OffsetOf.Should().Be(0);
 
         var anonymousField2 = anonymousStruct.Fields[1];
-        anonymousField2.Name.Should().Be("b");
+        _ = anonymousField2.Name.Should().Be("b");
         anonymousField2.Type.Should().BeInt();
-        anonymousField2.OffsetOf.Should().Be(4);
+        _ = anonymousField2.OffsetOf.Should().Be(4);
     }
 }

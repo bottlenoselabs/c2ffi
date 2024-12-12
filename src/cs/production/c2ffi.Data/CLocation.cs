@@ -56,7 +56,7 @@ public record struct CLocation : IComparable<CLocation>
     /// </summary>
     /// <param name="other">The other <see cref="CLocation" />.</param>
     /// <returns>A <see cref="int" />.</returns>
-    public int CompareTo(CLocation other)
+    public readonly int CompareTo(CLocation other)
     {
         var result = string.Compare(FileName, other.FileName, StringComparison.Ordinal);
         if (result != 0)
@@ -75,7 +75,7 @@ public record struct CLocation : IComparable<CLocation>
     }
 
     /// <inheritdoc />
-    public override string ToString()
+    public override readonly string ToString()
     {
         if (LineNumber == 0 && LineColumn == 0)
         {

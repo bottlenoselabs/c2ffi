@@ -22,32 +22,32 @@ public class Test : MergeFfisTest
     private void FfiFunctionExists(CTestFfiCrossPlatform ffi)
     {
         var function = ffi.GetFunction(FunctionName);
-        function.CallingConvention.Should().Be("cdecl");
+        _ = function.CallingConvention.Should().Be("cdecl");
 
         var returnType = function.ReturnType;
-        returnType.Name.Should().Be("int");
-        returnType.NodeKind.Should().Be("primitive");
-        returnType.SizeOf.Should().Be(4);
-        returnType.AlignOf.Should().Be(4);
-        returnType.InnerType.Should().BeNull();
+        _ = returnType.Name.Should().Be("int");
+        _ = returnType.NodeKind.Should().Be("primitive");
+        _ = returnType.SizeOf.Should().Be(4);
+        _ = returnType.AlignOf.Should().Be(4);
+        _ = returnType.InnerType.Should().BeNull();
 
-        function.Parameters.Should().HaveCount(1);
+        _ = function.Parameters.Should().HaveCount(1);
         var parameter = function.Parameters[0];
-        parameter.Name.Should().Be("value");
-        parameter.Type.Name.Should().Be("int");
-        parameter.Type.NodeKind.Should().Be("primitive");
-        parameter.Type.SizeOf.Should().Be(4);
-        parameter.Type.AlignOf.Should().Be(4);
+        _ = parameter.Name.Should().Be("value");
+        _ = parameter.Type.Name.Should().Be("int");
+        _ = parameter.Type.NodeKind.Should().Be("primitive");
+        _ = parameter.Type.SizeOf.Should().Be(4);
+        _ = parameter.Type.AlignOf.Should().Be(4);
 
         var @enum = ffi.GetEnum("enum_implicit");
-        @enum.Values.Should().HaveCount(2);
-        @enum.SizeOf.Should().Be(4);
+        _ = @enum.Values.Should().HaveCount(2);
+        _ = @enum.SizeOf.Should().Be(4);
     }
 
     private void FfiEnumExists(CTestFfiCrossPlatform ffi)
     {
         var @enum = ffi.GetEnum("enum_implicit");
-        @enum.Values.Should().HaveCount(2);
-        @enum.SizeOf.Should().Be(4);
+        _ = @enum.Values.Should().HaveCount(2);
+        _ = @enum.SizeOf.Should().Be(4);
     }
 }

@@ -5,12 +5,9 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using c2ffi.Data;
-using c2ffi.Data.Nodes;
 using c2ffi.Data.Serialization;
 using c2ffi.Tests.Library;
 using c2ffi.Tests.Library.Helpers;
-using c2ffi.Tests.Library.Models;
-using c2ffi.Tool.Commands.Merge;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,21 +18,15 @@ namespace c2ffi.Tests.EndToEnd.Merge;
 public abstract class MergeFfisTest
 {
     private readonly IFileSystem _fileSystem;
-    private readonly IPath _path;
-    private readonly IDirectory _directory;
-    private readonly IFile _file;
     private readonly FileSystemHelper _fileSystemHelper;
-    private readonly MergeFfisTool _tool;
+    private readonly c2ffi.Merge.Tool _tool;
 
     protected MergeFfisTest()
     {
         var services = TestHost.Services;
         _fileSystem = services.GetService<IFileSystem>()!;
-        _path = _fileSystem.Path;
-        _directory = _fileSystem.Directory;
-        _file = _fileSystem.File;
         _fileSystemHelper = services.GetService<FileSystemHelper>()!;
-        _tool = services.GetService<MergeFfisTool>()!;
+        _tool = services.GetService<c2ffi.Merge.Tool>()!;
     }
 
     public CTestFfiCrossPlatform GetCrossPlatformFfi(string ffiDirectoryPath)
@@ -57,26 +48,6 @@ public abstract class MergeFfisTest
     private void RunTool(string inputDirectoryPath, string outputFilePath)
     {
         _tool.Run(inputDirectoryPath, outputFilePath);
-    }
-
-    private void DeleteFiles(IEnumerable<string> filePaths)
-    {
-        foreach (var filePath in filePaths)
-        {
-            _file.Delete(filePath);
-        }
-    }
-
-    private IEnumerable<string> GetFfiFilePaths(string configurationFilePath)
-    {
-        var directoryPath = _path.GetDirectoryName(configurationFilePath)!;
-        var ffiDirectoryPath = _path.Combine(directoryPath, "ffi");
-        if (!_directory.Exists(ffiDirectoryPath))
-        {
-            return Array.Empty<string>();
-        }
-
-        return _directory.EnumerateFiles(ffiDirectoryPath);
     }
 
     private CTestFfiCrossPlatform ReadFfi(string filePath)
@@ -138,19 +109,6 @@ public abstract class MergeFfisTest
         {
             var result = new CTestRecord(value);
             builder.Add(result.Name, result);
-        }
-
-        return builder.ToImmutable();
-    }
-
-    private static ImmutableArray<CTestRecordField> CreateTestRecordFields(ImmutableArray<CRecordField> values)
-    {
-        var builder = ImmutableArray.CreateBuilder<CTestRecordField>();
-
-        foreach (var value in values)
-        {
-            var result = new CTestRecordField(value);
-            builder.Add(result);
         }
 
         return builder.ToImmutable();

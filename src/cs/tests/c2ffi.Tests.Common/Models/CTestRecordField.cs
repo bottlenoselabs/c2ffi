@@ -9,20 +9,13 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestRecordField
+public class CTestRecordField(CRecordField field)
 {
-    public string Name { get; }
+    public string Name { get; } = field.Name;
 
-    public int OffsetOf { get; }
+    public int OffsetOf { get; } = field.OffsetOf;
 
-    public CTestType Type { get; }
-
-    public CTestRecordField(CRecordField field)
-    {
-        Name = field.Name;
-        OffsetOf = field.OffsetOf;
-        Type = new CTestType(field.Type);
-    }
+    public CTestType Type { get; } = new(field.Type);
 
     public override string ToString()
     {

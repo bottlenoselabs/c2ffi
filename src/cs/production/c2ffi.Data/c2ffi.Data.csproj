@@ -2,7 +2,7 @@
 
   <!-- MSBuild properties -->
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>c2ffi.Data</RootNamespace>
@@ -24,11 +24,10 @@
 
   <!-- NuGet package references -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="20.0.15" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="21.1.7" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Generated\" />
-  </ItemGroup>
+
+  <!-- Generated source code files -->
 
 </Project>

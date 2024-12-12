@@ -3,19 +3,21 @@
 
 using System.CommandLine;
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Hosting;
 
-namespace c2ffi.Tool;
+namespace c2ffi;
 
 [ExcludeFromCodeCoverage]
-public sealed class CommandLineInterfaceHost(
+[UsedImplicitly]
+internal sealed class CommandLineInterfaceHost(
     IHostApplicationLifetime applicationLifetime,
     CommandLineInterfaceCommand command)
     : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        applicationLifetime.ApplicationStarted.Register(() => Task.Run(Main, cancellationToken));
+        _ = applicationLifetime.ApplicationStarted.Register(() => Task.Run(Main, cancellationToken));
         return Task.CompletedTask;
     }
 

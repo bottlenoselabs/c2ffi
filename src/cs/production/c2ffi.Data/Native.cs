@@ -63,22 +63,20 @@ public static class Native
     /// <summary>
     ///     Gets the <see cref="NativeArchitecture" /> of the current application.
     /// </summary>
-    public static NativeArchitecture Architecture
+    public static NativeArchitecture Architecture => RuntimeInformation.OSArchitecture switch
     {
-        get
-        {
-            return RuntimeInformation.OSArchitecture switch
-            {
-                System.Runtime.InteropServices.Architecture.Arm64 => NativeArchitecture.ARM64,
-                System.Runtime.InteropServices.Architecture.Arm => NativeArchitecture.ARM32,
-                System.Runtime.InteropServices.Architecture.X86 => NativeArchitecture.X86,
-                System.Runtime.InteropServices.Architecture.X64 => NativeArchitecture.X64,
-                System.Runtime.InteropServices.Architecture.Wasm => NativeArchitecture.WASM32,
-                System.Runtime.InteropServices.Architecture.S390x => NativeArchitecture.Unknown,
-                _ => NativeArchitecture.Unknown
-            };
-        }
-    }
+        System.Runtime.InteropServices.Architecture.Arm64 => NativeArchitecture.ARM64,
+        System.Runtime.InteropServices.Architecture.Arm => NativeArchitecture.ARM32,
+        System.Runtime.InteropServices.Architecture.X86 => NativeArchitecture.X86,
+        System.Runtime.InteropServices.Architecture.X64 => NativeArchitecture.X64,
+        System.Runtime.InteropServices.Architecture.Wasm => NativeArchitecture.WASM32,
+        System.Runtime.InteropServices.Architecture.S390x => NativeArchitecture.Unknown,
+        System.Runtime.InteropServices.Architecture.LoongArch64 => NativeArchitecture.Unknown,
+        System.Runtime.InteropServices.Architecture.Armv6 => NativeArchitecture.Unknown,
+        System.Runtime.InteropServices.Architecture.Ppc64le => NativeArchitecture.Unknown,
+        System.Runtime.InteropServices.Architecture.RiscV64 => NativeArchitecture.Unknown,
+        _ => NativeArchitecture.Unknown
+    };
 
     /// <summary>
     ///     Gets the <see cref="TargetPlatform" /> of the current application.
@@ -108,6 +106,16 @@ public static class Native
                     .i686_unknown_linux_gnu,
                 NativeOperatingSystem.Linux when architecture == NativeArchitecture.ARM64 => TargetPlatform
                     .aarch64_unknown_linux_gnu,
+                NativeOperatingSystem.Unknown => TargetPlatform.Unknown,
+                NativeOperatingSystem.FreeBSD => TargetPlatform.Unknown,
+                NativeOperatingSystem.Android => TargetPlatform.Unknown,
+                NativeOperatingSystem.iOS => TargetPlatform.Unknown,
+                NativeOperatingSystem.tvOS => TargetPlatform.Unknown,
+                NativeOperatingSystem.Browser => TargetPlatform.Unknown,
+                NativeOperatingSystem.PlayStation4 => TargetPlatform.Unknown,
+                NativeOperatingSystem.Xbox => TargetPlatform.Unknown,
+                NativeOperatingSystem.Switch => TargetPlatform.Unknown,
+                NativeOperatingSystem.DualScreen3D => TargetPlatform.Unknown,
                 _ => TargetPlatform.Unknown
             };
         }

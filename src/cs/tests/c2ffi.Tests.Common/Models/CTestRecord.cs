@@ -11,31 +11,21 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestRecord
+public class CTestRecord(CRecord record)
 {
-    public string Name { get; }
+    public string Name { get; } = record.Name;
 
-    public int SizeOf { get; }
+    public int SizeOf { get; } = record.SizeOf;
 
-    public int AlignOf { get; }
+    public int AlignOf { get; } = record.AlignOf;
 
-    public bool IsUnion { get; }
+    public bool IsUnion { get; } = record.RecordKind == CRecordKind.Union;
 
-    public bool IsAnonymous { get;  }
+    public bool IsAnonymous { get; } = record.IsAnonymous;
 
     public bool IsStruct => !IsUnion;
 
-    public ImmutableArray<CTestRecordField> Fields { get; }
-
-    public CTestRecord(CRecord record)
-    {
-        Name = record.Name;
-        SizeOf = record.SizeOf;
-        AlignOf = record.AlignOf;
-        IsUnion = record.RecordKind == CRecordKind.Union;
-        IsAnonymous = record.IsAnonymous;
-        Fields = record.Fields.Select(field => new CTestRecordField(field)).ToImmutableArray();
-    }
+    public ImmutableArray<CTestRecordField> Fields { get; } = [..record.Fields.Select(field => new CTestRecordField(field))];
 
     public override string ToString()
     {

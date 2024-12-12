@@ -74,7 +74,7 @@ public static class Json
 
         if (!Directory.Exists(outputDirectory))
         {
-            Directory.CreateDirectory(outputDirectory);
+            _ = Directory.CreateDirectory(outputDirectory);
         }
 
         if (File.Exists(fullFilePath))
@@ -107,7 +107,7 @@ public static class Json
 
         if (!fileSystem.Directory.Exists(outputDirectory))
         {
-            fileSystem.Directory.CreateDirectory(outputDirectory);
+            _ = fileSystem.Directory.CreateDirectory(outputDirectory);
         }
 
         if (fileSystem.File.Exists(fullFilePath))

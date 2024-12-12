@@ -1,9 +1,6 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2ffi.Tests.Library.Models;
-using FluentAssertions;
-
 #pragma warning disable CA1707
 
 namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_ignored;
@@ -41,7 +38,7 @@ public class Test : ExtractFfiTest
         foreach (var name in names)
         {
             var macroObject = ffi.TryGetMacroObject(name);
-            macroObject.Should().NotBeNull();
+            _ = macroObject.Should().NotBeNull();
         }
     }
 
@@ -50,7 +47,7 @@ public class Test : ExtractFfiTest
         foreach (var name in names)
         {
             var macroObject = ffi.TryGetMacroObject(name);
-            macroObject.Should().BeNull();
+            _ = macroObject.Should().BeNull();
         }
     }
 }

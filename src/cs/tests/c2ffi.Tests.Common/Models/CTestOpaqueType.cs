@@ -9,12 +9,7 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestOpaqueType
+public class CTestOpaqueType(COpaqueType opaqueType)
 {
-    public string Name { get; }
-
-    public CTestOpaqueType(COpaqueType opaqueType)
-    {
-        Name = opaqueType.Name;
-    }
+    public string Name { get; } = opaqueType.Name;
 }

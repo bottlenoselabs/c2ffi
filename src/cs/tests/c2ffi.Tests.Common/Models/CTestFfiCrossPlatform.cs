@@ -10,63 +10,41 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed class CTestFfiCrossPlatform
+public sealed class CTestFfiCrossPlatform(
+    ImmutableDictionary<string, CTestFunction> functions,
+    ImmutableDictionary<string, CTestEnum> enums,
+    ImmutableDictionary<string, CTestRecord> records,
+    ImmutableDictionary<string, CTestMacroObject> macroObjects,
+    ImmutableDictionary<string, CTestTypeAlias> typeAliases,
+    ImmutableDictionary<string, CTestFunctionPointer> functionPointers,
+    ImmutableDictionary<string, CTestOpaqueType> opaqueTypes,
+    ImmutableDictionary<string, CTestVariable> variables)
 {
-    private readonly ImmutableDictionary<string, CTestEnum> _enums;
-    private readonly ImmutableDictionary<string, CTestFunction> _functions;
-    private readonly ImmutableDictionary<string, CTestMacroObject> _macroObjects;
-    private readonly ImmutableDictionary<string, CTestRecord> _records;
-    private readonly ImmutableDictionary<string, CTestTypeAlias> _typeAliases;
-    private readonly ImmutableDictionary<string, CTestFunctionPointer> _functionPointers;
-    private readonly ImmutableDictionary<string, CTestOpaqueType> _opaqueTypes;
-    private readonly ImmutableDictionary<string, CTestVariable> _variables;
-
-    private readonly ImmutableHashSet<string>.Builder _namesTested;
-
-    public CTestFfiCrossPlatform(
-        ImmutableDictionary<string, CTestFunction> functions,
-        ImmutableDictionary<string, CTestEnum> enums,
-        ImmutableDictionary<string, CTestRecord> records,
-        ImmutableDictionary<string, CTestMacroObject> macroObjects,
-        ImmutableDictionary<string, CTestTypeAlias> typeAliases,
-        ImmutableDictionary<string, CTestFunctionPointer> functionPointers,
-        ImmutableDictionary<string, CTestOpaqueType> opaqueTypes,
-        ImmutableDictionary<string, CTestVariable> variables)
-    {
-        _functions = functions;
-        _enums = enums;
-        _records = records;
-        _macroObjects = macroObjects;
-        _typeAliases = typeAliases;
-        _functionPointers = functionPointers;
-        _opaqueTypes = opaqueTypes;
-        _variables = variables;
-        _namesTested = ImmutableHashSet.CreateBuilder<string>();
-    }
+    private readonly ImmutableHashSet<string>.Builder _namesTested = ImmutableHashSet.CreateBuilder<string>();
 
     public void AssertNodesAreTested()
     {
-        foreach (var value in _enums.Values)
+        foreach (var value in enums.Values)
         {
             Assert.True(_namesTested.Contains(value.Name), $"The C enum '{value.Name}' is not covered in a test!");
         }
 
-        foreach (var value in _records.Values)
+        foreach (var value in records.Values)
         {
             Assert.True(_namesTested.Contains(value.Name), $"The C record '{value.Name}' is not covered in a test!");
         }
 
-        foreach (var value in _macroObjects.Values)
+        foreach (var value in macroObjects.Values)
         {
             Assert.True(_namesTested.Contains(value.Name), $"The C macro object '{value.Name}' is not covered in a test!");
         }
 
-        foreach (var value in _typeAliases.Values)
+        foreach (var value in typeAliases.Values)
         {
             Assert.True(_namesTested.Contains(value.Name), $"The C type alias '{value.Name}' is not covered in a test!");
         }
 
-        foreach (var value in _functionPointers.Values)
+        foreach (var value in functionPointers.Values)
         {
             Assert.True(_namesTested.Contains(value.Name), $"The C function pointer '{value.Name}' is not covered in a test!");
         }
@@ -74,145 +52,145 @@ public sealed class CTestFfiCrossPlatform
 
     public CTestFunction GetFunction(string name)
     {
-        var exists = _functions.TryGetValue(name, out var value);
+        var exists = functions.TryGetValue(name, out var value);
         Assert.True(exists, $"The function '{name}' does not exist.");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value!;
     }
 
     public CTestFunction? TryGetFunction(string name)
     {
-        var exists = _functions.TryGetValue(name, out var value);
+        var exists = functions.TryGetValue(name, out var value);
         if (!exists)
         {
             return null;
         }
 
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value;
     }
 
     public CTestEnum GetEnum(string name)
     {
-        var exists = _enums.TryGetValue(name, out var value);
+        var exists = enums.TryGetValue(name, out var value);
         Assert.True(exists, $"The enum '{name}' does not exist.");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value!;
     }
 
     public CTestEnum? TryGetEnum(string name)
     {
-        var exists = _enums.TryGetValue(name, out var value);
+        var exists = enums.TryGetValue(name, out var value);
         if (!exists)
         {
             return null;
         }
 
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value;
     }
 
     public CTestRecord GetRecord(string name)
     {
-        var exists = _records.TryGetValue(name, out var value);
+        var exists = records.TryGetValue(name, out var value);
         Assert.True(exists, $"The record '{name}' does not exist.");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         AssertRecord(value!);
         return value!;
     }
 
     public CTestRecord? TryGetRecord(string name)
     {
-        var exists = _records.TryGetValue(name, out var value);
+        var exists = records.TryGetValue(name, out var value);
         if (!exists)
         {
             return null;
         }
 
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         AssertRecord(value!);
         return value;
     }
 
     public CTestMacroObject GetMacroObject(string name)
     {
-        var exists = _macroObjects.TryGetValue(name, out var value);
+        var exists = macroObjects.TryGetValue(name, out var value);
         Assert.True(exists, $"The macro object '{name}' does not exist.");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value!;
     }
 
     public CTestMacroObject? TryGetMacroObject(string name)
     {
-        var exists = _macroObjects.TryGetValue(name, out var value);
+        var exists = macroObjects.TryGetValue(name, out var value);
         if (!exists)
         {
             return null;
         }
 
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value;
     }
 
     public CTestTypeAlias GetTypeAlias(string name)
     {
-        var exists = _typeAliases.TryGetValue(name, out var value);
+        var exists = typeAliases.TryGetValue(name, out var value);
         Assert.True(exists, $"The type alias '{name}' does not exist.");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value!;
     }
 
     public CTestTypeAlias? TryGetTypeAlias(string name)
     {
-        var exists = _typeAliases.TryGetValue(name, out var value);
+        var exists = typeAliases.TryGetValue(name, out var value);
         if (!exists)
         {
             return null;
         }
 
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value;
     }
 
     public CTestFunctionPointer GetFunctionPointer(string name)
     {
-        var exists = _functionPointers.TryGetValue(name, out var value);
+        var exists = functionPointers.TryGetValue(name, out var value);
         Assert.True(exists, $"The function pointer '{name}' does not exist.");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value!;
     }
 
     public CTestFunctionPointer? TryGetFunctionPointer(string name)
     {
-        var exists = _functionPointers.TryGetValue(name, out var value);
+        var exists = functionPointers.TryGetValue(name, out var value);
         return exists ? value : null;
     }
 
     public CTestOpaqueType GetOpaqueType(string name)
     {
-        var exists = _opaqueTypes.TryGetValue(name, out var value);
+        var exists = opaqueTypes.TryGetValue(name, out var value);
         Assert.True(exists, $"The opaque type '{name}' does not exist.");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value!;
     }
 
     public CTestOpaqueType? TryGetOpaqueType(string name)
     {
-        var exists = _opaqueTypes.TryGetValue(name, out var value);
+        var exists = opaqueTypes.TryGetValue(name, out var value);
         return exists ? value : null;
     }
 
     public CTestVariable GetVariable(string name)
     {
-        var exists = _variables.TryGetValue(name, out var value);
+        var exists = variables.TryGetValue(name, out var value);
         Assert.True(exists, $"The variable '{name}' does not exist");
-        _namesTested.Add(name);
+        _ = _namesTested.Add(name);
         return value!;
     }
 
     public CTestVariable? TryGetVariable(string name)
     {
-        var exists = _variables.TryGetValue(name, out var value);
+        var exists = variables.TryGetValue(name, out var value);
         return exists ? value : null;
     }
 

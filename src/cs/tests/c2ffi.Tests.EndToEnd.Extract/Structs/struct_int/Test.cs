@@ -1,9 +1,6 @@
 // Copyright (c) Bottlenose Labs Inc. (https://github.com/bottlenoselabs). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
-using c2ffi.Tests.Library.Models;
-using FluentAssertions;
-
 #pragma warning disable CA1707
 
 namespace c2ffi.Tests.EndToEnd.Extract.Structs.struct_int;
@@ -29,16 +26,16 @@ public class Test : ExtractFfiTest
     {
         const string name = $"struct {StructName}";
         var record = ffi.GetRecord(name);
-        record.Name.Should().Be(name);
-        record.IsStruct.Should().BeTrue();
-        record.IsUnion.Should().BeFalse();
-        record.IsAnonymous.Should().BeFalse();
+        _ = record.Name.Should().Be(name);
+        _ = record.IsStruct.Should().BeTrue();
+        _ = record.IsUnion.Should().BeFalse();
+        _ = record.IsAnonymous.Should().BeFalse();
 
-        record.Fields.Length.Should().Be(1);
+        _ = record.Fields.Length.Should().Be(1);
 
         var field = record.Fields[0];
-        field.Name.Should().Be("a");
-        field.OffsetOf.Should().Be(0);
+        _ = field.Name.Should().Be("a");
+        _ = field.OffsetOf.Should().Be(0);
         field.Type.Should().BeInt();
     }
 }

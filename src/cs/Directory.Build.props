@@ -1,33 +1,25 @@
 <Project>
 
-  <!-- Change output folder -->
+  <!-- Use and change artifacts folder -->
   <PropertyGroup>
     <UseArtifactsOutput>true</UseArtifactsOutput>
     <ArtifactsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory),.gitignore))/artifacts</ArtifactsPath>
   </PropertyGroup>
 
-  <!-- Show generated files -->
-  <PropertyGroup>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
-  </PropertyGroup>
-
+  <!-- bottlenoselabs.MSBuildExtensions -->
   <PropertyGroup>
     <IsEnabledAnalyzers>true</IsEnabledAnalyzers>
     <IsEnabledAnalyzersStyleCop>true</IsEnabledAnalyzersStyleCop>
     <StyleCopSettingsFilePath>$(MSBuildThisFileDirectory)StyleCop.json</StyleCopSettingsFilePath>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="bottlenoselabs.Common.Tools" Version="*-*">
+    <PackageReference Include="bottlenoselabs.MSBuild.Extensions" Version="*">
       <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.507">
+    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="*">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)Analyzers.globalconfig" Link="Properties/Analyzers.globalconfig" />
   </ItemGroup>
 
 </Project>

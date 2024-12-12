@@ -9,15 +9,9 @@ namespace c2ffi.Tests.Library.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class CTestVariable
+public class CTestVariable(CVariable variable)
 {
-    public string Name { get; }
+    public string Name { get; } = variable.Name;
 
-    public string TypeName { get; }
-
-    public CTestVariable(CVariable variable)
-    {
-        Name = variable.Name;
-        TypeName = variable.Type.Name;
-    }
+    public string TypeName { get; } = variable.Type.Name;
 }
