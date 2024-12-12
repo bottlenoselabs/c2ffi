@@ -2,7 +2,7 @@
 
 Convert a C header `.h` to a FFI (foreign function interface) `.json` data structure for the purposes of generating bindings to other languages.
 
-For differences between the other GitHub project under the same name [https://github.com/rpav/c2ffi](https://github.com/rpav/c2ffi) please read
+For differences between the other GitHub project under the same name [https://github.com/rpav/c2ffi](https://github.com/rpav/c2ffi) please read [this section](#differences-between-httpsgithubcomrpavc2ffi).
 
 ## Background: Why?
 
@@ -166,7 +166,7 @@ graph LR
 
 ### Differences between https://github.com/rpav/c2ffi
 
-I originally had this project named as something different but then re-wrote it with tests under the name `c2ffi` as that accurately describes the project. Unfortunately it has the same name as another project with similar goals. If someone has a better name I am open to suggestions. Perhaps `c2ffix` where the `x` is for cross-platform?
+I originally had this project named as something different but then re-wrote it with tests under the name `c2ffi` as that accurately describes the project. Unfortunately it has the same name as another project (https://github.com/rpav/c2ffi) with similar goals. If someone has a better name I am open to suggestions. Perhaps `c2ffix` where the `x` is for cross-platform?
 
 This project is different in the following ways:
 
