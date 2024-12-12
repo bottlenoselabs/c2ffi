@@ -2,6 +2,8 @@
 
 Convert a C header `.h` to a FFI (foreign function interface) `.json` data structure for the purposes of generating bindings to other languages.
 
+For differences between the other GitHub project under the same name [https://github.com/rpav/c2ffi](https://github.com/rpav/c2ffi) please read
+
 ## Background: Why?
 
 ### Problem
@@ -161,6 +163,21 @@ graph LR
 
     end
 ```
+
+### Differences between https://github.com/rpav/c2ffi
+
+I originally had this project named as something different but then re-wrote it with tests under the name `c2ffi` as that accurately describes the project. Unfortunately it has the same name as another project with similar goals. If someone has a better name I am open to suggestions. Perhaps `c2ffix` where the `x` is for cross-platform?
+
+This project is different in the following ways:
+
+- This project is licensed under `MIT`. The other project is licensed under `GPL2`.
+- This project is written in C# and interacts with `libclang` over C interopability, the other project is written in C++. Additionally, this project has a C# library via a NuGet package that contains the code for serializing and deserializing the model to/from `.json`.
+- This project only supports C. The other one apparently supports C++, ObjC, etc.
+- This project fully supports macros objects by parsing via C++ using `auto`.
+- This project is intended to be used for generating a cross-platform FFI. Specific things which break portability such as variadic functions and bit-fields are not supported in this project by design. This project (`extract` step) outputs a `.json` file for each target platform (clang target triple), then this program (`merge` step) merges these platform specific `.json` files into a cross-platform `.json` and checks if it is indeed cross-platform. If it failed at the `merge` step then there is likely something wrong with the C code which makes it not portable between one or more target platforms. The other project does not check for cross-platform and is rather left upon the developer.
+- This project supports various options for configuring `extract` and `merge` steps including skipping C declarations by using regular expression matching.
+- This project also includes a brain dump of things which one should do and do not in C for interoperability (see next section).
+- This project is used directly by another project [c2cs](https://github.com/bottlenoselabs/c2cs) to generate C# bindings.
 
 ### Limitations: Is my C library FFI ready?
 
