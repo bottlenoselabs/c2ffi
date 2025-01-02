@@ -73,9 +73,9 @@ internal abstract partial class NodeExplorer(
             return false;
         }
 
-        if (!IsAllowed(exploreContext, info))
+        if (!IsIgnored(exploreContext, info))
         {
-            LogNotAllowed(info.NodeKind.ToString(), info.Name);
+            LogIgnored(info.NodeKind.ToString(), info.Name);
             return false;
         }
 
@@ -85,7 +85,7 @@ internal abstract partial class NodeExplorer(
 
     protected abstract CNode? GetNode(ExploreContext exploreContext, NodeInfo info);
 
-    protected virtual bool IsAllowed(ExploreContext exploreContext, NodeInfo info)
+    protected virtual bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
     {
         return true;
     }
@@ -130,6 +130,6 @@ internal abstract partial class NodeExplorer(
     [LoggerMessage(5, LogLevel.Debug, "- Explored {Kind} '{Name}' ({Location})'")]
     private partial void LogExplored(string kind, string name, CLocation? location);
 
-    [LoggerMessage(6, LogLevel.Debug, "- {Kind} '{Name}' not allowed, skipping")]
-    private partial void LogNotAllowed(string kind, string name);
+    [LoggerMessage(6, LogLevel.Debug, "- Ignored {Kind} '{Name}'")]
+    private partial void LogIgnored(string kind, string name);
 }
