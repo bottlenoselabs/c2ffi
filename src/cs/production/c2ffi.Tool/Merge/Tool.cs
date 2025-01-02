@@ -37,13 +37,13 @@ public sealed partial class Tool(
 
     public void Run(string inputDirectoryPath, string outputFilePath)
     {
-        var unsanitizedOptions = new InputUnsanitized
+        var unsanitizedInput = new InputUnsanitized
         {
             InputDirectoryPath = inputDirectoryPath,
             OutputFilePath = outputFilePath
         };
 
-        _ = Run(unsanitizedOptions);
+        _ = Run(unsanitizedInput);
     }
 
     protected override void Execute(InputSanitized inputSanitized, Output output)
@@ -90,7 +90,16 @@ public sealed partial class Tool(
 
         if (node is CNodeWithLocation nodeWithLocation)
         {
-            nodeWithLocation.Location = null;
+            var location = nodeWithLocation.Location!.Value;
+            // Strip the file path as it's usually platform specific
+            nodeWithLocation.Location = new CLocation
+            {
+                FileName = location.FileName,
+                FilePath = string.Empty,
+                LineColumn = location.LineColumn,
+                LineNumber = location.LineNumber,
+                IsSystem = location.IsSystem
+            };
         }
 
         switch (node)

@@ -29,7 +29,7 @@ internal sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     protected override KindTypes ExpectedTypes { get; } = KindTypes.Either(
         CXTypeKind.CXType_FunctionProto, CXTypeKind.CXType_FunctionNoProto);
 
-    protected override bool IsAllowed(ExploreContext exploreContext, NodeInfo info)
+    protected override bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
     {
         var regexes = exploreContext.ParseContext.InputSanitized.IgnoredFunctionRegexes;
         foreach (var regex in regexes)

@@ -19,11 +19,11 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiMacroObjectDoesNotExist(ffi);
+            MacroObjectDoesNotExist(ffi);
         }
     }
 
-    private void FfiMacroObjectDoesNotExist(CTestFfiTargetPlatform ffi)
+    private void MacroObjectDoesNotExist(CTestFfiTargetPlatform ffi)
     {
         var macroObject = ffi.TryGetMacroObject(MacroObjectName);
         _ = macroObject.Should().Be(null);

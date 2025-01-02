@@ -19,7 +19,7 @@ internal sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override bool IsAllowed(ExploreContext exploreContext, NodeInfo info)
+    protected override bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
     {
         var regexes = exploreContext.ParseContext.InputSanitized.IgnoredVariableRegexes;
         foreach (var regex in regexes)

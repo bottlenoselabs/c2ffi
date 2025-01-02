@@ -30,7 +30,7 @@ internal sealed class MacroObjectExplorer(
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override bool IsAllowed(ExploreContext exploreContext, NodeInfo info)
+    protected override bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
     {
         var ignoredMacroObjectRegexes = exploreContext.ParseContext.InputSanitized.IgnoredMacroObjectsRegexes;
         foreach (var regex in ignoredMacroObjectRegexes)

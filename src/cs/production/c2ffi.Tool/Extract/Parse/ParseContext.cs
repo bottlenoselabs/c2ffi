@@ -230,12 +230,6 @@ public sealed class ParseContext : IDisposable
 
         bool IsMacroObject(clang.CXCursor clangCursor)
         {
-            var isFromMainFile = clangCursor.IsFromMainFile();
-            if (!isFromMainFile)
-            {
-                return false;
-            }
-
             if (clangCursor.kind != clang.CXCursorKind.CXCursor_MacroDefinition)
             {
                 return false;

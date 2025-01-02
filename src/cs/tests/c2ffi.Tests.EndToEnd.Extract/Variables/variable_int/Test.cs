@@ -18,11 +18,11 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiVariableExists(ffi);
+            VariableExists(ffi);
         }
     }
 
-    private void FfiVariableExists(CTestFfiTargetPlatform ffi)
+    private void VariableExists(CTestFfiTargetPlatform ffi)
     {
         var variable = ffi.GetVariable(VariableName);
         _ = variable.Name.Should().Be(VariableName);

@@ -18,11 +18,11 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiEnumExists(ffi);
+            EnumExists(ffi);
         }
     }
 
-    private void FfiEnumExists(CTestFfiTargetPlatform ffi)
+    private void EnumExists(CTestFfiTargetPlatform ffi)
     {
         const string name = $"enum {EnumName}";
         var @enum = ffi.GetEnum(name);

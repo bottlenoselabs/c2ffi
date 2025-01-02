@@ -174,12 +174,13 @@ public sealed partial class Explorer(
 
         if (exploreContext.IsIncludeIgnored(filePath))
         {
-            LogIgnoreInclude(filePath);
+            LogIgnoredInclude(filePath);
             return;
         }
 
         if (!_visitedIncludeFilePaths.Add(filePath))
         {
+            LogAlreadyVisitedInclude(filePath);
             return;
         }
 
@@ -251,6 +252,9 @@ public sealed partial class Explorer(
     [LoggerMessage(6, LogLevel.Information, "- Found {FoundCount} functions: {Names}")]
     private partial void LogFoundFunctions(int foundCount, string names);
 
-    [LoggerMessage(7, LogLevel.Debug, "- Ignored include file header: {FilePath}")]
-    private partial void LogIgnoreInclude(string filePath);
+    [LoggerMessage(7, LogLevel.Debug, "- Skipping ignored include file header: {FilePath}")]
+    private partial void LogIgnoredInclude(string filePath);
+
+    [LoggerMessage(8, LogLevel.Debug, "- Skipping already visited include file header: {FilePath}")]
+    private partial void LogAlreadyVisitedInclude(string filePath);
 }

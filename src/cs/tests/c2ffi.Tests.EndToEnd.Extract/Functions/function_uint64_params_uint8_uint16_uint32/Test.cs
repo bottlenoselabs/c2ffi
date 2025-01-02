@@ -18,11 +18,11 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiFunctionExists(ffi);
+            FunctionExists(ffi);
         }
     }
 
-    private static void FfiFunctionExists(CTestFfiTargetPlatform ffi)
+    private static void FunctionExists(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.GetFunction(FunctionName);
         _ = function.CallingConvention.Should().Be("cdecl");
