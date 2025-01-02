@@ -18,11 +18,11 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiOpaqueTypeExists(ffi);
+            OpaqueTypeExists(ffi);
         }
     }
 
-    private void FfiOpaqueTypeExists(CTestFfiTargetPlatform ffi)
+    private void OpaqueTypeExists(CTestFfiTargetPlatform ffi)
     {
         const string name = $"struct {OpaqueTypeName}";
         var variable = ffi.GetOpaqueType(name);

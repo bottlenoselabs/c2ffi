@@ -18,11 +18,11 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiFunctionPointer(ffi);
+            FunctionPointerExists(ffi);
         }
     }
 
-    private void FfiFunctionPointer(CTestFfiTargetPlatform ffi)
+    private void FunctionPointerExists(CTestFfiTargetPlatform ffi)
     {
         var alias = ffi.GetTypeAlias(FunctionPointerName);
         _ = alias.Name.Should().Be(FunctionPointerName);

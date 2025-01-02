@@ -18,12 +18,12 @@ public class Test : ExtractFfiTest
 
         foreach (var ffi in ffis)
         {
-            FfiFunctionExists(ffi);
-            FfiEnumExists(ffi);
+            FunctionExists(ffi);
+            EnumExists(ffi);
         }
     }
 
-    private void FfiFunctionExists(CTestFfiTargetPlatform ffi)
+    private void FunctionExists(CTestFfiTargetPlatform ffi)
     {
         var function = ffi.GetFunction(FunctionName);
         _ = function.CallingConvention.Should().Be("cdecl");
@@ -44,7 +44,7 @@ public class Test : ExtractFfiTest
         _ = parameter.Type.AlignOf.Should().Be(4);
     }
 
-    private void FfiEnumExists(CTestFfiTargetPlatform ffi)
+    private void EnumExists(CTestFfiTargetPlatform ffi)
     {
         var @enum = ffi.GetEnum("enum_implicit");
         _ = @enum.Values.Should().HaveCount(2);
