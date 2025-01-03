@@ -158,8 +158,12 @@ public sealed partial class ParseSystemIncludeDirectoriesProvider(
             + " Do you need install the software development kit for Windows? https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/");
         }
 
-        var systemIncludeCommandLineArgSdk = $@"{sdkHighestVersionDirectoryPath}\ucrt";
-        directories.Add(systemIncludeCommandLineArgSdk);
+        // e.g. ucrt, shared, etc
+        var sdkDirectoryPaths = fileSystem.Directory.EnumerateDirectories(sdkHighestVersionDirectoryPath);
+        foreach (var directoryPath in sdkDirectoryPaths)
+        {
+            directories.Add(directoryPath);
+        }
 
         var vsWhereFilePath =
             Environment.ExpandEnvironmentVariables(
