@@ -75,7 +75,7 @@ public record struct CLocation : IComparable<CLocation>
     }
 
     /// <inheritdoc />
-    public override readonly string ToString()
+    public readonly override string ToString()
     {
         if (LineNumber == 0 && LineColumn == 0)
         {
