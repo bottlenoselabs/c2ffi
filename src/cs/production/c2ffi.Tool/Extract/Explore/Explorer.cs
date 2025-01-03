@@ -168,6 +168,7 @@ public sealed partial class Explorer(
         {
             if (filePath.Contains(systemIncludeDirectory, StringComparison.InvariantCulture))
             {
+                LogSkippedSystemInclude(filePath);
                 return;
             }
         }
@@ -257,4 +258,7 @@ public sealed partial class Explorer(
 
     [LoggerMessage(8, LogLevel.Debug, "- Skipping already visited include file header: {FilePath}")]
     private partial void LogAlreadyVisitedInclude(string filePath);
+
+    [LoggerMessage(9, LogLevel.Debug, "- Skipping system include file header: {FilePath}")]
+    private partial void LogSkippedSystemInclude(string filePath);
 }
