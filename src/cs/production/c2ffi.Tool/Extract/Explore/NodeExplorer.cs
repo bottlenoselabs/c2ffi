@@ -44,7 +44,7 @@ internal abstract partial class NodeExplorer(
         return result;
     }
 
-    internal bool CanVisitInternal(ExploreContext exploreContext, NodeInfo info)
+    internal bool CanVisitInternal(NodeInfo info)
     {
         if (!IsExpectedCursor(info))
         {
@@ -73,22 +73,11 @@ internal abstract partial class NodeExplorer(
             return false;
         }
 
-        if (!IsIgnored(exploreContext, info))
-        {
-            LogIgnored(info.NodeKind.ToString(), info.Name);
-            return false;
-        }
-
         MarkAsVisited(info);
         return true;
     }
 
     protected abstract CNode? GetNode(ExploreContext exploreContext, NodeInfo info);
-
-    protected virtual bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
-    {
-        return true;
-    }
 
     private bool IsAlreadyVisited(NodeInfo info, out CLocation? firstLocation)
     {
@@ -130,6 +119,6 @@ internal abstract partial class NodeExplorer(
     [LoggerMessage(5, LogLevel.Debug, "- Explored {Kind} '{Name}' ({Location})'")]
     private partial void LogExplored(string kind, string name, CLocation? location);
 
-    [LoggerMessage(6, LogLevel.Debug, "- Ignored {Kind} '{Name}'")]
-    private partial void LogIgnored(string kind, string name);
+    [LoggerMessage(6, LogLevel.Information, "- Tried to explore {Kind} '{Name}' ({Location})' but failed.")]
+    private partial void LogNotExplored(string kind, string name, CLocation? location);
 }

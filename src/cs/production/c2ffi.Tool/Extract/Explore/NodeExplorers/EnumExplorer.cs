@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using c2ffi.Clang;
 using c2ffi.Data;
 using c2ffi.Data.Nodes;
+using c2ffi.Extract.Parse;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using static bottlenoselabs.clang;
@@ -30,7 +31,7 @@ internal sealed class EnumExplorer(ILogger<EnumExplorer> logger)
     private CEnum Enum(ExploreContext exploreContext, NodeInfo info)
     {
         var integerType = IntegerTypeInfo(exploreContext, info);
-        var enumValues = EnumValues(info.ClangCursor);
+        var enumValues = EnumValues(exploreContext.ParseContext, info.ClangCursor);
         var comment = exploreContext.Comment(info.ClangCursor);
 
         var result = new CEnum
@@ -51,12 +52,13 @@ internal sealed class EnumExplorer(ILogger<EnumExplorer> logger)
         return exploreContext.VisitType(clangType, info);
     }
 
-    private ImmutableArray<CEnumValue> EnumValues(CXCursor clangCursor)
+    private ImmutableArray<CEnumValue> EnumValues(ParseContext parseContext, CXCursor clangCursor)
     {
         var builder = ImmutableArray.CreateBuilder<CEnumValue>();
 
         var enumValuesCursors = clangCursor.GetDescendents(
-            static (child, _) => child.kind == CXCursorKind.CXCursor_EnumConstantDecl);
+            parseContext,
+            static (_, child, _) => child.kind == CXCursorKind.CXCursor_EnumConstantDecl);
 
         foreach (var enumValueCursor in enumValuesCursors)
         {

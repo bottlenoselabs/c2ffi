@@ -72,7 +72,7 @@ internal sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExp
     {
         var fieldName = exploreContext.GetFieldName(clangCursor);
         var clangType = clang_getCursorType(clangCursor);
-        var location = exploreContext.ParseContext.Location(clangCursor);
+        var location = exploreContext.ParseContext.Location(clangCursor, out _);
         var type = exploreContext.VisitType(clangType, structInfo);
         var offsetOf = (int)clang_Cursor_getOffsetOfField(clangCursor) / 8;
         var comment = exploreContext.Comment(clangCursor);

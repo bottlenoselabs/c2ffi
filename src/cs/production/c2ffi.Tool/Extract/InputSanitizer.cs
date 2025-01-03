@@ -121,9 +121,9 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
             IsSingleHeader = input.IsSingleHeader ?? false,
             IncludedNames = IncludedNames(input),
-            IgnoredMacroObjectsRegexes = IgnoredMacroObjects(input),
-            IgnoredVariableRegexes = IgnoredVariables(input),
-            IgnoredFunctionRegexes = IgnoredFunctions(input)
+            IgnoreMacroObjectsRegexes = IgnoredMacroObjects(input),
+            IgnoreVariableRegexes = IgnoredVariables(input),
+            IgnoreFunctionRegexes = IgnoredFunctions(input)
         };
 
         return options;

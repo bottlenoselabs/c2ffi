@@ -73,7 +73,7 @@ public sealed partial class Explorer(
 
     private void VisitFunctions(ExploreContext exploreContext, ParseContext parseContext)
     {
-        var functionCursors = parseContext.GetExternalFunctions();
+        var functionCursors = parseContext.GetExternalFunctions(parseContext);
         foreach (var cursor in functionCursors)
         {
             VisitFunction(exploreContext, cursor);

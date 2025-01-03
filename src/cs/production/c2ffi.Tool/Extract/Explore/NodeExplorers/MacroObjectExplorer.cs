@@ -30,20 +30,6 @@ internal sealed class MacroObjectExplorer(
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
-    {
-        var ignoredMacroObjectRegexes = exploreContext.ParseContext.InputSanitized.IgnoredMacroObjectsRegexes;
-        foreach (var regex in ignoredMacroObjectRegexes)
-        {
-            if (regex.IsMatch(info.Name))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     protected override CNode? GetNode(ExploreContext exploreContext, NodeInfo info)
     {
         return MacroObject(exploreContext, info);
@@ -250,7 +236,7 @@ int main(void)
             clang.CXCursor clangCursor)
         {
             var name = clangCursor.Spelling();
-            var location = parseContext.Location(clangCursor);
+            var location = parseContext.Location(clangCursor, out _);
 
             // clang doesn't have a thing where we can easily get a value of a macro
             // we need to:

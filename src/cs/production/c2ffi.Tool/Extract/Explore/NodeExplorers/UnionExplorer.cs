@@ -70,7 +70,7 @@ internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplo
     {
         var name = exploreContext.GetFieldName(clangCursor);
         var clangType = clang_getCursorType(clangCursor);
-        var location = exploreContext.ParseContext.Location(clangCursor);
+        var location = exploreContext.ParseContext.Location(clangCursor, out _);
         var type = exploreContext.VisitType(clangType, parentInfo);
         var comment = exploreContext.Comment(clangCursor);
 

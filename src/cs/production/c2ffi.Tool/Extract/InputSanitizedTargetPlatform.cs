@@ -29,11 +29,11 @@ public sealed class InputSanitizedTargetPlatform
 
     public ImmutableHashSet<string> IncludedNames { get; init; } = ImmutableHashSet<string>.Empty;
 
-    public ImmutableArray<Regex> IgnoredMacroObjectsRegexes { get; init; } = ImmutableArray<Regex>.Empty;
+    public ImmutableArray<Regex> IgnoreMacroObjectsRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
-    public ImmutableArray<Regex> IgnoredVariableRegexes { get; init; } = ImmutableArray<Regex>.Empty;
+    public ImmutableArray<Regex> IgnoreVariableRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
-    public ImmutableArray<Regex> IgnoredFunctionRegexes { get; init; } = ImmutableArray<Regex>.Empty;
+    public ImmutableArray<Regex> IgnoreFunctionRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
     public override string ToString()
     {
