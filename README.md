@@ -198,7 +198,7 @@ Note that the internals of the C library is irrelevant and to which this list do
 |❌|Function-like macros <sup>5</sup>|
 |✅|Object-like macros <sup>2, 6, 7</sup>|
 
-<sup>1</sup>: When declaring your external functions or variables, do set the default visibility explictly. This is necessary because `c2ffi` is configured to have the visbiity set to hidden so that only the strict subset of functions and variables intended for FFI are extracted. Most C libraries will have an `API_DECL` macro object defined which can be redefined to also set the visibility. See [ffi_helper.h](src/c/production/ffi_helper/include/ffi_helper.h) for an example.
+<sup>1</sup>: When declaring your external functions or variables, do set the default visibility explictly. This is necessary because `c2ffi` is configured to have the visibiity set to hidden when using `libclang` via the flag `-fvisibility=hidden` so that only the strict subset of functions and variables intended for FFI are extracted. Most C libraries will have an `API_DECL` macro object defined which can be redefined to also set the visibility. See [ffi_helper.h](src/c/production/ffi_helper/include/ffi_helper.h) for an example in C. You can also use the config `.json` file to define tyour `API_DECL` macro object.
 
 Bad
 ```c
