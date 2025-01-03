@@ -182,7 +182,7 @@ public sealed class ParseContext : IDisposable
         static bool IsExternalFunction(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor cursorParent)
         {
             var location = parseContext.Location(cursor, out var isFromMainFile);
-            var isLocationOkay = !location.IsSystem;
+            var isLocationOkay = isFromMainFile && !location.IsSystem;
             if (!isLocationOkay)
             {
                 return false;
