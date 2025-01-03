@@ -29,20 +29,6 @@ internal sealed class FunctionExplorer(ILogger<FunctionExplorer> logger)
     protected override KindTypes ExpectedTypes { get; } = KindTypes.Either(
         CXTypeKind.CXType_FunctionProto, CXTypeKind.CXType_FunctionNoProto);
 
-    protected override bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
-    {
-        var regexes = exploreContext.ParseContext.InputSanitized.IgnoredFunctionRegexes;
-        foreach (var regex in regexes)
-        {
-            if (regex.IsMatch(info.Name))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
     {
         var function = Function(exploreContext, info);

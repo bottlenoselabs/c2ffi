@@ -73,7 +73,7 @@ public sealed partial class Explorer(
 
     private void VisitFunctions(ExploreContext exploreContext, ParseContext parseContext)
     {
-        var functionCursors = parseContext.GetExternalFunctions();
+        var functionCursors = parseContext.GetExternalFunctions(parseContext);
         foreach (var cursor in functionCursors)
         {
             VisitFunction(exploreContext, cursor);
@@ -168,6 +168,7 @@ public sealed partial class Explorer(
         {
             if (filePath.Contains(systemIncludeDirectory, StringComparison.InvariantCulture))
             {
+                LogSkippedSystemInclude(filePath);
                 return;
             }
         }
@@ -257,4 +258,7 @@ public sealed partial class Explorer(
 
     [LoggerMessage(8, LogLevel.Debug, "- Skipping already visited include file header: {FilePath}")]
     private partial void LogAlreadyVisitedInclude(string filePath);
+
+    [LoggerMessage(9, LogLevel.Debug, "- Skipping system include file header: {FilePath}")]
+    private partial void LogSkippedSystemInclude(string filePath);
 }

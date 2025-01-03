@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Runtime.InteropServices;
+using c2ffi.Extract.Parse;
 using static bottlenoselabs.clang;
 
 #pragma warning disable CA1806
@@ -11,7 +12,8 @@ namespace c2ffi.Clang
 {
     internal static class ClangExtensions
     {
-        internal delegate bool VisitChildPredicate(CXCursor child, CXCursor parent);
+        internal delegate bool VisitChildPredicate(
+            ParseContext parseContext, CXCursor child, CXCursor parent);
 
         private static VisitChildInstance[] _visitChildInstances = new VisitChildInstance[512];
         private static int _visitChildCount;
@@ -20,7 +22,7 @@ namespace c2ffi.Clang
 
         private static readonly CXCursorVisitor VisitorChild;
         private static readonly CXFieldVisitor VisitorField;
-        private static readonly VisitChildPredicate EmptyVisitChildPredicate = static (_, _) => true;
+        private static readonly VisitChildPredicate EmptyVisitChildPredicate = static (_, _, _) => true;
 
         static ClangExtensions()
         {
@@ -93,18 +95,14 @@ namespace c2ffi.Clang
             };
         }
 
-        public static bool IsFromMainFile(this CXCursor clangCursor)
-        {
-            var location = clang_getCursorLocation(clangCursor);
-            var isFromMainFile = clang_Location_isFromMainFile(location) > 0;
-            return isFromMainFile;
-        }
-
         public static ImmutableArray<CXCursor> GetDescendents(
-            this CXCursor cursor, VisitChildPredicate? predicate = null)
+            this CXCursor cursor,
+            ParseContext parseContext,
+            VisitChildPredicate? predicate = null,
+            bool isRecurse = false)
         {
             var predicate2 = predicate ?? EmptyVisitChildPredicate;
-            var visitData = new VisitChildInstance(predicate2);
+            var visitData = new VisitChildInstance(parseContext, predicate2, isRecurse);
             var visitsCount = Interlocked.Increment(ref _visitChildCount);
             if (visitsCount > _visitChildInstances.Length)
             {
@@ -164,15 +162,20 @@ namespace c2ffi.Clang
             }
 
             var data = _visitChildInstances[index - 1];
-            var result = data.Predicate(child, parent);
+            var result = data.Predicate(data.ParseContext, child, parent);
+
             if (!result)
             {
-                return CXChildVisitResult.CXChildVisit_Continue;
+                return data.IsRecurse
+                    ? CXChildVisitResult.CXChildVisit_Recurse
+                    : CXChildVisitResult.CXChildVisit_Continue;
             }
 
             data.CursorBuilder.Add(child);
 
-            return CXChildVisitResult.CXChildVisit_Continue;
+            return data.IsRecurse
+                ? CXChildVisitResult.CXChildVisit_Break
+                : CXChildVisitResult.CXChildVisit_Continue;
         }
 
         [UnmanagedCallersOnly]
@@ -189,8 +192,11 @@ namespace c2ffi.Clang
             return CXVisitorResult.CXVisit_Continue;
         }
 
-        private readonly struct VisitChildInstance(VisitChildPredicate predicate)
+        private readonly struct VisitChildInstance(
+            ParseContext parseContext, VisitChildPredicate predicate, bool isRecurse)
         {
+            public readonly bool IsRecurse = isRecurse;
+            public readonly ParseContext ParseContext = parseContext;
             public readonly VisitChildPredicate Predicate = predicate;
             public readonly ImmutableArray<CXCursor>.Builder CursorBuilder = ImmutableArray.CreateBuilder<CXCursor>();
         }

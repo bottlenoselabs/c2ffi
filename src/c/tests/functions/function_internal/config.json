@@ -4,11 +4,11 @@
     "../../../production/ffi_helper/include"
   ],
   "defines": {
-    "BAD_CUSTOM_API_DECL": "extern",
+    "BAD_CUSTOM_API_DECL": "",
     "GOOD_CUSTOM_API_DECL": "extern __attribute__ ((visibility(\"default\")))"
   },
   "ignoredIncludeFiles": [
-    "../../../production/ffi_helper/include/ffi_helper.h"
+    "./include.h"
   ],
     "targetPlatforms": {
     "windows": {

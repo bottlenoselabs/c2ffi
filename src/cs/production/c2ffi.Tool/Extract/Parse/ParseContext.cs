@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 using bottlenoselabs;
 using c2ffi.Clang;
 using c2ffi.Data;
@@ -42,9 +43,11 @@ public sealed class ParseContext : IDisposable
         PointerSize = targetInfo.PointerSizeBytes;
     }
 
-    public CLocation Location(clang.CXCursor clangCursor)
+    public CLocation Location(clang.CXCursor clangCursor, out bool isFromMainFile)
     {
         var locationSource = clang.clang_getCursorLocation(clangCursor);
+        isFromMainFile = clang.clang_Location_isFromMainFile(locationSource) > 0;
+
         clang.CXFile file;
         uint lineNumber;
         uint columnNumber;
@@ -154,101 +157,119 @@ public sealed class ParseContext : IDisposable
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
 
-        return translationUnitCursor.GetDescendents(IsInclude);
+        return translationUnitCursor.GetDescendents(this, IsInclude);
 
-        static bool IsInclude(clang.CXCursor child, clang.CXCursor parent)
+        static bool IsInclude(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor cursorParent)
         {
-            var isFromMainFile = child.IsFromMainFile();
-            if (!isFromMainFile)
+            var location = parseContext.Location(cursor, out var isFromMainFile);
+            var isLocationOkay = isFromMainFile && !location.IsSystem;
+            if (!isLocationOkay)
             {
                 return false;
             }
 
-            return child.kind == clang.CXCursorKind.CXCursor_InclusionDirective;
+            var isIncludeHeader = cursor.kind == clang.CXCursorKind.CXCursor_InclusionDirective;
+            return isIncludeHeader;
         }
     }
 
-    public ImmutableArray<clang.CXCursor> GetExternalFunctions()
+    public ImmutableArray<clang.CXCursor> GetExternalFunctions(ParseContext parseContext)
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        var result = translationUnitCursor.GetDescendents(IsExternalFunction);
+        var result = translationUnitCursor.GetDescendents(parseContext, IsExternalFunction);
         return result;
 
-        static bool IsExternalFunction(clang.CXCursor child, clang.CXCursor parent)
+        static bool IsExternalFunction(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor cursorParent)
         {
-            var isFromMainFile = child.IsFromMainFile();
-            if (!isFromMainFile)
+            var location = parseContext.Location(cursor, out var isFromMainFile);
+            var isLocationOkay = !location.IsSystem;
+            if (!isLocationOkay)
             {
                 return false;
             }
 
-            var isFunction = child.kind == clang.CXCursorKind.CXCursor_FunctionDecl;
-            return isFunction && IsExternal(child);
+            var isFunction = cursor.kind == clang.CXCursorKind.CXCursor_FunctionDecl;
+            var isExternal = clang.clang_getCursorLinkage(cursor) == clang.CXLinkageKind.CXLinkage_External;
+            var isVisible = clang.clang_getCursorVisibility(cursor) == clang.CXVisibilityKind.CXVisibility_Default;
+            var isExternallyVisibleFunction = isFunction && isExternal && isVisible;
+            if (!isExternallyVisibleFunction)
+            {
+                return false;
+            }
+
+            var name = cursor.Spelling();
+            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreFunctionRegexes);
+            return !isIgnored;
         }
     }
 
     public ImmutableArray<clang.CXCursor> GetExternalVariables()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        var result = translationUnitCursor.GetDescendents(IsExternalVariable);
+        var result = translationUnitCursor.GetDescendents(this, IsExternalVariable);
         return result;
 
-        static bool IsExternalVariable(clang.CXCursor child, clang.CXCursor parent)
+        static bool IsExternalVariable(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor parentCursor)
         {
-            var isFromMainFile = child.IsFromMainFile();
-            if (!isFromMainFile)
+            var location = parseContext.Location(cursor, out var isFromMainFile);
+            var isLocationOkay = isFromMainFile && !location.IsSystem;
+            if (!isLocationOkay)
             {
                 return false;
             }
 
-            var isExternal = IsExternal(child);
-            var isVariable = child.kind == clang.CXCursorKind.CXCursor_VarDecl;
-            return isVariable && isExternal;
-        }
-    }
+            var isVariable = cursor.kind == clang.CXCursorKind.CXCursor_VarDecl;
+            if (!isVariable)
+            {
+                return false;
+            }
 
-    public ImmutableArray<clang.CXCursor> GetExplicitlyIncludedNamedCursors()
-    {
-        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        var result = translationUnitCursor.GetDescendents(
-            (cursor, parent) => IsExplicitlyIncludedName(cursor, InputSanitized.IncludedNames));
-        return result;
-
-        static bool IsExplicitlyIncludedName(clang.CXCursor cursor, ImmutableHashSet<string> names)
-        {
             var name = cursor.Spelling();
-            var isIncluded = names.Contains(name);
-            return isIncluded;
+            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreVariableRegexes);
+            return !isIgnored;
         }
     }
 
     public ImmutableArray<clang.CXCursor> GetMacroObjects()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        return translationUnitCursor.GetDescendents(
-            (child, _) => IsMacroObject(child));
+        return translationUnitCursor.GetDescendents(this, IsMacroObject);
 
-        bool IsMacroObject(clang.CXCursor clangCursor)
+        static bool IsMacroObject(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor parentCursor)
         {
-            if (clangCursor.kind != clang.CXCursorKind.CXCursor_MacroDefinition)
+            var location = parseContext.Location(cursor, out var isFromMainFile);
+            var isLocationOkay = isFromMainFile && !location.IsSystem;
+            if (!isLocationOkay)
             {
                 return false;
             }
 
-            var isMacroBuiltIn = clang.clang_Cursor_isMacroBuiltin(clangCursor) > 0;
-            if (isMacroBuiltIn)
+            var isMacroDefinition = cursor.kind == clang.CXCursorKind.CXCursor_MacroDefinition;
+            var isMacroBuiltIn = clang.clang_Cursor_isMacroBuiltin(cursor) > 0;
+            var isMacroFunctionLike = clang.clang_Cursor_isMacroFunctionLike(cursor) > 0;
+            var isMacroObject = isMacroDefinition && !isMacroBuiltIn && !isMacroFunctionLike;
+            if (!isMacroObject)
             {
                 return false;
             }
 
-            var isMacroFunctionLike = clang.clang_Cursor_isMacroFunctionLike(clangCursor) > 0;
-            if (isMacroFunctionLike)
-            {
-                return false;
-            }
+            var name = cursor.Spelling();
+            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreMacroObjectsRegexes);
+            return !isIgnored;
+        }
+    }
 
-            var location = Location(clangCursor);
-            return !location.IsSystem;
+    public ImmutableArray<clang.CXCursor> GetExplicitlyIncludedNamedCursors()
+    {
+        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
+        var result = translationUnitCursor.GetDescendents(this, IsExplicitlyIncludedName);
+        return result;
+
+        static bool IsExplicitlyIncludedName(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor parentCursor)
+        {
+            var name = cursor.Spelling();
+            var isIncluded = parseContext.InputSanitized.IncludedNames.Contains(name);
+            return isIncluded;
         }
     }
 
@@ -289,22 +310,16 @@ public sealed class ParseContext : IDisposable
         return (platform, pointerSizeBytes);
     }
 
-    private static bool IsExternal(clang.CXCursor cursor)
+    private static bool IsIgnored(string name, ImmutableArray<Regex> regexes)
     {
-        var linkage = clang.clang_getCursorLinkage(cursor);
-        if (linkage == clang.CXLinkageKind.CXLinkage_Invalid)
+        foreach (var regex in regexes)
         {
-            return false;
+            if (regex.IsMatch(name))
+            {
+                return true;
+            }
         }
 
-        var visibility = clang.clang_getCursorVisibility(cursor);
-        if (visibility == clang.CXVisibilityKind.CXVisibility_Invalid)
-        {
-            return false;
-        }
-
-        var isExternalLinkage = linkage == clang.CXLinkageKind.CXLinkage_External;
-        var isVisible = visibility == clang.CXVisibilityKind.CXVisibility_Default;
-        return isExternalLinkage && isVisible;
+        return false;
     }
 }

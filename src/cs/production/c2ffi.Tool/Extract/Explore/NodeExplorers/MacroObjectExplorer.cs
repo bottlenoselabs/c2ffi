@@ -30,20 +30,6 @@ internal sealed class MacroObjectExplorer(
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
-    {
-        var ignoredMacroObjectRegexes = exploreContext.ParseContext.InputSanitized.IgnoredMacroObjectsRegexes;
-        foreach (var regex in ignoredMacroObjectRegexes)
-        {
-            if (regex.IsMatch(info.Name))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     protected override CNode? GetNode(ExploreContext exploreContext, NodeInfo info)
     {
         return MacroObject(exploreContext, info);
@@ -124,7 +110,7 @@ int main(void)
 
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(parseContext.TranslationUnit);
         var functionCursor = translationUnitCursor
-            .GetDescendents(static (cursor, _) =>
+            .GetDescendents(parseContext, static (_, cursor, _) =>
             {
                 var sourceLocation = clang.clang_getCursorLocation(cursor);
                 var isFromMainFile = clang.clang_Location_isFromMainFile(sourceLocation) > 0;
@@ -141,20 +127,20 @@ int main(void)
                 "Failed to parse C++ file to determine types of macro objects. Please ensure your libclang version is up-to-date.");
         }
 
-        var compoundStatement = functionCursor.GetDescendents(static (cursor, _) =>
+        var compoundStatement = functionCursor.GetDescendents(parseContext, static (_, cursor, _) =>
                 cursor.kind == clang.CXCursorKind.CXCursor_CompoundStmt)
             .FirstOrDefault();
         var declarationStatement =
-            compoundStatement.GetDescendents(static (cursor, _) =>
+            compoundStatement.GetDescendents(parseContext, static (_, cursor, _) =>
                 cursor.kind == clang.CXCursorKind.CXCursor_DeclStmt).FirstOrDefault();
 
-        var variable = declarationStatement.GetDescendents(static (cursor, _) =>
+        var variable = declarationStatement.GetDescendents(parseContext, static (_, cursor, _) =>
                 cursor.kind == clang.CXCursorKind.CXCursor_VarDecl)
             .FirstOrDefault();
         var variableName = variable.Spelling();
         var macroName =
             variableName.Replace("variable_", string.Empty, StringComparison.InvariantCultureIgnoreCase);
-        var variableDescendents = variable.GetDescendents();
+        var variableDescendents = variable.GetDescendents(parseContext);
         if (variableDescendents.IsDefaultOrEmpty)
         {
             return null;
@@ -173,7 +159,36 @@ int main(void)
             return null;
         }
 
-        var type = exploreContext.VisitType(clangType, info);
+        var typeName = clangType.Spelling();
+        var mainTranslationUnit = clang.clang_Cursor_getTranslationUnit(info.ClangCursor);
+        var mainTranslationUnitCursor = clang.clang_getTranslationUnitCursor(mainTranslationUnit);
+
+        var clangCursorsInMainTranslationUnit = mainTranslationUnitCursor.GetDescendents(
+            exploreContext.ParseContext,
+            (_, b, _) => FindTypeName(typeName, b),
+            isRecurse: true);
+
+        static bool FindTypeName(string typeName, clang.CXCursor clangCursor)
+        {
+            var clangType = clang.clang_getCursorType(clangCursor);
+            if (clangType.kind == clang.CXTypeKind.CXType_Invalid)
+            {
+                return false;
+            }
+
+            var clangTypeName = clangType.Spelling();
+            return clangTypeName == typeName;
+        }
+
+        if (clangCursorsInMainTranslationUnit.IsDefaultOrEmpty)
+        {
+            throw new ToolException(
+                $"Failed to find matching type in main translation unit for macro object '{macroName}'.");
+        }
+
+        var clangCursorInMainTranslationUnit = clangCursorsInMainTranslationUnit.First();
+        var clangTypeInMainTranslationUnit = clang.clang_getCursorType(clangCursorInMainTranslationUnit);
+        var type = exploreContext.VisitType(clangTypeInMainTranslationUnit, info);
         var macroObject = new CMacroObject
         {
             Name = macroName,
@@ -250,7 +265,7 @@ int main(void)
             clang.CXCursor clangCursor)
         {
             var name = clangCursor.Spelling();
-            var location = parseContext.Location(clangCursor);
+            var location = parseContext.Location(clangCursor, out _);
 
             // clang doesn't have a thing where we can easily get a value of a macro
             // we need to:

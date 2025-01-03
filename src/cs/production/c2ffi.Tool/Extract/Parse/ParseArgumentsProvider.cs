@@ -84,7 +84,7 @@ public sealed class ParseArgumentsProvider
 
         // Change the default visibility of symbols (functions, variables, etc.) from default to hidden
         //  This makes it so we don't extract symbols that are not explicitly set to default
-        args.Add("-fvisibility=hidden");
+        args.Add("-fvisibility-ms-compat");
     }
 
     private void AddIgnoreWarnings(ImmutableArray<string>.Builder args)

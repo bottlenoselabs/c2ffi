@@ -30,7 +30,7 @@ internal sealed class ExploreContext(
     public void TryEnqueueNode(NodeInfo info)
     {
         var handler = GetHandler(info.NodeKind);
-        if (!handler.CanVisitInternal(this, info))
+        if (!handler.CanVisitInternal(info))
         {
             return;
         }
@@ -140,7 +140,7 @@ internal sealed class ExploreContext(
         NodeInfo? rootNode)
     {
         var clangCursorLocation = clang.clang_getTypeDeclaration(clangType);
-        var location = ParseContext.Location(clangCursorLocation);
+        var location = ParseContext.Location(clangCursorLocation, out _);
 
         int? sizeOf;
         int? alignOf;
@@ -281,7 +281,7 @@ internal sealed class ExploreContext(
         clang.CXType clangType,
         NodeInfo? parentInfo)
     {
-        var location = ParseContext.Location(clangCursor);
+        var location = ParseContext.Location(clangCursor, out _);
         var sizeOf = ParseContext.SizeOf(kind, clangType);
         var alignOf = ParseContext.AlignOf(kind, clangType);
 

@@ -19,20 +19,6 @@ internal sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override bool IsIgnored(ExploreContext exploreContext, NodeInfo info)
-    {
-        var regexes = exploreContext.ParseContext.InputSanitized.IgnoredVariableRegexes;
-        foreach (var regex in regexes)
-        {
-            if (regex.IsMatch(info.Name))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
     {
         return Variable(exploreContext, info);
