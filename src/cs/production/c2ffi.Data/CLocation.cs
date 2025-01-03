@@ -75,7 +75,8 @@ public record struct CLocation : IComparable<CLocation>
     }
 
     /// <inheritdoc />
-    public readonly override string ToString()
+    // ReSharper disable once ArrangeModifiersOrder
+    public override readonly string ToString()
     {
         if (LineNumber == 0 && LineColumn == 0)
         {
