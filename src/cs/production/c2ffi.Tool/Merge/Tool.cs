@@ -56,7 +56,7 @@ public sealed partial class Tool(
         var ffi = CreateCrossPlatformFfi(platforms, platformNodesByKey);
 
         Json.WriteFfiCrossPlatform(_fileSystem, inputSanitized.OutputFilePath, ffi);
-        LogWriteAbstractSyntaxTreeSuccess(string.Join(", ", platforms), inputSanitized.OutputFilePath);
+        LogWriteFfiSuccess(string.Join(", ", platforms), inputSanitized.OutputFilePath);
     }
 
     private CFfiCrossPlatform CreateCrossPlatformFfi(
@@ -306,7 +306,7 @@ public sealed partial class Tool(
             catch (Exception e)
 #pragma warning restore CA1031
             {
-                LogFailedToLoadTargetPlatformAbstractSyntaxTree(e, filePath);
+                LogFailedToLoadTargetPlatformFfi(e, filePath);
                 continue;
             }
 
@@ -333,10 +333,10 @@ public sealed partial class Tool(
     private partial void LogNodeNotEqual(string nodeName, string nodeKind);
 
     [LoggerMessage(3, LogLevel.Information, "Success. Merged FFIs for the target platforms '{TargetPlatformsString}': {FilePath}")]
-    private partial void LogWriteAbstractSyntaxTreeSuccess(
+    private partial void LogWriteFfiSuccess(
         string targetPlatformsString,
         string filePath);
 
     [LoggerMessage(4, LogLevel.Error, "Failed to load platform FFI: {FilePath}")]
-    private partial void LogFailedToLoadTargetPlatformAbstractSyntaxTree(Exception e, string filePath);
+    private partial void LogFailedToLoadTargetPlatformFfi(Exception e, string filePath);
 }
