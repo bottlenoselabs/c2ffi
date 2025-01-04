@@ -19,49 +19,49 @@ public record CFfiTargetPlatform
     /// <summary>
     ///     Gets or sets the file name of the C header file.
     /// </summary>
-    [JsonPropertyName("fileName")]
+    [JsonPropertyName("file_name")]
     public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the target platform requested to be used by Clang.
     /// </summary>
-    [JsonPropertyName("platformRequested")]
+    [JsonPropertyName("platform_requested")]
     public TargetPlatform PlatformRequested { get; set; } = TargetPlatform.Unknown;
 
     /// <summary>
     ///     Gets or sets the target platform used by Clang.
     /// </summary>
-    [JsonPropertyName("platformActual")]
+    [JsonPropertyName("platform_actual")]
     public TargetPlatform PlatformActual { get; set; } = TargetPlatform.Unknown;
 
     /// <summary>
     ///     Gets or sets the arguments passed to Clang.
     /// </summary>
-    [JsonPropertyName("clangArguments")]
+    [JsonPropertyName("clang_arguments")]
     public ImmutableArray<string> ClangArguments;
 
     /// <summary>
     ///     Gets or sets the system include directories used.
     /// </summary>
-    [JsonPropertyName("systemIncludeDirectories")]
+    [JsonPropertyName("system_include_directories")]
     public ImmutableArray<string> SystemIncludeDirectories { get; set; } = ImmutableArray<string>.Empty;
 
     /// <summary>
     ///     Gets or sets the user include directories used.
     /// </summary>
-    [JsonPropertyName("userIncludeDirectories")]
+    [JsonPropertyName("user_include_directories")]
     public ImmutableArray<string> UserIncludeDirectories { get; set; } = ImmutableArray<string>.Empty;
 
     /// <summary>
     ///     Gets or sets the pointer size in bytes.
     /// </summary>
-    [JsonPropertyName("pointerSize")]
+    [JsonPropertyName("pointer_size")]
     public int PointerSize { get; set; }
 
     /// <summary>
     ///     Gets or sets the macro objects.
     /// </summary>
-    [JsonPropertyName("macroObjects")]
+    [JsonPropertyName("macro_objects")]
     public ImmutableSortedDictionary<string, CMacroObject> MacroObjects { get; set; } =
         ImmutableSortedDictionary<string, CMacroObject>.Empty;
 
@@ -96,21 +96,21 @@ public record CFfiTargetPlatform
     /// <summary>
     ///     Gets or sets the type aliases.
     /// </summary>
-    [JsonPropertyName("typeAliases")]
+    [JsonPropertyName("aliases")]
     public ImmutableSortedDictionary<string, CTypeAlias> TypeAliases { get; set; } =
         ImmutableSortedDictionary<string, CTypeAlias>.Empty;
 
     /// <summary>
     ///     Gets or sets the opaque types.
     /// </summary>
-    [JsonPropertyName("opaqueTypes")]
+    [JsonPropertyName("opaques")]
     public ImmutableSortedDictionary<string, COpaqueType> OpaqueTypes { get; set; } =
         ImmutableSortedDictionary<string, COpaqueType>.Empty;
 
     /// <summary>
     ///     Gets or sets the function pointers.
     /// </summary>
-    [JsonPropertyName("functionPointers")]
+    [JsonPropertyName("function_pointers")]
     public ImmutableSortedDictionary<string, CFunctionPointer> FunctionPointers { get; set; } =
         ImmutableSortedDictionary<string, CFunctionPointer>.Empty;
 }

@@ -25,7 +25,7 @@ public record CFfiCrossPlatform
     /// <summary>
     ///     Gets or sets the macro objects.
     /// </summary>
-    [JsonPropertyName("macroObjects")]
+    [JsonPropertyName("macro_objects")]
     public ImmutableSortedDictionary<string, CMacroObject> MacroObjects { get; set; } =
         ImmutableSortedDictionary<string, CMacroObject>.Empty;
 
@@ -60,21 +60,21 @@ public record CFfiCrossPlatform
     /// <summary>
     ///     Gets or sets the type aliases.
     /// </summary>
-    [JsonPropertyName("typeAliases")]
+    [JsonPropertyName("aliases")]
     public ImmutableSortedDictionary<string, CTypeAlias> TypeAliases { get; set; } =
         ImmutableSortedDictionary<string, CTypeAlias>.Empty;
 
     /// <summary>
     ///     Gets or sets the opaque types.
     /// </summary>
-    [JsonPropertyName("opaqueTypes")]
+    [JsonPropertyName("opaques")]
     public ImmutableSortedDictionary<string, COpaqueType> OpaqueTypes { get; set; } =
         ImmutableSortedDictionary<string, COpaqueType>.Empty;
 
     /// <summary>
     ///     Gets or sets the function pointers.
     /// </summary>
-    [JsonPropertyName("functionPointers")]
+    [JsonPropertyName("function_pointers")]
     public ImmutableSortedDictionary<string, CFunctionPointer> FunctionPointers { get; set; } =
         ImmutableSortedDictionary<string, CFunctionPointer>.Empty;
 }
