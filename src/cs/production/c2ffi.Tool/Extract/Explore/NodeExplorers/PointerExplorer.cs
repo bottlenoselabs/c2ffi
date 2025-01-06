@@ -18,9 +18,9 @@ internal sealed class PointerExplorer(ILogger<PointerExplorer> logger)
 
     protected override KindTypes ExpectedTypes { get; } = KindTypes.Is(CXTypeKind.CXType_Pointer);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        var pointer = Pointer(exploreContext, info);
+        var pointer = Pointer(context, info);
         return pointer;
     }
 

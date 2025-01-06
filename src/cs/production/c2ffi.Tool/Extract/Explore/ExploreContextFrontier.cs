@@ -84,8 +84,9 @@ internal sealed partial class ExploreContextFrontier(ILogger<ExploreContextFront
     {
         while (frontier.Count > 0)
         {
-            var node = frontier.PopFront()!;
-            exploreContext.TryExplore(node);
+            var nodeInfo = frontier.PopFront()!;
+            var node = exploreContext.Explore(nodeInfo);
+            exploreContext.AddNode(node);
         }
     }
 

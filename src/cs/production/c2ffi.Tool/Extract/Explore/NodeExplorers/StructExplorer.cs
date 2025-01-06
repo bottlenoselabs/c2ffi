@@ -18,15 +18,16 @@ internal sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExp
     protected override KindCursors ExpectedCursors { get; } =
         KindCursors.Is(CXCursorKind.CXCursor_StructDecl);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return Struct(exploreContext, info);
+        return Struct(context, info);
     }
 
-    private CRecord Struct(ExploreContext exploreContext, NodeInfo info)
+    private CRecord Struct(ExploreContext context, NodeInfo info)
     {
-        var fields = StructFields(exploreContext, info);
-        var comment = exploreContext.Comment(info.ClangCursor);
+        var nestedRecords = ImmutableArray.CreateBuilder<CRecord>();
+        var fields = StructFields(context, info, nestedRecords);
+        var comment = context.Comment(info.ClangCursor);
         var isAnonymous = clang_Cursor_isAnonymous(info.ClangCursor) > 0;
 
         var record = new CRecord
@@ -38,15 +39,17 @@ internal sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExp
             SizeOf = info.SizeOf!.Value,
             AlignOf = info.AlignOf!.Value,
             IsAnonymous = isAnonymous,
-            Comment = comment
+            Comment = comment,
+            NestedRecords = nestedRecords.ToImmutable()
         };
 
         return record;
     }
 
     private ImmutableArray<CRecordField> StructFields(
-        ExploreContext exploreContext,
-        NodeInfo structInfo)
+        ExploreContext context,
+        NodeInfo structInfo,
+        ImmutableArray<CRecord>.Builder nestedRecords)
     {
         var builder = ImmutableArray.CreateBuilder<CRecordField>();
         var fieldCursors = FieldCursors(structInfo.ClangType);
@@ -56,7 +59,7 @@ internal sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExp
             for (var i = 0; i < fieldCursors.Length; i++)
             {
                 var clangCursor = fieldCursors[i];
-                var field = StructField(exploreContext, structInfo, clangCursor);
+                var field = StructField(context, structInfo, clangCursor, nestedRecords);
                 builder.Add(field);
             }
         }
@@ -66,18 +69,28 @@ internal sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExp
     }
 
     private CRecordField StructField(
-        ExploreContext exploreContext,
+        ExploreContext context,
         NodeInfo structInfo,
-        CXCursor clangCursor)
+        CXCursor clangCursor,
+        ImmutableArray<CRecord>.Builder nestedRecords)
     {
-        var fieldName = exploreContext.GetFieldName(clangCursor);
+        var fieldName = context.GetFieldName(clangCursor);
         var clangType = clang_getCursorType(clangCursor);
-        var location = exploreContext.ParseContext.Location(clangCursor, out _);
-        var type = exploreContext.VisitType(clangType, structInfo);
+        var location = context.ParseContext.Location(clangCursor, out _);
+        var type = context.VisitType(clangType, structInfo);
         var offsetOf = (int)clang_Cursor_getOffsetOfField(clangCursor) / 8;
-        var comment = exploreContext.Comment(clangCursor);
+        var comment = context.Comment(clangCursor);
 
-        return new CRecordField
+        if ((type.IsAnonymous ?? false) && type.NodeKind is CNodeKind.Union or CNodeKind.Struct)
+        {
+            var clangCursorRecordNested = clang_getTypeDeclaration(clangType);
+            var nodeInfo =
+                context.CreateNodeInfoRecordNested(type.NodeKind, type.Name, clangCursorRecordNested, clangType, structInfo);
+            var node = (CRecord)context.Explore(nodeInfo)!;
+            nestedRecords.Add(node);
+        }
+
+        var structField = new CRecordField
         {
             Name = fieldName,
             Location = location,
@@ -85,5 +98,7 @@ internal sealed class StructExplorer(ILogger<StructExplorer> logger) : RecordExp
             OffsetOf = offsetOf,
             Comment = comment
         };
+
+        return structField;
     }
 }

@@ -27,6 +27,8 @@ public class CTestRecord(CRecord record)
 
     public ImmutableArray<CTestRecordField> Fields { get; } = [..record.Fields.Select(field => new CTestRecordField(field))];
 
+    public ImmutableArray<CTestRecord> NestedRecords { get; } = [..record.NestedRecords.Select(record => new CTestRecord(record))];
+
     public override string ToString()
     {
         return Name;

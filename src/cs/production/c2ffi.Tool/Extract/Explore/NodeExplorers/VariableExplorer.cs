@@ -19,9 +19,9 @@ internal sealed class VariableExplorer(ILogger<VariableExplorer> logger)
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return Variable(exploreContext, info);
+        return Variable(context, info);
     }
 
     private static CVariable Variable(ExploreContext exploreContext, NodeInfo info)

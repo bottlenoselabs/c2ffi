@@ -46,6 +46,12 @@ public class CRecord : CNodeWithLocation
     [JsonPropertyName("fields")]
     public ImmutableArray<CRecordField> Fields { get; set; } = ImmutableArray<CRecordField>.Empty;
 
+    /// <summary>
+    ///     Gets or sets the nested records.
+    /// </summary>
+    [JsonPropertyName("nested")]
+    public ImmutableArray<CRecord> NestedRecords { get; set; } = ImmutableArray<CRecord>.Empty;
+
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public override string ToString()

@@ -23,9 +23,9 @@ internal sealed class EnumExplorer(ILogger<EnumExplorer> logger)
 
     protected override KindTypes ExpectedTypes { get; } = KindTypes.Is(CXTypeKind.CXType_Enum);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return Enum(exploreContext, info);
+        return Enum(context, info);
     }
 
     private CEnum Enum(ExploreContext exploreContext, NodeInfo info)

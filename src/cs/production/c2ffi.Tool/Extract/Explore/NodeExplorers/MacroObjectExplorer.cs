@@ -30,9 +30,9 @@ internal sealed class MacroObjectExplorer(
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override CNode? GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode? GetNode(ExploreContext context, NodeInfo info)
     {
-        return MacroObject(exploreContext, info);
+        return MacroObject(context, info);
     }
 
     private CMacroObject? MacroObject(ExploreContext exploreContext, NodeInfo info)

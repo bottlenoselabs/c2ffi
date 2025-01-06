@@ -18,9 +18,9 @@ internal sealed class ArrayExplorer(ILogger<ArrayExplorer> logger) : NodeExplore
     protected override KindTypes ExpectedTypes { get; } = KindTypes.Either(
         CXTypeKind.CXType_ConstantArray, CXTypeKind.CXType_IncompleteArray);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return Array(exploreContext, info);
+        return Array(context, info);
     }
 
     private static CArray Array(ExploreContext exploreContext, NodeInfo info)

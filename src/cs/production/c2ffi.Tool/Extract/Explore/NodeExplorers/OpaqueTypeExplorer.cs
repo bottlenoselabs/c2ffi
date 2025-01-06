@@ -17,9 +17,9 @@ internal sealed class OpaqueTypeExplorer(ILogger<OpaqueTypeExplorer> logger)
 
     protected override KindTypes ExpectedTypes => KindTypes.Any;
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return OpaqueDataType(exploreContext, info);
+        return OpaqueDataType(context, info);
     }
 
     private static COpaqueType OpaqueDataType(ExploreContext exploreContext, NodeInfo info)

@@ -179,39 +179,11 @@ internal static class ClangTypeInfoProvider
     {
         var isAnonymous = clang.clang_Cursor_isAnonymous(clangCursor) > 0;
         var isRecord = clangCursor.kind is clang.CXCursorKind.CXCursor_StructDecl or clang.CXCursorKind.CXCursor_UnionDecl;
-        if (!isRecord || !isAnonymous)
+        if (isRecord && isAnonymous)
         {
-            return clangType.Spelling();
+            return string.Empty;
         }
 
-        var clangCursorParent = clang.clang_getCursorSemanticParent(clangCursor);
-        var clangTypeParent = clang.clang_getCursorType(clangCursorParent);
-        var parentName = GetTypeName(clangTypeParent, clangCursorParent);
-
-        var clangCursorFields = clangTypeParent.GetFields();
-        var index = -1;
-        for (var i = 0; i < clangCursorFields.Length; i++)
-        {
-            var clangCursorField = clangCursorFields[i];
-            var clangTypeField = clang.clang_getCursorType(clangCursorField);
-            if (clangTypeField.kind == clang.CXTypeKind.CXType_Elaborated)
-            {
-                clangTypeField = clang.clang_Type_getNamedType(clangTypeField);
-            }
-
-            var areEqual = clang.clang_equalTypes(clangType, clangTypeField) > 0;
-            if (areEqual)
-            {
-                index = i;
-            }
-        }
-
-        if (index == -1)
-        {
-            var name = clangType.Spelling();
-            throw new InvalidOperationException($"Could not find anonymous record declaration for type '{name}' in parent record '{parentName}'.");
-        }
-
-        return $"{parentName}_ANONYMOUS_{index}";
+        return clangType.Spelling();
     }
 }

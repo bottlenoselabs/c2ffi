@@ -18,9 +18,9 @@ internal sealed class TypeAliasExplorer(ILogger<TypeAliasExplorer> logger) : Nod
 
     protected override KindTypes ExpectedTypes { get; } = KindTypes.Is(CXTypeKind.CXType_Typedef);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return TypeAlias(exploreContext, info);
+        return TypeAlias(context, info);
     }
 
     private static CTypeAlias TypeAlias(ExploreContext exploreContext, NodeInfo info)
