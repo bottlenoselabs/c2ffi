@@ -34,13 +34,14 @@ public class Test : MergeFfisTest
         _ = field.OffsetOf.Should().Be(0);
 
         var fieldType = field.Type;
-        _ = fieldType.Name.Should().Be(name + "_ANONYMOUS_0");
+        _ = fieldType.Name.Should().Be(string.Empty);
         _ = fieldType.SizeOf.Should().Be(16);
         _ = fieldType.AlignOf.Should().Be(4);
         _ = fieldType.IsAnonymous.Should().BeTrue();
         _ = fieldType.InnerType.Should().BeNull();
 
-        var anonymousStruct = ffi.GetRecord(fieldType.Name);
+        _ = @struct.NestedRecords.Should().HaveCount(1);
+        var anonymousStruct = @struct.NestedRecords[0];
         _ = anonymousStruct.IsStruct.Should().BeTrue();
         _ = anonymousStruct.IsUnion.Should().BeFalse();
         _ = anonymousStruct.SizeOf.Should().Be(16);
@@ -51,7 +52,7 @@ public class Test : MergeFfisTest
         var anonymousField1 = anonymousStruct.Fields[0];
         _ = anonymousField1.Name.Should().BeEmpty();
         _ = anonymousField1.OffsetOf.Should().Be(0);
-        _ = anonymousField1.Type.Name.Should().Be(anonymousStruct.Name + "_ANONYMOUS_0");
+        _ = anonymousField1.Type.Name.Should().Be(string.Empty);
         _ = anonymousField1.Type.SizeOf.Should().Be(8);
         _ = anonymousField1.Type.AlignOf.Should().Be(4);
         _ = anonymousField1.Type.IsAnonymous.Should().BeTrue();
@@ -60,13 +61,14 @@ public class Test : MergeFfisTest
         var anonymousField2 = anonymousStruct.Fields[1];
         _ = anonymousField2.Name.Should().BeEmpty();
         _ = anonymousField2.OffsetOf.Should().Be(8);
-        _ = anonymousField2.Type.Name.Should().Be(anonymousStruct.Name + "_ANONYMOUS_1");
+        _ = anonymousField2.Type.Name.Should().Be(string.Empty);
         _ = anonymousField2.Type.SizeOf.Should().Be(8);
         _ = anonymousField2.Type.AlignOf.Should().Be(4);
         _ = anonymousField2.Type.IsAnonymous.Should().BeTrue();
         _ = anonymousField2.Type.InnerType.Should().BeNull();
 
-        var nestedAnonymousStruct1 = ffi.GetRecord(anonymousField1.Type.Name);
+        _ = anonymousStruct.NestedRecords.Should().HaveCount(2);
+        var nestedAnonymousStruct1 = anonymousStruct.NestedRecords[0];
         _ = nestedAnonymousStruct1.IsStruct.Should().BeTrue();
         _ = nestedAnonymousStruct1.IsUnion.Should().BeFalse();
         _ = nestedAnonymousStruct1.SizeOf.Should().Be(8);
@@ -84,7 +86,7 @@ public class Test : MergeFfisTest
         nestedAnonymousStruct1Field2.Type.Should().BeInt();
         _ = nestedAnonymousStruct1Field2.OffsetOf.Should().Be(4);
 
-        var nestedAnonymousStruct2 = ffi.GetRecord(anonymousField2.Type.Name);
+        var nestedAnonymousStruct2 = anonymousStruct.NestedRecords[1];
         _ = nestedAnonymousStruct2.IsStruct.Should().BeTrue();
         _ = nestedAnonymousStruct2.IsUnion.Should().BeFalse();
         _ = nestedAnonymousStruct2.SizeOf.Should().Be(8);

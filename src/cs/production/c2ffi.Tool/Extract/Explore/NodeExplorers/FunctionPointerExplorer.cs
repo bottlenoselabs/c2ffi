@@ -33,9 +33,9 @@ internal sealed class FunctionPointerExplorer(ILogger<FunctionPointerExplorer> l
     protected override KindTypes ExpectedTypes { get; } = KindTypes.Either(
         CXTypeKind.CXType_FunctionProto, CXTypeKind.CXType_FunctionNoProto);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return FunctionPointer(exploreContext, info);
+        return FunctionPointer(context, info);
     }
 
     private static CFunctionPointer FunctionPointer(ExploreContext exploreContext, NodeInfo info)

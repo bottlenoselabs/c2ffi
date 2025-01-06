@@ -39,7 +39,8 @@ public class Test : MergeFfisTest
         _ = fieldType.IsAnonymous.Should().BeTrue();
         _ = fieldType.InnerType.Should().BeNull();
 
-        var anonymousStruct = ffi.GetRecord(fieldType.Name);
+        _ = @struct.NestedRecords.Should().HaveCount(1);
+        var anonymousStruct = @struct.NestedRecords[0];
         _ = anonymousStruct.IsStruct.Should().BeTrue();
         _ = anonymousStruct.IsUnion.Should().BeFalse();
         _ = anonymousStruct.SizeOf.Should().Be(8);

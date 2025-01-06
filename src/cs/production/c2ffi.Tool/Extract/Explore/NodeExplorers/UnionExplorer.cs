@@ -18,15 +18,16 @@ internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplo
     protected override KindCursors ExpectedCursors { get; } =
         KindCursors.Is(CXCursorKind.CXCursor_UnionDecl);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return Union(exploreContext, info);
+        return Union(context, info);
     }
 
-    private CRecord Union(ExploreContext exploreContext, NodeInfo info)
+    private CRecord Union(ExploreContext context, NodeInfo info)
     {
-        var fields = UnionFields(exploreContext, info.ClangType, info);
-        var comment = exploreContext.Comment(info.ClangCursor);
+        var nestedRecords = ImmutableArray.CreateBuilder<CRecord>();
+        var fields = UnionFields(context, info.ClangType, info, nestedRecords);
+        var comment = context.Comment(info.ClangCursor);
         var isAnonymous = clang_Cursor_isAnonymous(info.ClangCursor) > 0;
 
         var record = new CRecord
@@ -38,7 +39,8 @@ internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplo
             SizeOf = info.SizeOf!.Value,
             AlignOf = info.AlignOf!.Value,
             Comment = comment,
-            IsAnonymous = isAnonymous
+            IsAnonymous = isAnonymous,
+            NestedRecords = nestedRecords.ToImmutable()
         };
 
         return record;
@@ -47,7 +49,8 @@ internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplo
     private ImmutableArray<CRecordField> UnionFields(
         ExploreContext exploreContext,
         CXType clangType,
-        NodeInfo parentInfo)
+        NodeInfo parentInfo,
+        ImmutableArray<CRecord>.Builder nestedRecords)
     {
         var builder = ImmutableArray.CreateBuilder<CRecordField>();
         var fieldCursors = FieldCursors(clangType);
@@ -55,7 +58,7 @@ internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplo
         for (var i = 0; i < fieldCursors.Length; i++)
         {
             var clangCursor = fieldCursors[i];
-            var field = UnionField(exploreContext, clangCursor, parentInfo);
+            var field = UnionField(exploreContext, clangCursor, parentInfo, nestedRecords);
             builder.Add(field);
         }
 
@@ -64,17 +67,27 @@ internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplo
     }
 
     private CRecordField UnionField(
-        ExploreContext exploreContext,
+        ExploreContext context,
         CXCursor clangCursor,
-        NodeInfo parentInfo)
+        NodeInfo parentInfo,
+        ImmutableArray<CRecord>.Builder nestedRecords)
     {
-        var name = exploreContext.GetFieldName(clangCursor);
+        var name = context.GetFieldName(clangCursor);
         var clangType = clang_getCursorType(clangCursor);
-        var location = exploreContext.ParseContext.Location(clangCursor, out _);
-        var type = exploreContext.VisitType(clangType, parentInfo);
-        var comment = exploreContext.Comment(clangCursor);
+        var location = context.ParseContext.Location(clangCursor, out _);
+        var type = context.VisitType(clangType, parentInfo);
+        var comment = context.Comment(clangCursor);
 
-        var result = new CRecordField
+        if ((type.IsAnonymous ?? false) && type.NodeKind is CNodeKind.Union or CNodeKind.Struct)
+        {
+            var clangCursorRecordNested = clang_getTypeDeclaration(clangType);
+            var nodeInfo =
+                context.CreateNodeInfoRecordNested(type.NodeKind, type.Name, clangCursorRecordNested, clangType, parentInfo);
+            var node = (CRecord)context.Explore(nodeInfo)!;
+            nestedRecords.Add(node);
+        }
+
+        var unionField = new CRecordField
         {
             Name = name,
             Location = location,
@@ -82,6 +95,6 @@ internal sealed class UnionExplorer(ILogger<UnionExplorer> logger) : RecordExplo
             Comment = comment
         };
 
-        return result;
+        return unionField;
     }
 }

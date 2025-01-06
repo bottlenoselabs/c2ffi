@@ -23,14 +23,14 @@ internal abstract partial class NodeExplorer(
 
     protected abstract KindTypes ExpectedTypes { get; }
 
-    internal CNode? ExploreInternal(ExploreContext exploreContext, NodeInfo info)
+    internal CNode? ExploreInternal(ExploreContext context, NodeInfo info)
     {
         LogExploring(info.NodeKind.ToString(), info.Name, info.Location);
         CNode? result;
 
         try
         {
-            result = GetNode(exploreContext, info);
+            result = GetNode(context, info);
         }
 #pragma warning disable CA1031
         catch (Exception e)
@@ -77,7 +77,7 @@ internal abstract partial class NodeExplorer(
         return true;
     }
 
-    protected abstract CNode? GetNode(ExploreContext exploreContext, NodeInfo info);
+    protected abstract CNode? GetNode(ExploreContext context, NodeInfo info);
 
     private bool IsAlreadyVisited(NodeInfo info, out CLocation? firstLocation)
     {

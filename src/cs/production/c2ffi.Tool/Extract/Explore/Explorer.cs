@@ -80,40 +80,40 @@ public sealed partial class Explorer(
         }
     }
 
-    private void VisitFunction(ExploreContext exploreContext, clang.CXCursor clangCursor)
+    private void VisitFunction(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var info = exploreContext.CreateTopLevelNodeInfo(CNodeKind.Function, clangCursor);
-        exploreContext.TryEnqueueNode(info);
+        var info = context.CreateNodeInfoFunction(clangCursor);
+        context.TryEnqueueNode(info);
     }
 
-    private void VisitVariables(ExploreContext exploreContext, ParseContext parseContext)
+    private void VisitVariables(ExploreContext context, ParseContext parseContext)
     {
         var variableCursors = parseContext.GetExternalVariables();
         foreach (var cursor in variableCursors)
         {
-            VisitVariable(exploreContext, cursor);
+            VisitVariable(context, cursor);
         }
     }
 
-    private void VisitVariable(ExploreContext exploreContext, clang.CXCursor clangCursor)
+    private void VisitVariable(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var info = exploreContext.CreateTopLevelNodeInfo(CNodeKind.Variable, clangCursor);
-        exploreContext.TryEnqueueNode(info);
+        var info = context.CreateNodeInfoVariable(clangCursor);
+        context.TryEnqueueNode(info);
     }
 
-    private void VisitMacroObjects(ExploreContext exploreContext, ParseContext parseContext)
+    private void VisitMacroObjects(ExploreContext context, ParseContext parseContext)
     {
         var macroObjectCursors = parseContext.GetMacroObjects();
         foreach (var cursor in macroObjectCursors)
         {
-            VisitMacroObject(exploreContext, cursor);
+            VisitMacroObject(context, cursor);
         }
     }
 
-    private void VisitMacroObject(ExploreContext exploreContext, clang.CXCursor clangCursor)
+    private void VisitMacroObject(ExploreContext context, clang.CXCursor clangCursor)
     {
-        var info = exploreContext.CreateTopLevelNodeInfo(CNodeKind.MacroObject, clangCursor);
-        exploreContext.TryEnqueueNode(info);
+        var info = context.CreateNodeInfoMacroObject(clangCursor);
+        context.TryEnqueueNode(info);
     }
 
     private void VisitExplicitIncludedNames(ExploreContext exploreContext, ParseContext parseContext)
@@ -125,7 +125,7 @@ public sealed partial class Explorer(
         }
     }
 
-    private void VisitExplicitlyIncludedName(ExploreContext exploreContext, clang.CXCursor clangCursor)
+    private void VisitExplicitlyIncludedName(ExploreContext context, clang.CXCursor clangCursor)
     {
 #pragma warning disable IDE0072
         var nodeKind = clangCursor.kind switch
@@ -141,20 +141,20 @@ public sealed partial class Explorer(
             return;
         }
 
-        var info = exploreContext.CreateTopLevelNodeInfo(nodeKind, clangCursor);
-        exploreContext.TryEnqueueNode(info);
+        var info = context.CreateNodeInfoExplicitlyIncluded(nodeKind, clangCursor);
+        context.TryEnqueueNode(info);
     }
 
-    private void VisitIncludes(ExploreContext exploreContext, ParseContext parseContext)
+    private void VisitIncludes(ExploreContext context, ParseContext parseContext)
     {
         var includeCursors = parseContext.GetIncludes();
         foreach (var includeCursor in includeCursors)
         {
-            VisitInclude(exploreContext, includeCursor);
+            VisitInclude(context, includeCursor);
         }
     }
 
-    private void VisitInclude(ExploreContext exploreContext, clang.CXCursor clangCursor)
+    private void VisitInclude(ExploreContext context, clang.CXCursor clangCursor)
     {
         var clangFile = clang.clang_getIncludedFile(clangCursor);
         var stringFile = clang.clang_getFileName(clangFile).String();
@@ -164,7 +164,7 @@ public sealed partial class Explorer(
         }
 
         var filePath = Path.GetFullPath(stringFile);
-        foreach (var systemIncludeDirectory in exploreContext.ParseContext.SystemIncludeDirectories)
+        foreach (var systemIncludeDirectory in context.ParseContext.SystemIncludeDirectories)
         {
             if (filePath.Contains(systemIncludeDirectory, StringComparison.InvariantCulture))
             {
@@ -173,7 +173,7 @@ public sealed partial class Explorer(
             }
         }
 
-        if (exploreContext.IsIncludeIgnored(filePath))
+        if (context.IsIncludeIgnored(filePath))
         {
             LogIgnoredInclude(filePath);
             return;
@@ -187,12 +187,12 @@ public sealed partial class Explorer(
 
         var parseContext2 = clangTranslationUnitParser.ParseTranslationUnit(
             filePath,
-            exploreContext.ParseContext.InputSanitized,
+            context.ParseContext.InputSanitized,
             false,
             true);
         _parseContexts.Add(parseContext2);
 
-        VisitTranslationUnit(exploreContext, parseContext2);
+        VisitTranslationUnit(context, parseContext2);
     }
 
     private ExploreContext CreateExploreContext(string filePath, InputSanitizedTargetPlatform input)

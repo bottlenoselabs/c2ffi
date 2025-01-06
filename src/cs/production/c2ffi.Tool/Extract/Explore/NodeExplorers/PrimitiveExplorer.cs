@@ -40,9 +40,9 @@ internal sealed class PrimitiveExplorer(ILogger<PrimitiveExplorer> logger)
         CXTypeKind.CXType_Double,
         CXTypeKind.CXType_LongDouble);
 
-    protected override CNode GetNode(ExploreContext exploreContext, NodeInfo info)
+    protected override CNode GetNode(ExploreContext context, NodeInfo info)
     {
-        return Primitive(exploreContext, info);
+        return Primitive(context, info);
     }
 
     private static CPrimitive Primitive(ExploreContext exploreContext, NodeInfo info)

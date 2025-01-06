@@ -38,13 +38,14 @@ public class Test : ExtractFfiTest
         _ = field.OffsetOf.Should().Be(0);
 
         var fieldType = field.Type;
-        _ = fieldType.Name.Should().Be(name + "_ANONYMOUS_0");
+        _ = fieldType.Name.Should().Be(string.Empty);
         _ = fieldType.SizeOf.Should().Be(8);
         _ = fieldType.AlignOf.Should().Be(4);
         _ = fieldType.IsAnonymous.Should().BeTrue();
         _ = fieldType.InnerType.Should().BeNull();
 
-        var anonymousStruct = ffi.GetRecord(fieldType.Name);
+        _ = @struct.NestedRecords.Should().HaveCount(1);
+        var anonymousStruct = @struct.NestedRecords[0];
         _ = anonymousStruct.IsStruct.Should().BeTrue();
         _ = anonymousStruct.IsUnion.Should().BeFalse();
         _ = anonymousStruct.SizeOf.Should().Be(8);
