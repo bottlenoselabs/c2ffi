@@ -187,26 +187,23 @@ public sealed partial class Tool(
         }
 
         var areAllEqual = true;
-        var firstNode = nodes[0].Node;
+        var nodeA = nodes[0].Node;
         for (var i = 1; i < nodes.Length; i++)
         {
-            var node = nodes[i].Node;
+            var nodeB = nodes[i].Node;
 
-            var nodesAreEqual = node.Equals(firstNode);
+            var nodesAreEqual = nodeB.Equals(nodeA);
             if (!nodesAreEqual)
             {
-                var x = node.Equals(firstNode);
-
-                if (node is CMacroObject nodeMacroObject && firstNode is CMacroObject firstNodeMacroObject)
+                if (nodeA is CMacroObject nodeMacroObjectA && nodeB is CMacroObject nodeMacroObjectB)
                 {
-                    if (nodeMacroObject.EqualsWithoutValue(firstNodeMacroObject))
+                    if (IsEqualMacroObjectsRelaxed(nodeMacroObjectA, nodeMacroObjectB))
                     {
-                        areAllEqual = false;
                         break;
                     }
                 }
 
-                LogNodeNotEqual(nodeName, firstNode.NodeKind.ToString());
+                LogNodeNotEqual(nodeName, nodeA.NodeKind.ToString());
                 areAllEqual = false;
                 break;
             }
@@ -216,6 +213,34 @@ public sealed partial class Tool(
         {
             AddCrossPlatformNode(nodes[0]);
         }
+    }
+
+    private static bool IsEqualMacroObjectsRelaxed(
+        CMacroObject macroObjectA,
+        CMacroObject macroObjectB)
+    {
+        var typeA = macroObjectA.Type;
+        var typeB = macroObjectB.Type;
+
+        var isSameSize = typeA.SizeOf == typeB.SizeOf && typeA.AlignOf == typeB.AlignOf;
+        if (!isSameSize)
+        {
+            return false;
+        }
+
+        var isSameValue = macroObjectA.Value == macroObjectB.Value;
+        if (!isSameValue)
+        {
+            return false;
+        }
+
+        if ((typeA.Name == "unsigned long long" && typeB.Name == "unsigned long") ||
+            (typeA.Name == "unsigned long" && typeB.Name == "unsigned long long"))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private ImmutableSortedDictionary<string, ImmutableArray<CNodeWithTargetPlatform>> GetPlatformNodesByKey(
