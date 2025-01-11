@@ -114,6 +114,14 @@ public sealed partial class ClangInstaller
             _path.Combine(AppContext.BaseDirectory, "libclang.so"),
             "/usr/lib/libclang.so",
 
+            // found via running the following command on Ubuntu 24.04: find / -name libclang.so* 2>/dev/null
+            "/usr/lib/llvm-18/lib/libclang.so.1",
+            "/usr/lib/llvm-17/lib/libclang.so.1",
+            "/usr/lib/llvm-16/lib/libclang.so.1",
+
+            // didn't test on Ubuntu 22.04, but I assume there is a version 15
+            "/usr/lib/llvm-15/lib/libclang.so.1",
+
             // found via running the following command on Ubuntu 20.04: find / -name libclang.so* 2>/dev/null
             "/usr/lib/llvm-14/lib/libclang.so.1",
             "/usr/lib/llvm-13/lib/libclang.so.1",
