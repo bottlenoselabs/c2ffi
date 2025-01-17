@@ -119,11 +119,8 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
             MacroObjectDefines = ClangDefines(input, targetPlatformInput),
             AdditionalArguments = ClangArguments(targetPlatformInput),
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
-            IsSingleHeader = input.IsSingleHeader ?? false,
             IncludedNames = IncludedNames(input),
-            IgnoreMacroObjectsRegexes = IgnoredMacroObjects(input),
-            IgnoreVariableRegexes = IgnoredVariables(input),
-            IgnoreFunctionRegexes = IgnoredFunctions(input)
+            IgnoreNameRegexes = IgnoredNames(input),
         };
 
         return options;
@@ -174,19 +171,9 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
         return SanitizeStrings(targetPlatformInput.ClangArguments);
     }
 
-    private ImmutableArray<Regex> IgnoredMacroObjects(InputUnsanitized input)
+    private ImmutableArray<Regex> IgnoredNames(InputUnsanitized input)
     {
-        return SanitizeRegexes(input.IgnoredMacroObjects);
-    }
-
-    private ImmutableArray<Regex> IgnoredVariables(InputUnsanitized input)
-    {
-        return SanitizeRegexes(input.IgnoredVariables);
-    }
-
-    private ImmutableArray<Regex> IgnoredFunctions(InputUnsanitized input)
-    {
-        return SanitizeRegexes(input.IgnoredFunctions);
+        return SanitizeRegexes(input.IgnoredNames);
     }
 
     private ImmutableHashSet<string> IncludedNames(InputUnsanitized input)

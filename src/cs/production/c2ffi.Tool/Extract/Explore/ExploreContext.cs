@@ -304,6 +304,14 @@ internal sealed class ExploreContext(
             return type;
         }
 
+        foreach (var regex in ParseContext.InputSanitized.IgnoreNameRegexes)
+        {
+            if (regex.IsMatch(typeName))
+            {
+                return type;
+            }
+        }
+
         var info = CreateNodeInfo(type.NodeKind, type.Name, type.Name, clangCursor, clangType, parentInfo);
         TryEnqueueNode(info);
         return type;

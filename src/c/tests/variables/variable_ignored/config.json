@@ -6,7 +6,7 @@
   "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
-  "ignoredVariables": [
+  "ignoredNames": [
     "variable_not_allowed",
     "variable_ignored*"
   ],

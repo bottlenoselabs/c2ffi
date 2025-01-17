@@ -69,38 +69,22 @@ public sealed class InputUnsanitized : ToolUnsanitizedInput
     public bool? IsEnabledAutomaticallyFindSystemHeaders { get; set; }
 
     /// <summary>
-    ///     Gets or sets a value that determines whether the C code is parsed as a single header or multiple headers.
-    /// </summary>
-    /// <para>
-    ///     Default is <c>false</c>. Use <c>true</c> to parse the C code as a single header. Use <c>false</c> to parse
-    ///     the C code as multiple headers.
-    /// </para>
-    [JsonPropertyName("isSingleHeader")]
-    public bool? IsSingleHeader { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the cursor names to be treated as opaque types.
+    ///     Gets or sets the Clang cursor names to be treated as opaque types.
     /// </summary>
     [JsonPropertyName("opaqueTypeNames")]
     public ImmutableArray<string>? OpaqueTypeNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the name of macro objects that are not allowed. Use <c>null</c> to allow all macro objects.
+    ///     Gets or sets the name of Clang cursors / Clang types that are not allowed.
     /// </summary>
-    [JsonPropertyName("ignoredMacroObjects")]
-    public ImmutableArray<string>? IgnoredMacroObjects { get; set; }
+    [JsonPropertyName("ignoredNames")]
+    public ImmutableArray<string>? IgnoredNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the name of variables that are not allowed. Use <c>null</c> to allow all variables.
+    ///     Gets or sets the name of Clang cursors / Clang types that are explicitly allowed.
     /// </summary>
-    [JsonPropertyName("ignoredVariables")]
-    public ImmutableArray<string>? IgnoredVariables { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the name of functions that are not allowed. Use <c>null</c> to allow all functions.
-    /// </summary>
-    [JsonPropertyName("ignoredFunctions")]
-    public ImmutableArray<string>? IgnoredFunctions { get; set; }
+    [JsonPropertyName("includedNames")]
+    public ImmutableArray<string>? IncludedNames { get; set; }
 
     /// <summary>
     ///     Gets or sets the target platform configurations for extracting the FFIs per desktop host
@@ -108,16 +92,4 @@ public sealed class InputUnsanitized : ToolUnsanitizedInput
     /// </summary>
     [JsonPropertyName("targetPlatforms")]
     public ImmutableDictionary<string, ImmutableDictionary<string, InputUnsanitizedTargetPlatform>>? TargetPlatforms { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the names of libraries and/or interfaces for macOS, iOS, tvOS or watchOS.
-    /// </summary>
-    [JsonPropertyName("appleFrameworks")]
-    public ImmutableArray<string>? AppleFrameworks { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the name of enums that are explicitly allowed.
-    /// </summary>
-    [JsonPropertyName("includedNames")]
-    public ImmutableArray<string>? IncludedNames { get; set; }
 }
