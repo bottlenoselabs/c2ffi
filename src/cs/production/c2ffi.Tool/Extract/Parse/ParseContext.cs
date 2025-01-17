@@ -198,7 +198,7 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreFunctionRegexes);
+            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
             return !isIgnored;
         }
     }
@@ -225,7 +225,7 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreVariableRegexes);
+            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
             return !isIgnored;
         }
     }
@@ -254,7 +254,7 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreMacroObjectsRegexes);
+            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
             return !isIgnored;
         }
     }

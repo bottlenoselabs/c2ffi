@@ -25,15 +25,9 @@ public sealed class InputSanitizedTargetPlatform
 
     public bool IsEnabledFindSystemHeaders { get; init; }
 
-    public bool IsSingleHeader { get; init; }
-
     public ImmutableHashSet<string> IncludedNames { get; init; } = ImmutableHashSet<string>.Empty;
 
-    public ImmutableArray<Regex> IgnoreMacroObjectsRegexes { get; init; } = ImmutableArray<Regex>.Empty;
-
-    public ImmutableArray<Regex> IgnoreVariableRegexes { get; init; } = ImmutableArray<Regex>.Empty;
-
-    public ImmutableArray<Regex> IgnoreFunctionRegexes { get; init; } = ImmutableArray<Regex>.Empty;
+    public ImmutableArray<Regex> IgnoreNameRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
     public override string ToString()
     {

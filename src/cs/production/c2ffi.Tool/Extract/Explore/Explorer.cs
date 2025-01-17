@@ -57,12 +57,7 @@ public sealed partial class Explorer(
     {
         LogVisitingTranslationUnit(parseContext.FilePath);
 
-        var isMultipleHeaders = !exploreContext.ParseContext.InputSanitized.IsSingleHeader;
-        if (isMultipleHeaders)
-        {
-            VisitIncludes(exploreContext, parseContext);
-        }
-
+        VisitIncludes(exploreContext, parseContext);
         VisitFunctions(exploreContext, parseContext);
         VisitVariables(exploreContext, parseContext);
         VisitMacroObjects(exploreContext, parseContext);

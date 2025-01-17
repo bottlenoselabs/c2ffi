@@ -6,7 +6,7 @@
   "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
-  "ignoredMacroObjects": [
+  "ignoredNames": [
     "MACRO_OBJECT_NOT_ALLOWED",
     "MACRO_OBJECT_IGNORED*"
   ],
