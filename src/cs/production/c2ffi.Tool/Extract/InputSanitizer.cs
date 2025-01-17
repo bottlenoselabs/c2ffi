@@ -119,7 +119,7 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
             MacroObjectDefines = ClangDefines(input, targetPlatformInput),
             AdditionalArguments = ClangArguments(targetPlatformInput),
             IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
-            IncludedNames = IncludedNames(input),
+            IncludeNameRegexes = IncludedNames(input),
             IgnoreNameRegexes = IgnoredNames(input),
         };
 
@@ -176,9 +176,9 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
         return SanitizeRegexes(input.IgnoredNames);
     }
 
-    private ImmutableHashSet<string> IncludedNames(InputUnsanitized input)
+    private ImmutableArray<Regex> IncludedNames(InputUnsanitized input)
     {
-        return [.. SanitizeStrings(input.IncludedNames)];
+        return SanitizeRegexes(input.IncludedNames);
     }
 
     private string SanitizeOutputDirectoryPath(

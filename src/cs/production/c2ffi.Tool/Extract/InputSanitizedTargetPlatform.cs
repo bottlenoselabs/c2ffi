@@ -25,7 +25,7 @@ public sealed class InputSanitizedTargetPlatform
 
     public bool IsEnabledFindSystemHeaders { get; init; }
 
-    public ImmutableHashSet<string> IncludedNames { get; init; } = ImmutableHashSet<string>.Empty;
+    public ImmutableArray<Regex> IncludeNameRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 
     public ImmutableArray<Regex> IgnoreNameRegexes { get; init; } = ImmutableArray<Regex>.Empty;
 

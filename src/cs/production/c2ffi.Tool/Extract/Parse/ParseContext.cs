@@ -198,7 +198,13 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
+            var isExplicitlyIncluded = IsMatch(name, parseContext.InputSanitized.IncludeNameRegexes);
+            if (isExplicitlyIncluded)
+            {
+                return true;
+            }
+
+            var isIgnored = IsMatch(name, parseContext.InputSanitized.IgnoreNameRegexes);
             return !isIgnored;
         }
     }
@@ -225,7 +231,13 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
+            var isExplicitlyIncluded = IsMatch(name, parseContext.InputSanitized.IncludeNameRegexes);
+            if (isExplicitlyIncluded)
+            {
+                return true;
+            }
+
+            var isIgnored = IsMatch(name, parseContext.InputSanitized.IgnoreNameRegexes);
             return !isIgnored;
         }
     }
@@ -254,22 +266,14 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
+            var isExplicitlyIncluded = IsMatch(name, parseContext.InputSanitized.IncludeNameRegexes);
+            if (isExplicitlyIncluded)
+            {
+                return true;
+            }
+
+            var isIgnored = IsMatch(name, parseContext.InputSanitized.IgnoreNameRegexes);
             return !isIgnored;
-        }
-    }
-
-    public ImmutableArray<clang.CXCursor> GetExplicitlyIncludedNamedCursors()
-    {
-        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        var result = translationUnitCursor.GetDescendents(this, IsExplicitlyIncludedName);
-        return result;
-
-        static bool IsExplicitlyIncludedName(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor parentCursor)
-        {
-            var name = cursor.Spelling();
-            var isIncluded = parseContext.InputSanitized.IncludedNames.Contains(name);
-            return isIncluded;
         }
     }
 
@@ -310,7 +314,7 @@ public sealed class ParseContext : IDisposable
         return (platform, pointerSizeBytes);
     }
 
-    private static bool IsIgnored(string name, ImmutableArray<Regex> regexes)
+    private static bool IsMatch(string name, ImmutableArray<Regex> regexes)
     {
         foreach (var regex in regexes)
         {

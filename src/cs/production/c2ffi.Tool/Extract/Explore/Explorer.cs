@@ -61,7 +61,6 @@ public sealed partial class Explorer(
         VisitFunctions(exploreContext, parseContext);
         VisitVariables(exploreContext, parseContext);
         VisitMacroObjects(exploreContext, parseContext);
-        VisitExplicitIncludedNames(exploreContext, parseContext);
 
         LogVisitedTranslationUnit(parseContext.FilePath);
     }
@@ -111,32 +110,9 @@ public sealed partial class Explorer(
         context.TryEnqueueNode(info);
     }
 
-    private void VisitExplicitIncludedNames(ExploreContext exploreContext, ParseContext parseContext)
-    {
-        var cursors = parseContext.GetExplicitlyIncludedNamedCursors();
-        foreach (var cursor in cursors)
-        {
-            VisitExplicitlyIncludedName(exploreContext, cursor);
-        }
-    }
-
     private void VisitExplicitlyIncludedName(ExploreContext context, clang.CXCursor clangCursor)
     {
-#pragma warning disable IDE0072
-        var nodeKind = clangCursor.kind switch
-#pragma warning restore IDE0072
-        {
-            clang.CXCursorKind.CXCursor_EnumDecl => CNodeKind.Enum,
-            _ => CNodeKind.Unknown
-        };
-
-        if (nodeKind == CNodeKind.Unknown)
-        {
-            // TODO: Add more allowed kinds to explicitly included names
-            return;
-        }
-
-        var info = context.CreateNodeInfoExplicitlyIncluded(nodeKind, clangCursor);
+        var info = context.CreateNodeInfoExplicitlyIncluded(clangCursor);
         context.TryEnqueueNode(info);
     }
 

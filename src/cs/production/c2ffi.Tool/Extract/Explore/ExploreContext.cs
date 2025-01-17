@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 using bottlenoselabs;
 using c2ffi.Clang;
 using c2ffi.Data;
@@ -131,14 +132,15 @@ internal sealed class ExploreContext(
         return nodeInfo;
     }
 
-    public NodeInfo CreateNodeInfoExplicitlyIncluded(CNodeKind nodeKind, clang.CXCursor clangCursor)
+    public NodeInfo CreateNodeInfoExplicitlyIncluded(clang.CXCursor clangCursor)
     {
         var clangCursorName = clangCursor.Spelling();
+
         var clangCursorType = clang.clang_getCursorType(clangCursor);
         var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangCursorType);
 
         var nodeInfo = CreateNodeInfo(
-            nodeKind,
+            clangTypeInfo.NodeKind,
             clangCursorName,
             clangTypeInfo.Name,
             clangCursor,
@@ -304,17 +306,29 @@ internal sealed class ExploreContext(
             return type;
         }
 
-        foreach (var regex in ParseContext.InputSanitized.IgnoreNameRegexes)
+        var isExplicitlyIncluded = IsMatch(typeName, ParseContext.InputSanitized.IncludeNameRegexes);
+        var isIgnored = IsMatch(typeName, ParseContext.InputSanitized.IgnoreNameRegexes);
+        if (!isExplicitlyIncluded && isIgnored)
         {
-            if (regex.IsMatch(typeName))
-            {
-                return type;
-            }
+            return type;
         }
 
         var info = CreateNodeInfo(type.NodeKind, type.Name, type.Name, clangCursor, clangType, parentInfo);
         TryEnqueueNode(info);
         return type;
+
+        static bool IsMatch(string name, ImmutableArray<Regex> regexes)
+        {
+            foreach (var regex in regexes)
+            {
+                if (regex.IsMatch(name))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
     private CType VisitTypeInternalPointer(

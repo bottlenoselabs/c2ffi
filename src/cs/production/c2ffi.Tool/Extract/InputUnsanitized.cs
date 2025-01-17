@@ -75,13 +75,14 @@ public sealed class InputUnsanitized : ToolUnsanitizedInput
     public ImmutableArray<string>? OpaqueTypeNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the name of Clang cursors / Clang types that are not allowed.
+    ///     Gets or sets the regular expressions to match the names of Clang cursors or Clang types that are not allowed.
     /// </summary>
     [JsonPropertyName("ignoredNames")]
     public ImmutableArray<string>? IgnoredNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the name of Clang cursors / Clang types that are explicitly allowed.
+    ///     Gets or sets the regular expressions to match the names of Clang cursors or Clang types that are explicitly
+    ///     allowed in a second pass (does not overlap with <see cref="IgnoredNames" />).
     /// </summary>
     [JsonPropertyName("includedNames")]
     public ImmutableArray<string>? IncludedNames { get; set; }
