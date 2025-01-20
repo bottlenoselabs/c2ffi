@@ -198,14 +198,8 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isExplicitlyIncluded = IsMatch(name, parseContext.InputSanitized.IncludeNameRegexes);
-            if (isExplicitlyIncluded)
-            {
-                return true;
-            }
-
-            var isIgnored = IsMatch(name, parseContext.InputSanitized.IgnoreNameRegexes);
-            return !isIgnored;
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
         }
     }
 
@@ -231,14 +225,8 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isExplicitlyIncluded = IsMatch(name, parseContext.InputSanitized.IncludeNameRegexes);
-            if (isExplicitlyIncluded)
-            {
-                return true;
-            }
-
-            var isIgnored = IsMatch(name, parseContext.InputSanitized.IgnoreNameRegexes);
-            return !isIgnored;
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
         }
     }
 
@@ -266,14 +254,34 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isExplicitlyIncluded = IsMatch(name, parseContext.InputSanitized.IncludeNameRegexes);
-            if (isExplicitlyIncluded)
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
+        }
+    }
+
+    public ImmutableArray<clang.CXCursor> GetEnums()
+    {
+        var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
+        return translationUnitCursor.GetDescendents(this, IsEnum);
+
+        static bool IsEnum(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor parentCursor)
+        {
+            var location = parseContext.Location(cursor, out var isFromMainFile);
+            var isLocationOkay = isFromMainFile && !location.IsSystem;
+            if (!isLocationOkay)
             {
-                return true;
+                return false;
             }
 
-            var isIgnored = IsMatch(name, parseContext.InputSanitized.IgnoreNameRegexes);
-            return !isIgnored;
+            var isEnum = cursor.kind == clang.CXCursorKind.CXCursor_EnumDecl;
+            if (!isEnum)
+            {
+                return false;
+            }
+
+            var name = cursor.Spelling();
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
         }
     }
 
@@ -312,18 +320,5 @@ public sealed class ParseContext : IDisposable
         var platform = new TargetPlatform(platformString);
         clang.clang_TargetInfo_dispose(targetInfo);
         return (platform, pointerSizeBytes);
-    }
-
-    private static bool IsMatch(string name, ImmutableArray<Regex> regexes)
-    {
-        foreach (var regex in regexes)
-        {
-            if (regex.IsMatch(name))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

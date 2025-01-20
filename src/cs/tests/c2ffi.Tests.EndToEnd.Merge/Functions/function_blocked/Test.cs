@@ -3,9 +3,9 @@
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Extract.Functions.function_ignored;
+namespace c2ffi.Tests.EndToEnd.Merge.Functions.function_blocked;
 
-public class Test : ExtractFfiTest
+public class Test : MergeFfisTest
 {
     private readonly string[] _functionNamesThatShouldExist =
     [
@@ -15,25 +15,20 @@ public class Test : ExtractFfiTest
     private readonly string[] _functionNamesThatShouldNotExist =
     [
         "function_not_allowed",
-        "function_ignored_1",
-        "function_ignored_2"
+        "function_blocked_1",
+        "function_blocked_2"
     ];
 
     [Fact]
     public void Function()
     {
-        var ffis = GetTargetPlatformFfis(
-            $"src/c/tests/functions/function_ignored/config.json");
-        Assert.True(ffis.Length > 0);
+        var ffi = GetCrossPlatformFfi("src/c/tests/functions/function_blocked/ffi");
 
-        foreach (var ffi in ffis)
-        {
-            FunctionsExist(ffi, _functionNamesThatShouldExist);
-            FunctionsDoNotExist(ffi, _functionNamesThatShouldNotExist);
-        }
+        FunctionsExist(ffi, _functionNamesThatShouldExist);
+        FunctionsDoNotExist(ffi, _functionNamesThatShouldNotExist);
     }
 
-    private void FunctionsExist(CTestFfiTargetPlatform ffi, params string[] names)
+    private void FunctionsExist(CTestFfiCrossPlatform ffi, params string[] names)
     {
         foreach (var name in names)
         {
@@ -42,7 +37,7 @@ public class Test : ExtractFfiTest
         }
     }
 
-    private void FunctionsDoNotExist(CTestFfiTargetPlatform ffi, params string[] names)
+    private void FunctionsDoNotExist(CTestFfiCrossPlatform ffi, params string[] names)
     {
         foreach (var name in names)
         {

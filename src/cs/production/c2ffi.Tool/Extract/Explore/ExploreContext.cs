@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the Git repository root directory for full license information.
 
 using System.Collections.Immutable;
-using System.Text.RegularExpressions;
 using bottlenoselabs;
 using c2ffi.Clang;
 using c2ffi.Data;
@@ -132,23 +131,6 @@ internal sealed class ExploreContext(
         return nodeInfo;
     }
 
-    public NodeInfo CreateNodeInfoExplicitlyIncluded(clang.CXCursor clangCursor)
-    {
-        var clangCursorName = clangCursor.Spelling();
-
-        var clangCursorType = clang.clang_getCursorType(clangCursor);
-        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangCursorType);
-
-        var nodeInfo = CreateNodeInfo(
-            clangTypeInfo.NodeKind,
-            clangCursorName,
-            clangTypeInfo.Name,
-            clangCursor,
-            clangTypeInfo.ClangType,
-            null);
-        return nodeInfo;
-    }
-
     public NodeInfo CreateNodeInfoRecordNested(
         CNodeKind nodeKind,
         string typeName,
@@ -165,6 +147,23 @@ internal sealed class ExploreContext(
             clangCursor,
             clangType,
             parentInfo);
+        return nodeInfo;
+    }
+
+    public NodeInfo CreateNodeInfo(clang.CXCursor clangCursor)
+    {
+        var clangCursorName = clangCursor.Spelling();
+
+        var clangCursorType = clang.clang_getCursorType(clangCursor);
+        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangCursorType);
+
+        var nodeInfo = CreateNodeInfo(
+            clangTypeInfo.NodeKind,
+            clangCursorName,
+            clangTypeInfo.Name,
+            clangCursor,
+            clangTypeInfo.ClangType,
+            null);
         return nodeInfo;
     }
 
@@ -306,9 +305,8 @@ internal sealed class ExploreContext(
             return type;
         }
 
-        var isExplicitlyIncluded = IsMatch(typeName, ParseContext.InputSanitized.IncludeNameRegexes);
-        var isIgnored = IsMatch(typeName, ParseContext.InputSanitized.IgnoreNameRegexes);
-        if (!isExplicitlyIncluded && isIgnored)
+        var isBlocked = !ParseContext.InputSanitized.IsNameAllowed(typeName);
+        if (isBlocked)
         {
             return type;
         }
@@ -316,19 +314,6 @@ internal sealed class ExploreContext(
         var info = CreateNodeInfo(type.NodeKind, type.Name, type.Name, clangCursor, clangType, parentInfo);
         TryEnqueueNode(info);
         return type;
-
-        static bool IsMatch(string name, ImmutableArray<Regex> regexes)
-        {
-            foreach (var regex in regexes)
-            {
-                if (regex.IsMatch(name))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
     }
 
     private CType VisitTypeInternalPointer(

@@ -61,14 +61,15 @@ public sealed partial class Explorer(
         VisitFunctions(exploreContext, parseContext);
         VisitVariables(exploreContext, parseContext);
         VisitMacroObjects(exploreContext, parseContext);
+        VisitEnums(exploreContext, parseContext);
 
         LogVisitedTranslationUnit(parseContext.FilePath);
     }
 
     private void VisitFunctions(ExploreContext exploreContext, ParseContext parseContext)
     {
-        var functionCursors = parseContext.GetExternalFunctions(parseContext);
-        foreach (var cursor in functionCursors)
+        var cursors = parseContext.GetExternalFunctions(parseContext);
+        foreach (var cursor in cursors)
         {
             VisitFunction(exploreContext, cursor);
         }
@@ -82,8 +83,8 @@ public sealed partial class Explorer(
 
     private void VisitVariables(ExploreContext context, ParseContext parseContext)
     {
-        var variableCursors = parseContext.GetExternalVariables();
-        foreach (var cursor in variableCursors)
+        var cursors = parseContext.GetExternalVariables();
+        foreach (var cursor in cursors)
         {
             VisitVariable(context, cursor);
         }
@@ -97,8 +98,8 @@ public sealed partial class Explorer(
 
     private void VisitMacroObjects(ExploreContext context, ParseContext parseContext)
     {
-        var macroObjectCursors = parseContext.GetMacroObjects();
-        foreach (var cursor in macroObjectCursors)
+        var cursors = parseContext.GetMacroObjects();
+        foreach (var cursor in cursors)
         {
             VisitMacroObject(context, cursor);
         }
@@ -110,9 +111,18 @@ public sealed partial class Explorer(
         context.TryEnqueueNode(info);
     }
 
-    private void VisitExplicitlyIncludedName(ExploreContext context, clang.CXCursor clangCursor)
+    private void VisitEnums(ExploreContext context, ParseContext parseContext)
     {
-        var info = context.CreateNodeInfoExplicitlyIncluded(clangCursor);
+        var cursors = parseContext.GetEnums();
+        foreach (var cursor in cursors)
+        {
+            VisitEnum(context, cursor);
+        }
+    }
+
+    private void VisitEnum(ExploreContext context, clang.CXCursor clangCursor)
+    {
+        var info = context.CreateNodeInfo(clangCursor);
         context.TryEnqueueNode(info);
     }
 

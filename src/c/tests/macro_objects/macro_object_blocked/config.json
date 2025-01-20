@@ -6,9 +6,9 @@
   "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
-  "ignoredNames": [
+  "blockedNames": [
     "MACRO_OBJECT_NOT_ALLOWED",
-    "MACRO_OBJECT_IGNORED*"
+    "MACRO_OBJECT_BLOCKED_.*"
   ],
   "targetPlatforms": {
     "windows": {

@@ -9,6 +9,10 @@ namespace c2ffi.Extract;
 
 public sealed class InputSanitizedTargetPlatform
 {
+    private readonly ImmutableArray<Regex> _allowedNameRegexRegexes;
+
+    private readonly ImmutableArray<Regex> _blockedNameRegexRegexes;
+
     public string OutputFilePath { get; init; } = string.Empty;
 
     public TargetPlatform TargetPlatform { get; init; } = TargetPlatform.Unknown;
@@ -25,12 +29,57 @@ public sealed class InputSanitizedTargetPlatform
 
     public bool IsEnabledFindSystemHeaders { get; init; }
 
-    public ImmutableArray<Regex> IncludeNameRegexes { get; init; } = ImmutableArray<Regex>.Empty;
-
-    public ImmutableArray<Regex> IgnoreNameRegexes { get; init; } = ImmutableArray<Regex>.Empty;
+    public InputSanitizedTargetPlatform(
+        ImmutableArray<Regex> allowedNameRegexes,
+        ImmutableArray<Regex> blockedNameRegexes)
+    {
+        _allowedNameRegexRegexes = allowedNameRegexes;
+        _blockedNameRegexRegexes = blockedNameRegexes;
+    }
 
     public override string ToString()
     {
         return $"{{ TargetPlatform: {TargetPlatform}, OutputFilePath: {OutputFilePath} }}";
+    }
+
+    public bool IsNameAllowed(string name)
+    {
+        bool isAllowed;
+        if (_allowedNameRegexRegexes.IsDefaultOrEmpty)
+        {
+            isAllowed = true;
+        }
+        else
+        {
+            isAllowed = false;
+            foreach (var regex in _allowedNameRegexRegexes)
+            {
+                if (regex.IsMatch(name))
+                {
+                    isAllowed = true;
+                    break;
+                }
+            }
+        }
+
+        bool isBlocked;
+        if (_blockedNameRegexRegexes.IsDefaultOrEmpty)
+        {
+            isBlocked = false;
+        }
+        else
+        {
+            isBlocked = false;
+            foreach (var regex in _blockedNameRegexRegexes)
+            {
+                if (regex.IsMatch(name))
+                {
+                    isBlocked = true;
+                    break;
+                }
+            }
+        }
+
+        return isAllowed && !isBlocked;
     }
 }

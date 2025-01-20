@@ -6,9 +6,9 @@
   "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
-  "ignoredNames": [
+  "blockedNames": [
     "variable_not_allowed",
-    "variable_ignored*"
+    "variable_blocked_.*"
   ],
   "targetPlatforms": {
     "windows": {

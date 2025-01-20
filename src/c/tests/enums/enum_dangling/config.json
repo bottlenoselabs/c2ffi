@@ -6,9 +6,8 @@
   "ignoredIncludeFiles": [
     "../../../production/ffi_helper/include/ffi_helper.h"
   ],
-  "ignoredNames": [
-    "function_not_allowed",
-    "function_ignored*"
+  "allowedNames": [
+    "enum_dangling"
   ],
   "targetPlatforms": {
     "windows": {

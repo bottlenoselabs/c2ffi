@@ -75,17 +75,18 @@ public sealed class InputUnsanitized : ToolUnsanitizedInput
     public ImmutableArray<string>? OpaqueTypeNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the regular expressions to match the names of Clang cursors or Clang types that are not allowed.
+    ///     Gets or sets the regular expressions to match the names of Clang cursors or Clang types that are blocked
+    ///     from being explored.
     /// </summary>
-    [JsonPropertyName("ignoredNames")]
-    public ImmutableArray<string>? IgnoredNames { get; set; }
+    [JsonPropertyName("blockedNames")]
+    public ImmutableArray<string>? BlockedNames { get; set; }
 
     /// <summary>
-    ///     Gets or sets the regular expressions to match the names of Clang cursors or Clang types that are explicitly
-    ///     allowed in a second pass (does not overlap with <see cref="IgnoredNames" />).
+    ///     Gets or sets the regular expressions to match the names of Clang cursors or Clang types that are allowed
+    ///     to be explored.
     /// </summary>
-    [JsonPropertyName("includedNames")]
-    public ImmutableArray<string>? IncludedNames { get; set; }
+    [JsonPropertyName("allowedNames")]
+    public ImmutableArray<string>? AllowedNames { get; set; }
 
     /// <summary>
     ///     Gets or sets the target platform configurations for extracting the FFIs per desktop host
