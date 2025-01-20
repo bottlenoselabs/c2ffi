@@ -131,22 +131,6 @@ internal sealed class ExploreContext(
         return nodeInfo;
     }
 
-    public NodeInfo CreateNodeInfoExplicitlyIncluded(CNodeKind nodeKind, clang.CXCursor clangCursor)
-    {
-        var clangCursorName = clangCursor.Spelling();
-        var clangCursorType = clang.clang_getCursorType(clangCursor);
-        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangCursorType);
-
-        var nodeInfo = CreateNodeInfo(
-            nodeKind,
-            clangCursorName,
-            clangTypeInfo.Name,
-            clangCursor,
-            clangTypeInfo.ClangType,
-            null);
-        return nodeInfo;
-    }
-
     public NodeInfo CreateNodeInfoRecordNested(
         CNodeKind nodeKind,
         string typeName,
@@ -163,6 +147,23 @@ internal sealed class ExploreContext(
             clangCursor,
             clangType,
             parentInfo);
+        return nodeInfo;
+    }
+
+    public NodeInfo CreateNodeInfo(clang.CXCursor clangCursor)
+    {
+        var clangCursorName = clangCursor.Spelling();
+
+        var clangCursorType = clang.clang_getCursorType(clangCursor);
+        var clangTypeInfo = ClangTypeInfoProvider.GetTypeInfo(clangCursorType);
+
+        var nodeInfo = CreateNodeInfo(
+            clangTypeInfo.NodeKind,
+            clangCursorName,
+            clangTypeInfo.Name,
+            clangCursor,
+            clangTypeInfo.ClangType,
+            null);
         return nodeInfo;
     }
 
@@ -304,12 +305,10 @@ internal sealed class ExploreContext(
             return type;
         }
 
-        foreach (var regex in ParseContext.InputSanitized.IgnoreNameRegexes)
+        var isBlocked = !ParseContext.InputSanitized.IsNameAllowed(typeName);
+        if (isBlocked)
         {
-            if (regex.IsMatch(typeName))
-            {
-                return type;
-            }
+            return type;
         }
 
         var info = CreateNodeInfo(type.NodeKind, type.Name, type.Name, clangCursor, clangType, parentInfo);

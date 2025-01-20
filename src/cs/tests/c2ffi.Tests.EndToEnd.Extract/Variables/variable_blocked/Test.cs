@@ -15,15 +15,15 @@ public class Test : ExtractFfiTest
     private readonly string[] _variableNamesThatShouldNotExist =
     [
         "variable_not_allowed",
-        "variable_ignored_1",
-        "variable_ignored_2"
+        "variable_blocked_1",
+        "variable_blocked_2"
     ];
 
     [Fact]
     public void Variable()
     {
         var ffis = GetTargetPlatformFfis(
-            $"src/c/tests/variables/variable_ignored/config.json");
+            $"src/c/tests/variables/variable_blocked/config.json");
         Assert.True(ffis.Length > 0);
 
         foreach (var ffi in ffis)

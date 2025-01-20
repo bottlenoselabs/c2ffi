@@ -3,9 +3,9 @@
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.MacroObjects.macro_object_ignored;
+namespace c2ffi.Tests.EndToEnd.Extract.MacroObjects.macro_object_blocked;
 
-public class Test : MergeFfisTest
+public class Test : ExtractFfiTest
 {
     private readonly string[] _macroObjectNamesThatShouldExist =
     [
@@ -15,20 +15,25 @@ public class Test : MergeFfisTest
     private readonly string[] _macroObjectNamesThatShouldNotExist =
     [
         "MACRO_OBJECT_NOT_ALLOWED",
-        "MACRO_OBJECT_IGNORED_1",
-        "MACRO_OBJECT_IGNORED_2"
+        "MACRO_OBJECT_BLOCKED_1",
+        "MACRO_OBJECT_BLOCKED_2"
     ];
 
     [Fact]
     public void MacroObject()
     {
-        var ffi = GetCrossPlatformFfi("src/c/tests/macro_objects/macro_object_ignored/ffi");
+        var ffis = GetTargetPlatformFfis(
+            $"src/c/tests/macro_objects/macro_object_blocked/config.json");
+        Assert.True(ffis.Length > 0);
 
-        MacroObjectsExist(ffi, _macroObjectNamesThatShouldExist);
-        MacroObjectsDoNotExist(ffi, _macroObjectNamesThatShouldNotExist);
+        foreach (var ffi in ffis)
+        {
+            MacroObjectsExist(ffi, _macroObjectNamesThatShouldExist);
+            MacroObjectsDoNotExist(ffi, _macroObjectNamesThatShouldNotExist);
+        }
     }
 
-    private void MacroObjectsExist(CTestFfiCrossPlatform ffi, params string[] names)
+    private void MacroObjectsExist(CTestFfiTargetPlatform ffi, params string[] names)
     {
         foreach (var name in names)
         {
@@ -37,7 +42,7 @@ public class Test : MergeFfisTest
         }
     }
 
-    private void MacroObjectsDoNotExist(CTestFfiCrossPlatform ffi, params string[] names)
+    private void MacroObjectsDoNotExist(CTestFfiTargetPlatform ffi, params string[] names)
     {
         foreach (var name in names)
         {

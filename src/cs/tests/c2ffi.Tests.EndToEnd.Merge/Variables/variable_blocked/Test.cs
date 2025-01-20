@@ -3,7 +3,7 @@
 
 #pragma warning disable CA1707
 
-namespace c2ffi.Tests.EndToEnd.Merge.Variables.variable_ignored;
+namespace c2ffi.Tests.EndToEnd.Merge.Variables.variable_blocked;
 
 public class Test : MergeFfisTest
 {
@@ -15,14 +15,14 @@ public class Test : MergeFfisTest
     private readonly string[] _variableNamesThatShouldNotExist =
     [
         "variable_not_allowed",
-        "variable_ignored_1",
-        "variable_ignored_2"
+        "variable_blocked_1",
+        "variable_blocked_2"
     ];
 
     [Fact]
     public void Variable()
     {
-        var ffi = GetCrossPlatformFfi("src/c/tests/variables/variable_ignored/ffi");
+        var ffi = GetCrossPlatformFfi("src/c/tests/variables/variable_blocked/ffi");
 
         VariablesExist(ffi, _variableNamesThatShouldExist);
         VariablesDoNotExist(ffi, _variableNamesThatShouldNotExist);

@@ -9,10 +9,10 @@ FFI_API_DECL void function_not_allowed()
 {
 }
 
-FFI_API_DECL void function_ignored1()
+FFI_API_DECL void function_blocked_1()
 {
 }
 
-FFI_API_DECL void function_ignored2()
+FFI_API_DECL void function_blocked_2()
 {
 }

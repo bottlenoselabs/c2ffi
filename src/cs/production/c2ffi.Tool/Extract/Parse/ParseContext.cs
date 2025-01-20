@@ -198,8 +198,8 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
-            return !isIgnored;
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
         }
     }
 
@@ -225,8 +225,8 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
-            return !isIgnored;
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
         }
     }
 
@@ -254,22 +254,34 @@ public sealed class ParseContext : IDisposable
             }
 
             var name = cursor.Spelling();
-            var isIgnored = IsIgnored(name, parseContext.InputSanitized.IgnoreNameRegexes);
-            return !isIgnored;
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
         }
     }
 
-    public ImmutableArray<clang.CXCursor> GetExplicitlyIncludedNamedCursors()
+    public ImmutableArray<clang.CXCursor> GetEnums()
     {
         var translationUnitCursor = clang.clang_getTranslationUnitCursor(_translationUnit);
-        var result = translationUnitCursor.GetDescendents(this, IsExplicitlyIncludedName);
-        return result;
+        return translationUnitCursor.GetDescendents(this, IsEnum);
 
-        static bool IsExplicitlyIncludedName(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor parentCursor)
+        static bool IsEnum(ParseContext parseContext, clang.CXCursor cursor, clang.CXCursor parentCursor)
         {
+            var location = parseContext.Location(cursor, out var isFromMainFile);
+            var isLocationOkay = isFromMainFile && !location.IsSystem;
+            if (!isLocationOkay)
+            {
+                return false;
+            }
+
+            var isEnum = cursor.kind == clang.CXCursorKind.CXCursor_EnumDecl;
+            if (!isEnum)
+            {
+                return false;
+            }
+
             var name = cursor.Spelling();
-            var isIncluded = parseContext.InputSanitized.IncludedNames.Contains(name);
-            return isIncluded;
+            var isNameAllowed = parseContext.InputSanitized.IsNameAllowed(name);
+            return isNameAllowed;
         }
     }
 
@@ -308,18 +320,5 @@ public sealed class ParseContext : IDisposable
         var platform = new TargetPlatform(platformString);
         clang.clang_TargetInfo_dispose(targetInfo);
         return (platform, pointerSizeBytes);
-    }
-
-    private static bool IsIgnored(string name, ImmutableArray<Regex> regexes)
-    {
-        foreach (var regex in regexes)
-        {
-            if (regex.IsMatch(name))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

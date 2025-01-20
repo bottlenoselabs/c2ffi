@@ -109,7 +109,10 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
         string inputFilePath)
     {
         var targetPlatform = new TargetPlatform(targetPlatformString);
-        var options = new InputSanitizedTargetPlatform
+
+        var allowedNameRegexes = AllowedNameRegexes(input);
+        var blockedNamesRegexes = BlockedNameRegexes(input);
+        var options = new InputSanitizedTargetPlatform(allowedNameRegexes, blockedNamesRegexes)
         {
             TargetPlatform = targetPlatform,
             OutputFilePath = OutputFilePath(input, targetPlatformString),
@@ -118,9 +121,7 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
             IgnoredIncludeFiles = IgnoredIncludeFiles(input, targetPlatformInput),
             MacroObjectDefines = ClangDefines(input, targetPlatformInput),
             AdditionalArguments = ClangArguments(targetPlatformInput),
-            IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true,
-            IncludedNames = IncludedNames(input),
-            IgnoreNameRegexes = IgnoredNames(input),
+            IsEnabledFindSystemHeaders = input.IsEnabledAutomaticallyFindSystemHeaders ?? true
         };
 
         return options;
@@ -171,14 +172,14 @@ public sealed class InputSanitizer(IFileSystem fileSystem) : InputSanitizer<Inpu
         return SanitizeStrings(targetPlatformInput.ClangArguments);
     }
 
-    private ImmutableArray<Regex> IgnoredNames(InputUnsanitized input)
+    private ImmutableArray<Regex> BlockedNameRegexes(InputUnsanitized input)
     {
-        return SanitizeRegexes(input.IgnoredNames);
+        return SanitizeRegexes(input.BlockedNames);
     }
 
-    private ImmutableHashSet<string> IncludedNames(InputUnsanitized input)
+    private ImmutableArray<Regex> AllowedNameRegexes(InputUnsanitized input)
     {
-        return [.. SanitizeStrings(input.IncludedNames)];
+        return SanitizeRegexes(input.AllowedNames);
     }
 
     private string SanitizeOutputDirectoryPath(

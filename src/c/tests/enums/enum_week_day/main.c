@@ -11,4 +11,4 @@ typedef enum enum_week_day {
     _ENUM_WEEK_DAY_MAX = 6
 } enum_week_day;
 
-FFI_API_DECL enum_week_day enum_week_day;
+FFI_API_DECL enum_week_day variable_1;
