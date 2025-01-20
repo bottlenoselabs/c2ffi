@@ -198,7 +198,7 @@ Note that the internals of the C library is irrelevant and to which this list do
 |❌|Function-like macros <sup>5</sup>|
 |✅|Object-like macros <sup>2, 6, 7</sup>|
 
-<sup>1</sup>: When declaring your external functions or variables, do set the default visibility explictly. This is necessary because `c2ffi` is configured to have the visibiity set to hidden when using `libclang` via the flag `-fvisibility=hidden` so that only the strict subset of functions and variables intended for FFI are extracted. Most C libraries will have an `API_DECL` macro object defined which can be redefined to also set the visibility. See [ffi_helper.h](src/c/production/ffi_helper/include/ffi_helper.h) for an example in C. You can also use the config `.json` file to define tyour `API_DECL` macro object.
+<sup>1</sup>: When declaring your external functions or variables, do set the default visibility explictly. This is necessary because `c2ffi` is configured to have the visibiity set to hidden when using `libclang` via the flag `-fvisibility=hidden` so that only the strict subset of functions and variables intended for FFI are extracted. Most C libraries will have an `API_DECL` macro object defined which can be redefined to also set the visibility. See [ffi_helper.h](src/c/production/ffi_helper/include/ffi_helper.h) for an example in C. You can also use the config `.json` file to define your `API_DECL` macro object.
 
 Bad
 ```c
@@ -294,7 +294,7 @@ Acceptable
 #define BUFFER_SIZE 1024 // Type is int16_t
 ```
 
-<sup>7</sup>: Types must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the FFI. If this is not the case, then the type is not used in the FFI and will not be extracted.
+<sup>7</sup>: Types other than enums must be explicitly transtive to a function extern, variable extern, or macro-object so that they can be included as part of the FFI. If this is not the case, then the type is not used in the FFI and will not be extracted.
 
 ### Platforms
 
