@@ -160,7 +160,7 @@ int main(void)
         }
 
         var typeName = clangType.Spelling();
-        var mainTranslationUnit = clang.clang_Cursor_getTranslationUnit(info.ClangCursor);
+        var mainTranslationUnit = exploreContext.ParseContext.TranslationUnit;
         var mainTranslationUnitCursor = clang.clang_getTranslationUnitCursor(mainTranslationUnit);
 
         var clangCursorsInMainTranslationUnit = mainTranslationUnitCursor.GetDescendents(
@@ -182,8 +182,9 @@ int main(void)
 
         if (clangCursorsInMainTranslationUnit.IsDefaultOrEmpty)
         {
-            throw new ToolException(
+            var up = new ToolException(
                 $"Failed to find matching type in main translation unit for macro object '{macroName}'.");
+            throw up;
         }
 
         var clangCursorInMainTranslationUnit = clangCursorsInMainTranslationUnit.First();
